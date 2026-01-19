@@ -2,7 +2,7 @@ import { AlertTriangle, ChefHat, Info, Timer } from 'lucide-react-native';
 import React from 'react';
 import { Image, Text, View } from 'react-native';
 import { GapAnalysis } from '../../hooks/useGapAnalysis';
-import { RecipeWithIngredients } from '../../hooks/useRecipes';
+import { RecipeWithIngredients } from '../../types/schema';
 
 interface RecipeCardProps {
     recipe: RecipeWithIngredients;

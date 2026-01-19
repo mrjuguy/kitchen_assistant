@@ -1,13 +1,15 @@
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
-import { ChefHat, ChevronLeft, Clock, ShoppingCart, Trash2, Users } from 'lucide-react-native';
+import { CalendarDays, ChefHat, ChevronLeft, Clock, ShoppingCart, Trash2, Users } from 'lucide-react-native';
 import React from 'react';
 import { ActivityIndicator, Alert, Image, Pressable, ScrollView, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { IngredientMatcher } from '../../components/Recipes/IngredientMatcher';
 import { GapAnalysis, useGapAnalysis } from '../../hooks/useGapAnalysis';
+import { useAddToPlan } from '../../hooks/useMealPlan';
 import { useConsumeIngredients } from '../../hooks/usePantry';
 import { useDeleteRecipe, useRecipes } from '../../hooks/useRecipes';
 import { useAddShoppingItems } from '../../hooks/useShoppingList';
+import { formatDate } from '../../utils/date';
 
 export default function RecipeDetailScreen() {
     const { id } = useLocalSearchParams<{ id: string }>();
@@ -18,6 +20,7 @@ export default function RecipeDetailScreen() {
     const consumeMutation = useConsumeIngredients();
     const addShoppingMutation = useAddShoppingItems();
     const deleteMutation = useDeleteRecipe();
+    const addToPlanMutation = useAddToPlan();
 
     const recipe = recipes?.find(r => r.id === id);
 
@@ -44,7 +47,7 @@ export default function RecipeDetailScreen() {
                     text: "Cook & Eat",
                     onPress: () => {
                         const updates = analysis.ingredientMatches
-                            .filter(m => m.pantryItemId) // Only update items we matched
+                            .filter(m => m.pantryItemId)
                             .map(m => ({
                                 id: m.pantryItemId!,
                                 newQuantity: Math.max(0, m.available - m.required)
@@ -70,10 +73,9 @@ export default function RecipeDetailScreen() {
             .filter(m => !m.isInStock)
             .map(m => ({
                 name: m.name,
-                // If we have some, buy the difference. If none, buy the required amount.
                 quantity: Math.max(0, m.required - m.available),
                 unit: m.unit,
-                category: 'produce' // Default category, ideally we'd map this better
+                category: 'produce'
             }));
 
         if (missingItems.length === 0) return;
@@ -90,7 +92,38 @@ export default function RecipeDetailScreen() {
                             onSuccess: () => {
                                 Alert.alert("Added!", "Items added to shopping list.", [
                                     { text: "Go to Shopping List", onPress: () => router.push('/(tabs)/shopping') },
-                                    { text: "Stay Component" }
+                                    { text: "Stay" }
+                                ]);
+                            }
+                        });
+                    }
+                }
+            ]
+        );
+    };
+
+    const handleSchedule = () => {
+        // For now, simpler implementation: schedule for tonight's dinner
+        // In a real app, this would open a DatePicker modal
+        const today = formatDate(new Date());
+
+        Alert.alert(
+            "Schedule Meal",
+            "When would you like to cook this?",
+            [
+                { text: "Cancel", style: "cancel" },
+                {
+                    text: "Tonight for Dinner",
+                    onPress: () => {
+                        addToPlanMutation.mutate({
+                            date: today,
+                            meal_type: 'dinner',
+                            recipe_id: id!
+                        }, {
+                            onSuccess: () => {
+                                Alert.alert("Scheduled!", "Meal added to your planner.", [
+                                    { text: "Go to Planner", onPress: () => router.push('/(tabs)/planner') },
+                                    { text: "OK" }
                                 ]);
                             }
                         });
@@ -101,79 +134,100 @@ export default function RecipeDetailScreen() {
     };
 
     const getActionButton = () => {
-        if (status === 'Green') {
-            return (
+        return (
+            <View style={{ flexDirection: 'row', gap: 12 }}>
                 <Pressable
-                    onPress={handleCookNow}
-                    disabled={consumeMutation.isPending}
+                    onPress={handleSchedule}
                     style={{
-                        backgroundColor: '#10b981',
+                        flex: 1,
+                        backgroundColor: 'white',
                         paddingVertical: 16,
                         borderRadius: 16,
                         alignItems: 'center',
                         flexDirection: 'row',
                         justifyContent: 'center',
-                        elevation: 4
+                        borderWidth: 1,
+                        borderColor: '#e5e7eb'
                     }}
                 >
-                    {consumeMutation.isPending ? (
-                        <ActivityIndicator color="white" />
-                    ) : (
-                        <>
-                            <ChefHat size={20} color="white" style={{ marginRight: 8 }} />
-                            <Text style={{ color: 'white', fontSize: 16, fontWeight: 'bold' }}>
-                                Cook This Now
-                            </Text>
-                        </>
-                    )}
-                </Pressable>
-            );
-        } else if (status === 'Yellow') {
-            return (
-                <Pressable
-                    onPress={handleAddMissing}
-                    disabled={addShoppingMutation.isPending}
-                    style={{
-                        backgroundColor: '#f59e0b',
-                        paddingVertical: 16,
-                        borderRadius: 16,
-                        alignItems: 'center',
-                        flexDirection: 'row',
-                        justifyContent: 'center',
-                        elevation: 4
-                    }}
-                >
-                    {addShoppingMutation.isPending ? (
-                        <ActivityIndicator color="white" />
-                    ) : (
-                        <>
-                            <ShoppingCart size={20} color="white" style={{ marginRight: 8 }} />
-                            <Text style={{ color: 'white', fontSize: 16, fontWeight: 'bold' }}>
-                                Add Missing to List
-                            </Text>
-                        </>
-                    )}
-                </Pressable>
-            );
-        } else {
-            return (
-                <View
-                    style={{
-                        backgroundColor: '#ef4444',
-                        paddingVertical: 16,
-                        borderRadius: 16,
-                        alignItems: 'center',
-                        flexDirection: 'row',
-                        justifyContent: 'center',
-                        opacity: 0.8
-                    }}
-                >
-                    <Text style={{ color: 'white', fontSize: 16, fontWeight: 'bold' }}>
-                        Unsafe: Allergen Warning
+                    <CalendarDays size={20} color="#111827" style={{ marginRight: 8 }} />
+                    <Text style={{ color: '#111827', fontSize: 16, fontWeight: 'bold' }}>
+                        Schedule
                     </Text>
-                </View>
-            );
-        }
+                </Pressable>
+
+                {status === 'Green' ? (
+                    <Pressable
+                        onPress={handleCookNow}
+                        disabled={consumeMutation.isPending}
+                        style={{
+                            flex: 2,
+                            backgroundColor: '#10b981',
+                            paddingVertical: 16,
+                            borderRadius: 16,
+                            alignItems: 'center',
+                            flexDirection: 'row',
+                            justifyContent: 'center',
+                            elevation: 4
+                        }}
+                    >
+                        {consumeMutation.isPending ? (
+                            <ActivityIndicator color="white" />
+                        ) : (
+                            <>
+                                <ChefHat size={20} color="white" style={{ marginRight: 8 }} />
+                                <Text style={{ color: 'white', fontSize: 16, fontWeight: 'bold' }}>
+                                    Cook This Now
+                                </Text>
+                            </>
+                        )}
+                    </Pressable>
+                ) : status === 'Yellow' ? (
+                    <Pressable
+                        onPress={handleAddMissing}
+                        disabled={addShoppingMutation.isPending}
+                        style={{
+                            flex: 2,
+                            backgroundColor: '#f59e0b',
+                            paddingVertical: 16,
+                            borderRadius: 16,
+                            alignItems: 'center',
+                            flexDirection: 'row',
+                            justifyContent: 'center',
+                            elevation: 4
+                        }}
+                    >
+                        {addShoppingMutation.isPending ? (
+                            <ActivityIndicator color="white" />
+                        ) : (
+                            <>
+                                <ShoppingCart size={20} color="white" style={{ marginRight: 8 }} />
+                                <Text style={{ color: 'white', fontSize: 16, fontWeight: 'bold' }}>
+                                    Add Missing
+                                </Text>
+                            </>
+                        )}
+                    </Pressable>
+                ) : (
+                    <View
+                        style={{
+                            flex: 2,
+                            backgroundColor: '#ef4444',
+                            paddingVertical: 16,
+                            borderRadius: 16,
+                            alignItems: 'center',
+                            flexDirection: 'row',
+                            justifyContent: 'center',
+                            opacity: 0.8
+                        }}
+                    >
+                        <Text style={{ color: 'white', fontSize: 16, fontWeight: 'bold' }}>
+                            Unsafe
+                        </Text>
+                    </View>
+                )}
+            </View>
+        );
     };
 
     return (

@@ -1,77 +1,69 @@
-# PRD: Kitchen Intelligence Layer (Phase 2)
+# PRD: Meal Planner (The "Chef's Weekly")
 
 ## 1. Vision & Purpose
-Transition the "Kitchen Assistant" from a manual tracker to an intelligent "Culinary OS". This phase introduces the **Gap Analysis Engine**, enabling users to see exactly what they can cook based on their current inventory and health profile.
+Empower the user to proactively manage their kitchen by assigning recipes to specific days. This transforms the app from a "reactive" tool (what can I cook now?) to a "proactive" system (what am I eating this week?), directly feeding the Shopping List.
 
 ## 2. Core Features
 
-### A. User Health Profile & Safety
-- **Objective**: Ensure all recipe matches respect user allergies and dietary restrictions.
-- **Requirements**:
-    - Build a `Profile` settings screen.
-    - Track `allergens` (e.g., Peanuts, Dairy, Gluten) and `dietary_restrictions` (e.g., Vegan, Keto).
-    - Rule: If a recipe contains a known allergen, it must be flagged as "Red" (Unsafe).
+### A. Weekly Calendar View
+- **Objective**: Visualize the week's meals at a glance.
+- **UI**: A horizontal week strip (Mon-Sun) or simple list view.
+- **Slots**: Breakfast, Lunch, Dinner for each day.
 
-### B. Gap Analysis Engine (The Intelligence)
-- **Objective**: Real-time cross-referencing of Inventory vs. Recipes.
-- **Logic**:
-    - **Green (Full Match)**: All ingredients are in the pantry with sufficient quantity.
-    - **Yellow (Partial Match)**: Missing 1-2 ingredients or insufficient quantity.
-    - **Red (Incompatible)**: Missing >2 ingredients OR contains an allergen from the User Profile.
-- **Technical**: Implement a custom hook `useGapAnalysis(recipeId)` that performs this check.
+### B. "Add to Plan" Flow
+- **Entry Points**:
+    1.  **From Recipe Detail**: "Schedule this Meal" button.
+    2.  **From Planner**: Tap an empty slot -> Open Recipe Selector.
+- **Logic**: Saves the `recipe_id` to a specific `date` and `meal_type`.
 
-### C. Recipe Action Flow
-- **Recipe Detail Screen**: Enhanced view showing match status for each ingredient.
-- **"Cook This" Button**:
-    - Deducts required quantities from the `PantryItem` table.
-    - Handles "out of stock" logic (removes or zeros out items).
-- **"Add Missing to List" Button**:
-    - Quickly adds all "Yellow" (missing/low) items to the `ShoppingItem` list.
+### C. Smart Shopping Integration
+- **The "Shop for Week" Button**:
+    - Scans the entire week's meal plan.
+    - Aggregates ingredients from ALL planned recipes.
+    - Subtracts current Pantry inventory (using the existing Gap Analysis engine).
+    - Adds the net missing items to the Shopping List in one click.
 
 ## 3. Technical Requirements
 
 ### Schema Updates (`types/schema.ts`)
 ```typescript
-export interface UserProfile {
-    id: string; // matches auth.uid()
-    display_name: string;
-    allergens: string[];
-    dietary_preferences: string[];
-    created_at: string;
-}
-
-export interface Recipe {
-    // ... existing
-    tags: string[]; // for Keto, Vegan, etc.
-    allergens: string[]; // list of allergens present in the recipe
+export interface MealPlan {
+    id: string;
+    user_id: string;
+    date: string; // ISO date string (YYYY-MM-DD)
+    meal_type: 'breakfast' | 'lunch' | 'dinner';
+    recipe_id: string;
+    // joined fields
+    recipe?: Recipe;
 }
 ```
 
 ### New Hooks & Services
-- `useProfile`: Manage user health/dietary data.
-- `useGapAnalysis`: The core logic for ingredient matching.
-- `useRecipeActions`: Logic for the "Cook" and "Shop for Missing" actions.
+- `useMealPlan(startDate, endDate)`: Fetch plans for the view.
+- `useAddToPlan()`: Mutation to schedule a meal.
+- `useWeeklyShoppingList()`: The logic to aggregate ingredients across multiple recipes and diff against pantry.
 
 ## 4. UI/UX Targets
-- **Visual Status**: Use colored badges (Green/Yellow/Red) on Recipe list items.
-- **Ingredient Checklist**: Inside recipe detail, show "In Pantry" (Green check) or "Missing" (Orange plus) next to each item.
-- **Haptics**: Use haptic feedback for the "Cook" action to confirm inventory deduction.
+- **New Tab**: `app/(tabs)/planner.tsx`.
+- **Drag & Drop (Nice to have, phase 2)**: For now, simple tap-to-select.
+- **Empty States**: Encouraging UI to "Plan your week".
 
 ## 5. Implementation Plan
 
-### Step 1: Health Profile & Schema
-- [ ] Add `profiles` table to Supabase.
-- [ ] Update `types/schema.ts` with Profile and enhanced Recipe types.
-- [ ] Create Profile settings page.
+### Step 1: Database & Schema
+- [ ] Create `meal_plans` table in Supabase.
+- [ ] Update `types/schema.ts`.
+- [ ] Create `useMealPlan` hooks.
 
-### Step 2: The Matcher (Engine)
-- [ ] Implement `useGapAnalysis` hook.
-- [ ] Create a "fuzzy matching" utility to handle "Tomato" vs "Tomatoes".
+### Step 2: The Planner UI
+- [ ] Create `app/(tabs)/planner.tsx`.
+- [ ] Build `WeekView` component (date selector).
+- [ ] Build `MealSlot` component (shows recipe card or "Empty").
 
-### Step 3: Intelligence in the UI
-- [ ] Update Recipe list items to show status badges.
-- [ ] Create an "Ingredient Matcher" component for the Recipe Detail screen.
+### Step 3: Scheduling Logic
+- [ ] Connect "Add" button to a Recipe Pixel/Selector modal.
+- [ ] Add "Schedule" button to existing `RecipeDetail` screen.
 
-### Step 4: Action Flow
-- [ ] Implement `deductPantryItems` helper.
-- [ ] Build the "Cook" and "Shop for Missing" buttons with confirmation flow.
+### Step 4: The "Shop for Week" Feature
+- [ ] Implement `generateWeeklyShoppingList` logic (The heaviest technical piece).
+- [ ] Add "Generate Shopping List" button to the Planner header.

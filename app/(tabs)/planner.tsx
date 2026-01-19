@@ -1,0 +1,143 @@
+import { useRouter } from 'expo-router';
+import { CalendarDays, ShoppingBasket } from 'lucide-react-native';
+import React, { useMemo, useState } from 'react';
+import { ActivityIndicator, Alert, Pressable, RefreshControl, ScrollView, Text, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { MealCard } from '../../components/Planner/MealCard';
+import { WeekStrip } from '../../components/Planner/WeekStrip';
+import { useMealPlan, useWeeklyShoppingList } from '../../hooks/useMealPlan';
+import { formatDate, getWeekDays } from '../../utils/date';
+
+export default function PlannerScreen() {
+    const router = useRouter();
+    const [selectedDate, setSelectedDate] = useState(new Date());
+    const weekDays = useMemo(() => getWeekDays(new Date()), []);
+
+    const startDate = formatDate(weekDays[0]);
+    const endDate = formatDate(weekDays[6]);
+
+    const { data: mealPlans, isLoading, refetch, isRefetching } = useMealPlan(startDate, endDate);
+    const { addMissingToShoppingList, isPending: isShoppingPending } = useWeeklyShoppingList(startDate, endDate);
+
+    const selectedDateStr = formatDate(selectedDate);
+
+    const dayPlans = useMemo(() => {
+        if (!mealPlans) return {};
+        const plans = mealPlans.filter(p => p.date === selectedDateStr);
+        return {
+            breakfast: plans.find(p => p.meal_type === 'breakfast'),
+            lunch: plans.find(p => p.meal_type === 'lunch'),
+            dinner: plans.find(p => p.meal_type === 'dinner'),
+        };
+    }, [mealPlans, selectedDateStr]);
+
+    const handleAddMeal = (type: 'breakfast' | 'lunch' | 'dinner') => {
+        router.push({
+            pathname: '/(tabs)/recipes',
+            params: {
+                mode: 'select',
+                date: selectedDateStr,
+                meal_type: type
+            }
+        } as any);
+    };
+
+    const handleShopForWeek = async () => {
+        try {
+            const results = await addMissingToShoppingList();
+            if (results && results.length > 0) {
+                Alert.alert(
+                    "Success!",
+                    `Added ${results.length} items to your shopping list.`,
+                    [
+                        { text: "Go to Shopping List", onPress: () => router.push('/(tabs)/shopping') },
+                        { text: "OK" }
+                    ]
+                );
+            } else {
+                Alert.alert("All Set!", "You already have all the ingredients for this week's plan.");
+            }
+        } catch (error) {
+            Alert.alert("Error", "Failed to generate shopping list.");
+            console.error(error);
+        }
+    };
+
+    return (
+        <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }} edges={['top']}>
+            <View style={{ flex: 1, paddingTop: 24 }}>
+                <View style={{ paddingHorizontal: 16, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 24 }}>
+                    <View>
+                        <Text style={{ fontSize: 30, fontWeight: 'bold', color: '#111827' }}>Meal Planner</Text>
+                        <Text style={{ fontSize: 14, color: '#6b7280' }}>The "Chef's Weekly"</Text>
+                    </View>
+                    <View style={{ backgroundColor: '#f0fdf4', padding: 12, borderRadius: 99 }}>
+                        <CalendarDays size={24} color="#10b981" />
+                    </View>
+                </View>
+
+                <WeekStrip
+                    days={weekDays}
+                    selectedDate={selectedDate}
+                    onDateSelect={setSelectedDate}
+                />
+
+                <ScrollView
+                    style={{ flex: 1 }}
+                    contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 100 }}
+                    refreshControl={
+                        <RefreshControl refreshing={isRefetching} onRefresh={refetch} tintColor="#10b981" />
+                    }
+                >
+                    <View style={{ marginBottom: 32 }}>
+                        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
+                            <Text style={{ fontSize: 18, fontWeight: 'bold', color: '#111827' }}>
+                                Meals for {selectedDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric' })}
+                            </Text>
+                        </View>
+
+                        <MealCard
+                            meal={dayPlans.breakfast}
+                            mealType="breakfast"
+                            onPress={() => handleAddMeal('breakfast')}
+                        />
+                        <MealCard
+                            meal={dayPlans.lunch}
+                            mealType="lunch"
+                            onPress={() => handleAddMeal('lunch')}
+                        />
+                        <MealCard
+                            meal={dayPlans.dinner}
+                            mealType="dinner"
+                            onPress={() => handleAddMeal('dinner')}
+                        />
+                    </View>
+
+                    {/* Quick Shopping Button */}
+                    <Pressable
+                        style={{
+                            backgroundColor: '#111827',
+                            padding: 20,
+                            borderRadius: 20,
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            opacity: isShoppingPending ? 0.7 : 1
+                        }}
+                        onPress={handleShopForWeek}
+                        disabled={isShoppingPending}
+                    >
+                        {isShoppingPending ? (
+                            <ActivityIndicator color="white" />
+                        ) : (
+                            <>
+                                <ShoppingBasket size={20} color="white" style={{ marginRight: 12 }} />
+                                <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 16 }}>Shop for Week</Text>
+                            </>
+                        )}
+                    </Pressable>
+                </ScrollView>
+            </View>
+        </SafeAreaView>
+    );
+}

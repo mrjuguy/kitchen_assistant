@@ -64,4 +64,21 @@ export interface RecipeIngredient {
     unit: string;
 }
 
+export interface RecipeWithIngredients extends Recipe {
+    ingredients: RecipeIngredient[];
+}
+
 export type CreateRecipe = Omit<Recipe, 'id' | 'created_at' | 'user_id'>;
+
+export interface MealPlan {
+    id: string;
+    user_id: string;
+    date: string; // ISO date string (YYYY-MM-DD)
+    meal_type: 'breakfast' | 'lunch' | 'dinner';
+    recipe_id: string;
+    created_at: string;
+    // joined fields
+    recipe?: RecipeWithIngredients;
+}
+
+export type CreateMealPlan = Omit<MealPlan, 'id' | 'created_at' | 'user_id' | 'recipe'>;

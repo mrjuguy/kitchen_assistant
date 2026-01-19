@@ -1,10 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '../services/supabase';
-import { Recipe, RecipeIngredient } from '../types/schema';
-
-export interface RecipeWithIngredients extends Recipe {
-    ingredients: RecipeIngredient[];
-}
+import { RecipeWithIngredients } from '../types/schema';
 
 export const useRecipes = () => {
     return useQuery<RecipeWithIngredients[]>({

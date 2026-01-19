@@ -1,18 +1,51 @@
-import { useRouter } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import { ChefHat, Search, SlidersHorizontal } from 'lucide-react-native';
 import React, { useMemo, useState } from 'react';
-import { FlatList, Pressable, RefreshControl, Text, TextInput, View } from 'react-native';
+import { Alert, FlatList, Pressable, RefreshControl, Text, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { RecipeCard } from '../../components/Recipes/RecipeCard';
 import { useGapAnalysis } from '../../hooks/useGapAnalysis';
+import { useAddToPlan } from '../../hooks/useMealPlan';
 import { useRecipes } from '../../hooks/useRecipes';
 
 export default function RecipesScreen() {
     const { data: recipes, isLoading, isError, refetch, isRefetching } = useRecipes();
-    const router = useRouter(); // <--- Added this line
+    const router = useRouter();
+    const { mode, date, meal_type } = useLocalSearchParams<{ mode?: string, date?: string, meal_type?: string }>();
+    const addToPlanMutation = useAddToPlan();
+
     const analysisMap = useGapAnalysis() as Record<string, any> | null;
     const [searchQuery, setSearchQuery] = useState('');
     const [filter, setFilter] = useState<'all' | 'ready' | 'missing'>('all');
+
+    const handleRecipePress = (recipeId: string, recipeName: string) => {
+        if (mode === 'select' && date && meal_type) {
+            Alert.alert(
+                "Schedule Meal",
+                `Schedule ${recipeName} for ${meal_type} on ${date}?`,
+                [
+                    { text: "Cancel", style: "cancel" },
+                    { text: "View Details", onPress: () => router.push(`/recipes/${recipeId}` as any) },
+                    {
+                        text: "Schedule",
+                        onPress: () => {
+                            addToPlanMutation.mutate({
+                                date,
+                                meal_type: meal_type as any,
+                                recipe_id: recipeId
+                            }, {
+                                onSuccess: () => {
+                                    router.replace('/(tabs)/planner');
+                                }
+                            });
+                        }
+                    }
+                ]
+            );
+        } else {
+            router.push(`/recipes/${recipeId}` as any);
+        }
+    };
 
     const filteredRecipes = useMemo(() => {
         if (!recipes || !analysisMap) return [];
@@ -49,15 +82,42 @@ export default function RecipesScreen() {
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }} edges={['top']}>
             <View style={{ flex: 1, paddingHorizontal: 16, paddingTop: 24 }}>
-                <View className="flex-row items-center justify-between mb-6">
-                    <View>
-                        <Text style={{ fontSize: 30, fontWeight: 'bold', color: '#111827' }}>Recipes</Text>
-                        <Text style={{ fontSize: 14, color: '#6b7280' }}>Match with Pantry</Text>
+                {mode === 'select' && date && meal_type ? (
+                    <View style={{
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        marginBottom: 24,
+                        backgroundColor: '#eff6ff',
+                        padding: 16,
+                        borderRadius: 16,
+                        borderWidth: 1,
+                        borderColor: '#bfdbfe'
+                    }}>
+                        <View style={{ flex: 1 }}>
+                            <Text style={{ fontSize: 16, fontWeight: 'bold', color: '#1e40af' }}>Select Meal</Text>
+                            <Text style={{ fontSize: 14, color: '#3b82f6' }}>
+                                Scheduling for <Text style={{ fontWeight: 'bold' }}>{meal_type}</Text> on <Text style={{ fontWeight: 'bold' }}>{new Date(date).toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' })}</Text>
+                            </Text>
+                        </View>
+                        <Pressable
+                            onPress={() => router.setParams({ mode: undefined, date: undefined, meal_type: undefined })}
+                            style={{ backgroundColor: 'white', padding: 8, borderRadius: 20 }}
+                        >
+                            <Text style={{ color: '#ef4444', fontWeight: 'bold', fontSize: 12 }}>Cancel</Text>
+                        </Pressable>
                     </View>
-                    <View style={{ backgroundColor: '#f0fdf4', padding: 12, borderRadius: 99 }}>
-                        <ChefHat size={24} color="#10b981" />
+                ) : (
+                    <View className="flex-row items-center justify-between mb-6">
+                        <View>
+                            <Text style={{ fontSize: 30, fontWeight: 'bold', color: '#111827' }}>Recipes</Text>
+                            <Text style={{ fontSize: 14, color: '#6b7280' }}>Match with Pantry</Text>
+                        </View>
+                        <View style={{ backgroundColor: '#f0fdf4', padding: 12, borderRadius: 99 }}>
+                            <ChefHat size={24} color="#10b981" />
+                        </View>
                     </View>
-                </View>
+                )}
 
                 {/* Search & Filter */}
                 <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 24 }}>
@@ -109,7 +169,7 @@ export default function RecipesScreen() {
                     data={filteredRecipes}
                     keyExtractor={(item) => item.id}
                     renderItem={({ item }) => (
-                        <Pressable onPress={() => router.push(`/recipes/${item.id}` as any)}>
+                        <Pressable onPress={() => handleRecipePress(item.id, item.name)}>
                             <RecipeCard
                                 recipe={item}
                                 analysis={analysisMap?.[item.id]}

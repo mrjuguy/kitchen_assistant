@@ -60,18 +60,18 @@ export interface Recipe {
 ## 5. Implementation Plan
 
 ### Step 1: Health Profile & Schema
-- [ ] Add `profiles` table to Supabase.
-- [ ] Update `types/schema.ts` with Profile and enhanced Recipe types.
-- [ ] Create Profile settings page.
+- [x] Add `profiles` table to Supabase.
+- [x] Update `types/schema.ts` with Profile and enhanced Recipe types.
+- [x] Create Profile settings page.
 
 ### Step 2: The Matcher (Engine)
-- [ ] Implement `useGapAnalysis` hook.
-- [ ] Create a "fuzzy matching" utility to handle "Tomato" vs "Tomatoes".
+- [x] Implement `useGapAnalysis` hook.
+- [x] Create a "fuzzy matching" utility to handle "Tomato" vs "Tomatoes".
 
 ### Step 3: Intelligence in the UI
-- [ ] Update Recipe list items to show status badges.
-- [ ] Create an "Ingredient Matcher" component for the Recipe Detail screen.
+- [x] Update Recipe list items to show status badges.
+- [x] Create an "Ingredient Matcher" component for the Recipe Detail screen.
 
 ### Step 4: Action Flow
-- [ ] Implement `deductPantryItems` helper.
-- [ ] Build the "Cook" and "Shop for Missing" buttons with confirmation flow.
+- [x] Implement `deductPantryItems` helper.
+- [x] Build the "Cook" and "Shop for Missing" buttons with confirmation flow.

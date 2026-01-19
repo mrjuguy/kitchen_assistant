@@ -3,9 +3,9 @@
  */
 export const normalizeName = (name: string): string => {
     return name.toLowerCase().trim()
-        .replace(/s$/, '') // simple "s" plural
-        .replace(/es$/, '') // simple "es" plural
-        .replace(/ies$/, 'y'); // "ies" -> "y" (e.g. berries)
+        .replace(/ies$/, 'y')
+        .replace(/es$/, '')
+        .replace(/s$/, '');
 };
 
 const IDENTITY_MODIFIERS = ['peanut', 'almond', 'cashew', 'coconut', 'soy', 'oat', 'cocoa'];

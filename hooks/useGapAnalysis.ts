@@ -1,9 +1,9 @@
 import { useMemo } from 'react';
-import { RecipeIngredient } from '../types/schema';
+import { RecipeIngredient, RecipeWithIngredients } from '../types/schema';
 import { checkAllergen, isMatch } from '../utils/matcher';
 import { usePantry } from './usePantry';
 import { useProfile } from './useProfile';
-import { RecipeWithIngredients, useRecipes } from './useRecipes';
+import { useRecipes } from './useRecipes';
 
 export type MatchStatus = 'Green' | 'Yellow' | 'Red';
 
@@ -47,9 +47,16 @@ export const useGapAnalysis = (recipeId?: string) => {
 
             // 2. Check Ingredients
             recipe.ingredients.forEach((reqIng: RecipeIngredient) => {
-                const pantryMatch = pantry.find(p => isMatch(p.name, reqIng.name));
-                const available = pantryMatch ? pantryMatch.quantity : 0;
+                // Find ALL items that match
+                const matchingItems = pantry.filter((p: any) => isMatch(p.name, reqIng.name));
+
+                // Sum available quantity
+                const available = matchingItems.reduce((sum, item) => sum + item.quantity, 0);
                 const isInStock = available >= reqIng.quantity;
+
+                // Pick the "best" match (exact match first, then most quantity) for the ID
+                const exactMatch = matchingItems.find(p => p.name.toLowerCase().trim() === reqIng.name.toLowerCase().trim());
+                const bestMatch = exactMatch || matchingItems.sort((a, b) => b.quantity - a.quantity)[0];
 
                 if (!isInStock) {
                     missingCount++;
@@ -57,7 +64,7 @@ export const useGapAnalysis = (recipeId?: string) => {
 
                 ingredientMatches.push({
                     name: reqIng.name,
-                    pantryItemId: pantryMatch?.id,
+                    pantryItemId: bestMatch?.id,
                     required: reqIng.quantity,
                     available,
                     unit: reqIng.unit,

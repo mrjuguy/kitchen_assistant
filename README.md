@@ -8,12 +8,14 @@ A premium, inventory-first kitchen management application built with Expo and Su
 - **Pantry Core**: Real-time inventory tracking with Supabase.
 - **Smart Scanner**: Barcode identification via `expo-camera` and OpenFoodFacts integration.
 - **Shopping List**: Dynamic replenishment list with "Checkout to Pantry" transfer logic.
+- **Meal Planner (Chef's Weekly)**: Proactive weekly meal scheduling with a dedicated calendar view.
+- **Smart "Shop for Week"**: One-click generation of shopping lists based on planned meals minus current pantry inventory.
 - **Recipe Intelligence**: Discovery and gap analysis based on current pantry stock.
 - **Allergen Safety Guardrails**: Automatic "Unsafe" warnings if recipe ingredients match user profile allergens.
 - **Smart Recipe Actions**: "Cook This Now" (auto-deducts inventory) and "Add Missing" (auto-add to shopping list) workflows.
 - **Premium UI**: Modern design with skeleton loaders, haptic feedback, and robust inline styling.
 - **Optimistic Updates**: Instant UI response for quantity changes and item additions.
-- **Full CRUD**: Manage pantry, recipes, and shopping items with safety confirmations.
+- **Full CRUD**: Manage pantry, recipes, meal plans, and shopping items with safety confirmations.
 
 ## 🛠 Tech Stack
 
