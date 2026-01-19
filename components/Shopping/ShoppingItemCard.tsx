@@ -1,13 +1,13 @@
 import * as Haptics from 'expo-haptics';
-import { Package, Trash2 } from 'lucide-react-native';
+import { Check, Package, Trash2 } from 'lucide-react-native';
 import React from 'react';
 import { Alert, Image, Pressable, Text, View } from 'react-native';
-import { useDeletePantryItem, useUpdatePantryItem } from '../../hooks/usePantry';
-import { PantryItem } from '../../types/schema';
-import { QuantityControl } from './QuantityControl';
+import { useDeleteShoppingItem, useUpdateShoppingItem } from '../../hooks/useShoppingList';
+import { ShoppingItem } from '../../types/schema';
+import { QuantityControl } from '../Inventory/QuantityControl';
 
-interface PantryCardProps {
-    item: PantryItem;
+interface ShoppingItemCardProps {
+    item: ShoppingItem;
 }
 
 const categoryStyles: Record<string, { bg: string, text: string }> = {
@@ -18,9 +18,17 @@ const categoryStyles: Record<string, { bg: string, text: string }> = {
     Pantry: { bg: '#f3f4f6', text: '#374151' },
 };
 
-export const PantryCard: React.FC<PantryCardProps> = ({ item }) => {
-    const updateMutation = useUpdatePantryItem();
-    const deleteMutation = useDeletePantryItem();
+export const ShoppingItemCard: React.FC<ShoppingItemCardProps> = ({ item }) => {
+    const updateMutation = useUpdateShoppingItem();
+    const deleteMutation = useDeleteShoppingItem();
+
+    const handleToggleBought = () => {
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+        updateMutation.mutate({
+            id: item.id,
+            updates: { bought: !item.bought },
+        });
+    };
 
     const handleIncrease = () => {
         updateMutation.mutate({
@@ -30,10 +38,10 @@ export const PantryCard: React.FC<PantryCardProps> = ({ item }) => {
     };
 
     const handleDecrease = () => {
-        if (item.quantity > 0) {
+        if (item.quantity > 1) {
             updateMutation.mutate({
                 id: item.id,
-                updates: { quantity: Math.max(0, item.quantity - 1) },
+                updates: { quantity: Math.max(1, item.quantity - 1) },
             });
         }
     };
@@ -42,7 +50,7 @@ export const PantryCard: React.FC<PantryCardProps> = ({ item }) => {
         Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
         Alert.alert(
             'Delete Item',
-            `Are you sure you want to remove ${item.name} from your pantry?`,
+            `Are you sure you want to remove ${item.name} from your shopping list?`,
             [
                 { text: 'Cancel', style: 'cancel' },
                 {
@@ -66,12 +74,31 @@ export const PantryCard: React.FC<PantryCardProps> = ({ item }) => {
             borderColor: '#f3f4f6',
             flexDirection: 'row',
             alignItems: 'center',
+            opacity: item.bought ? 0.6 : 1,
             shadowColor: '#000',
             shadowOffset: { width: 0, height: 2 },
             shadowOpacity: 0.05,
             shadowRadius: 4,
             elevation: 2
         }}>
+            {/* Checkbox */}
+            <Pressable
+                onPress={handleToggleBought}
+                style={{
+                    width: 24,
+                    height: 24,
+                    borderRadius: 12,
+                    borderWidth: 2,
+                    marginRight: 16,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    backgroundColor: item.bought ? '#10b981' : 'transparent',
+                    borderColor: item.bought ? '#10b981' : '#d1d5db'
+                }}
+            >
+                {item.bought && <Check size={14} color="white" strokeWidth={3} />}
+            </Pressable>
+
             {/* Product Image/Icon */}
             <View style={{
                 width: 64,
@@ -116,7 +143,13 @@ export const PantryCard: React.FC<PantryCardProps> = ({ item }) => {
                         <Trash2 size={16} color="#ef4444" />
                     </Pressable>
                 </View>
-                <Text style={{ fontSize: 18, fontWeight: 'bold', color: '#111827', marginBottom: 4 }} numberOfLines={1}>
+                <Text style={{
+                    fontSize: 18,
+                    fontWeight: 'bold',
+                    color: '#111827',
+                    marginBottom: 4,
+                    textDecorationLine: item.bought ? 'line-through' : 'none'
+                }} numberOfLines={1}>
                     {item.name}
                 </Text>
                 <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>

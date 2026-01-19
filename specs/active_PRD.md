@@ -1,61 +1,51 @@
-# PRD: Pantry Core & Inventory Foundation
+# PRD: Culinary OS Expansion (Scanner, Shopping List & Recipes)
 
-## 1. Overview
-The goal of this first feature set is to establish the "Source of Truth" for the Culinary OS: the **Pantry**. This will allow users to track what ingredients they have, which is prerequisite for the later "Gap Analysis Engine."
+## Overview
+This feature set expands the "Kitchen Assistant" from a static inventory tracker into a dynamic culinary ecosystem. We will implement barcode scanning for easy entry, a shopping list for replenishment, and basic recipe integration to answer the question: "What can I cook with what I have?"
 
-## 2. User Stories
-- **As a user**, I want to see a visual list of all items currently in my kitchen.
-- **As a user**, I want to quickly add a new item to my pantry.
-- **As a user**, I want to update the quantity of an item or remove it when it's used up.
-- **As a user**, I want my inventory to sync in real-time across devices (using Supabase).
+## Core User Stories
+1. **The Modern Shopper**: "I want to scan a barcode and have the app identify the product so I don't have to type everything manually."
+2. **The Replenisher**: "I want to keep a list of items I need to buy and move them into my pantry with a single tap once I'm home."
+3. **The Home Cook**: "I want to see recipes that I can make using the ingredients already in my pantry."
 
-## 3. Technical Requirements
-### Data Model (Supabase/PostgreSQL)
-- `pantry_items` table:
-  - `id`: uuid (primary key)
-  - `user_id`: uuid (references auth.users)
-  - `name`: text (required)
-  - `quantity`: float (default 1)
-  - `unit`: text (e.g., 'grams', 'items', 'ml')
-  - `category`: text (e.g., 'Produce', 'Dairy', 'Spices')
-  - `expiry_date`: timestamptz (optional)
-  - `barcode`: text (optional)
-  - `image_url`: text (optional)
-  - `created_at`: timestamptz
+## Technical Foundation & Constraints
+- **Scanner**: Use `expo-camera` (modern replacement for `expo-barcode-scanner`).
+- **Data Persistence**: Continue using Supabase for `shopping_list` and `recipes` tables.
+- **UI Consistency**: Use NativeWind and Lucide icons; maintain the emerald/zinc "premium" aesthetic.
 
-### Components to Build
-- **PantryScreen** (`app/(tabs)/index.tsx`): The main inventory view.
-- **PantryCard**: A premium list item showing product image/icon, name, and quantity controls.
-- **AddItemModal**: A stylized entry form for new items.
-- **QuantityControl**: Reusable +/- button component.
+## Feature Phases
 
-### Infrastructure
-- `services/supabase.ts`: Supabase client initialization.
-- `hooks/usePantry.ts`: TanStack Query hooks for CRUD operations (Read/Create/Update/Delete).
-- `types/schema.ts`: TypeScript interfaces for the pantry entities.
+### Phase 1: The Shopping Hub (Shopping List & Scanner)
+- **Shopping List Screen**: Transform `app/(tabs)/two.tsx` into a dedicated Shopping List.
+- **Scanner Integration**: Add a barcode scanner to the "Add Item" flow (`app/modal.tsx`).
+- **Transfer Logic**: Implement a "Check out" feature to move bought items from Shopping List to Pantry.
 
-## 4. Design Guidelines (from Project Rules)
-- Use **NativeWind** for styling.
-- **Gradients** for category badges (e.g., green for produce, blue for dairy).
-- **Haptic feedback** on quantity updates (where possible in Expo).
-- **8px Grid system** for all spacing.
+### Phase 2: Recipe Intelligence (Discovery & Gap Analysis)
+- **Recipe Management**: Create a new tab or section for Recipes.
+- **Gap Analysis**: Simple logic to compare recipe ingredients against `pantry_items`.
+- **UI**: Display recipes with "Missing Ingredients" indicators.
 
-## 5. Implementation Plan
-### Phase 1: Foundation
-1. Create `types/schema.ts` with the `PantryItem` interface.
-2. Initialize `services/supabase.ts` (with placeholder env vars instructions).
-3. Set up `hooks/usePantry.ts` with basic fetch logic using TanStack Query.
+## Implementation Plan
 
-### Phase 2: UI Structure
-1. Refactor `app/(tabs)/index.tsx` to display a list of pantry items.
-2. Create `components/Inventory/PantryCard.tsx` with quantity controls.
+### Step 1: Database Migration
+- [x] Add `shopping_list` table to Supabase.
+- [x] Add `recipes` and `recipe_ingredients` tables.
 
-### Phase 3: Interaction
-1. Implement the `AddItemModal`.
-2. Add "Optimistic Updates" to quantity changes for "instant" feel.
-3. Add a "Search/Filter" bar to the PantryScreen.
+### Step 2: Shopping List UI & Logic
+- [x] Implement `useShoppingList` hook.
+- [x] Build `app/(tabs)/shopping.tsx` (renamed from `two.tsx`).
+- [x] Add `ShoppingItemCard` component.
 
-## 6. Success Criteria
-- User can add an item and see it appear in the list immediately.
-- Quantities can be adjusted without a visible reload (Optimistic UI).
-- Data persists in Supabase.
+### Step 3: Smart Scanner Implementation
+- [x] Install `expo-camera`.
+- [x] Add scanner view to `app/modal.tsx`.
+- [x] Integrate a barcode lookup API (e.g., OpenFoodFacts).
+
+### Step 4: Recipe Foundation
+- [x] Build `app/(tabs)/recipes.tsx`.
+- [x] Implement gap analysis service.
+
+## Success Metrics
+- Item entry time reduced via scanner.
+- Zero manual entry needed for restocking (Transfer to Pantry).
+- At least 3 recipes correctly identified as "cookable" based on current pantry.

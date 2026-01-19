@@ -1,12 +1,14 @@
+import { useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import { Platform } from 'react-native';
+import { Platform, View } from 'react-native';
 import { AddItemForm } from '../components/Inventory/AddItemForm';
-import { View } from '../components/Themed';
 
 export default function ModalScreen() {
+  const router = useRouter();
+
   return (
-    <View style={{ flex: 1 }}>
-      <AddItemForm />
+    <View style={{ flex: 1, backgroundColor: 'white' }}>
+      <AddItemForm onClose={() => router.back()} />
       <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} />
     </View>
   );

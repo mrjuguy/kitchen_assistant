@@ -29,26 +29,26 @@ export const QuantityControl: React.FC<QuantityControlProps> = ({
     };
 
     return (
-        <View className="flex-row items-center bg-gray-100 dark:bg-zinc-800 rounded-full px-2 py-1">
+        <View style={{ flexDirection: 'row', alignItems: 'center', backgroundColor: '#f3f4f6', borderRadius: 99, paddingHorizontal: 8, paddingVertical: 4 }}>
             <Pressable
                 onPress={handleDecrease}
-                className="p-1 rounded-full active:bg-gray-200 dark:active:bg-zinc-700"
+                style={{ padding: 4, borderRadius: 99 }}
             >
-                <Minus size={18} color="#666" />
+                <Minus size={18} color="#10b981" />
             </Pressable>
 
-            <View className="flex-row items-baseline px-2 min-w-[40px] justify-center">
-                <Text className="text-base font-semibold dark:text-white">{quantity}</Text>
+            <View style={{ flexDirection: 'row', alignItems: 'baseline', paddingHorizontal: 8, minWidth: 40, justifyContent: 'center' }}>
+                <Text style={{ fontSize: 16, fontWeight: '600', color: '#000' }}>{quantity}</Text>
                 {unit && (
-                    <Text className="text-xs text-gray-500 ml-1 dark:text-gray-400">{unit}</Text>
+                    <Text style={{ fontSize: 12, color: '#6b7280', marginLeft: 4 }}>{unit}</Text>
                 )}
             </View>
 
             <Pressable
                 onPress={handleIncrease}
-                className="p-1 rounded-full active:bg-gray-200 dark:active:bg-zinc-700"
+                style={{ padding: 4, borderRadius: 99 }}
             >
-                <Plus size={18} color="#666" />
+                <Plus size={18} color="#10b981" />
             </Pressable>
         </View>
     );

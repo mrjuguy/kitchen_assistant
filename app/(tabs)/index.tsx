@@ -1,16 +1,18 @@
-import { Link } from 'expo-router';
+import { useRouter } from 'expo-router';
 import { Plus, Refrigerator, Search, ShoppingBasket } from 'lucide-react-native';
 import React, { useMemo, useState } from 'react';
 import { FlatList, Pressable, RefreshControl, Text, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { PantryCard } from '../../components/Inventory/PantryCard';
 import { usePantry } from '../../hooks/usePantry';
+import { supabase } from '../../services/supabase';
 
 import { PantryCardSkeleton } from '../../components/Inventory/Skeleton';
 
 export default function PantryScreen() {
   const { data: items, isLoading, isError, refetch, isRefetching } = usePantry();
   const [searchQuery, setSearchQuery] = useState('');
+  const router = useRouter();
 
   const filteredItems = useMemo(() => {
     if (!items) return [];
@@ -18,19 +20,19 @@ export default function PantryScreen() {
 
     const query = searchQuery.toLowerCase();
     return items.filter(item =>
-      item.name.toLowerCase().includes(query) ||
-      item.category.toLowerCase().includes(query)
+      (item.name?.toLowerCase() || '').includes(query) ||
+      (item.category?.toLowerCase() || '').includes(query)
     );
   }, [items, searchQuery]);
 
   if (isLoading) {
     return (
-      <SafeAreaView className="flex-1 bg-gray-50 dark:bg-black" edges={['top']}>
-        <View className="px-4 py-6">
-          <View className="flex-row items-center justify-between mb-8">
+      <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }} edges={['top']}>
+        <View style={{ paddingHorizontal: 16, paddingVertical: 24 }}>
+          <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 32 }}>
             <View>
-              <View className="h-10 w-32 bg-gray-200 dark:bg-zinc-800 rounded-lg mb-2" />
-              <View className="h-4 w-24 bg-gray-200 dark:bg-zinc-800 rounded-lg" />
+              <View style={{ height: 40, width: 128, backgroundColor: '#f3f4f6', borderRadius: 8, marginBottom: 8 }} />
+              <View style={{ height: 16, width: 96, backgroundColor: '#f3f4f6', borderRadius: 8 }} />
             </View>
           </View>
           {[1, 2, 3, 4, 5].map((i) => (
@@ -53,25 +55,27 @@ export default function PantryScreen() {
   }
 
   return (
-    <SafeAreaView className="flex-1 bg-gray-50 dark:bg-black" edges={['top']}>
-      <View className="flex-1 px-4 pt-6">
-        <View className="flex-row items-center justify-between mb-6">
+    <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }} edges={['top']}>
+      <View style={{ flex: 1, paddingHorizontal: 16, paddingTop: 24 }}>
+        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 24 }}>
           <View>
-            <Text className="text-3xl font-bold text-gray-900 dark:text-white">Pantry</Text>
-            <Text className="text-gray-500 dark:text-gray-400">Inventory Core</Text>
+            <Text style={{ fontSize: 30, fontWeight: 'bold', color: '#111827' }}>Pantry</Text>
+            <Text style={{ fontSize: 14, color: '#6b7280' }}>Inventory Core</Text>
           </View>
-          <View className="bg-emerald-500/10 p-3 rounded-full">
+          <View style={{ backgroundColor: '#f0fdf4', padding: 12, borderRadius: 99, flexDirection: 'row', alignItems: 'center' }}>
+            <Pressable onPress={() => supabase.auth.signOut()}>
+              <Text style={{ color: '#10b981', fontWeight: 'bold', fontSize: 12, marginRight: 8 }}>Log Out</Text>
+            </Pressable>
             <ShoppingBasket size={24} color="#10b981" />
           </View>
         </View>
 
-        {/* Search Bar */}
-        <View className="flex-row items-center bg-white dark:bg-zinc-900 px-4 py-3 rounded-2xl mb-6 shadow-sm border border-gray-100 dark:border-zinc-800">
+        <View style={{ flexDirection: 'row', alignItems: 'center', backgroundColor: '#f9fafb', paddingHorizontal: 16, paddingVertical: 12, borderRadius: 16, marginBottom: 24, borderWidth: 1, borderColor: '#f3f4f6' }}>
           <Search size={20} color="#999" />
           <TextInput
             placeholder="Search ingredients..."
             placeholderTextColor="#999"
-            className="flex-1 ml-3 text-gray-900 dark:text-white text-base"
+            style={{ flex: 1, marginLeft: 12, color: '#111827', fontSize: 16 }}
             value={searchQuery}
             onChangeText={setSearchQuery}
           />
@@ -88,15 +92,13 @@ export default function PantryScreen() {
               <View className="bg-gray-100 dark:bg-zinc-900 p-6 rounded-full mb-4">
                 <Refrigerator size={48} color="#999" strokeWidth={1} />
               </View>
-              <Text className="text-gray-500 dark:text-gray-400 text-center text-lg font-medium">
+              <Text className="text-gray-500 dark:text-zinc-300 text-center text-lg font-medium">
                 {searchQuery ? 'No items match your search.' : 'Your pantry is empty.'}
               </Text>
               {!searchQuery && (
-                <Link href="/modal" asChild>
-                  <Pressable className="mt-4 bg-emerald-500 px-6 py-3 rounded-xl">
-                    <Text className="text-white font-bold">Add your first item</Text>
-                  </Pressable>
-                </Link>
+                <Pressable onPress={() => router.push('/modal')} className="mt-4 bg-emerald-500 px-6 py-3 rounded-xl">
+                  <Text className="text-white font-bold">Add your first item</Text>
+                </Pressable>
               )}
             </View>
           }
@@ -107,14 +109,27 @@ export default function PantryScreen() {
       </View>
 
       {/* Floating Action Button */}
-      <Link href="/modal" asChild>
-        <Pressable
-          className="absolute bottom-6 right-6 w-16 h-16 bg-emerald-500 rounded-full items-center justify-center shadow-xl shadow-emerald-500/40"
-          style={{ elevation: 5 }}
-        >
-          <Plus size={32} color="white" />
-        </Pressable>
-      </Link>
+      <Pressable
+        onPress={() => router.push('/modal')}
+        style={{
+          position: 'absolute',
+          bottom: 24,
+          right: 24,
+          width: 64,
+          height: 64,
+          backgroundColor: '#10b981',
+          borderRadius: 16,
+          alignItems: 'center',
+          justifyContent: 'center',
+          shadowColor: '#10b981',
+          shadowOffset: { width: 0, height: 4 },
+          shadowOpacity: 0.4,
+          shadowRadius: 10,
+          elevation: 5
+        }}
+      >
+        <Plus size={32} color="white" />
+      </Pressable>
     </SafeAreaView>
   );
 }
