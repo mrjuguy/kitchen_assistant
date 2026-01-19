@@ -1,23 +1,9 @@
-import { useQuery } from '@tanstack/react-query';
-import { useMemo } from 'react';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '../services/supabase';
 import { Recipe, RecipeIngredient } from '../types/schema';
-import { usePantry } from './usePantry';
 
 export interface RecipeWithIngredients extends Recipe {
     ingredients: RecipeIngredient[];
-}
-
-export interface GapAnalysisResult {
-    recipeId: string;
-    missingIngredients: {
-        name: string;
-        required: number;
-        available: number;
-        unit: string;
-    }[];
-    percentAvailable: number;
-    canCook: boolean;
 }
 
 export const useRecipes = () => {
@@ -37,48 +23,75 @@ export const useRecipes = () => {
     });
 };
 
-export const useGapAnalysis = () => {
-    const { data: recipes } = useRecipes();
-    const { data: pantry } = usePantry();
+export const useAddRecipe = () => {
+    const queryClient = useQueryClient();
 
-    return useMemo(() => {
-        if (!recipes || !pantry) return [];
+    return useMutation({
+        mutationFn: async (recipeData: {
+            name: string;
+            description?: string;
+            prep_time?: number;
+            cook_time?: number;
+            servings?: number;
+            ingredients: { name: string; quantity: number; unit: string }[];
+        }) => {
+            const { data: { user } } = await supabase.auth.getUser();
+            if (!user) throw new Error('User not authenticated');
 
-        return recipes.map(recipe => {
-            const analysis: GapAnalysisResult = {
-                recipeId: recipe.id,
-                missingIngredients: [],
-                percentAvailable: 0,
-                canCook: false,
-            };
+            // 1. Create Recipe
+            const { data: recipe, error: recipeError } = await supabase
+                .from('recipes')
+                .insert([{
+                    name: recipeData.name,
+                    description: recipeData.description,
+                    prep_time: recipeData.prep_time,
+                    cook_time: recipeData.cook_time,
+                    servings: recipeData.servings,
+                    instructions: [], // Default to empty array
+                    user_id: user.id
+                }])
+                .select()
+                .single();
 
-            let matchedCount = 0;
+            if (recipeError) throw recipeError;
 
-            recipe.ingredients.forEach(reqIng => {
-                // Simple string matching for now (can be improved with fuzzy search or aliases)
-                const pantryMatch = pantry.find(p =>
-                    p.name.toLowerCase().includes(reqIng.name.toLowerCase()) ||
-                    reqIng.name.toLowerCase().includes(p.name.toLowerCase())
-                );
+            // 2. Add Ingredients
+            if (recipeData.ingredients.length > 0) {
+                const ingredients = recipeData.ingredients.map(ing => ({
+                    recipe_id: recipe.id,
+                    name: ing.name,
+                    quantity: ing.quantity,
+                    unit: ing.unit
+                }));
 
-                if (pantryMatch && pantryMatch.quantity >= reqIng.quantity) {
-                    matchedCount++;
-                } else {
-                    analysis.missingIngredients.push({
-                        name: reqIng.name,
-                        required: reqIng.quantity,
-                        available: pantryMatch?.quantity || 0,
-                        unit: reqIng.unit,
-                    });
-                }
-            });
+                const { error: ingError } = await supabase
+                    .from('recipe_ingredients')
+                    .insert(ingredients);
 
-            analysis.percentAvailable = recipe.ingredients.length > 0
-                ? (matchedCount / recipe.ingredients.length) * 100
-                : 100;
-            analysis.canCook = matchedCount === recipe.ingredients.length;
+                if (ingError) throw ingError;
+            }
 
-            return analysis;
-        });
-    }, [recipes, pantry]);
+            return recipe;
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['recipes'] });
+        },
+    });
+};
+export const useDeleteRecipe = () => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: async (id: string) => {
+            const { error } = await supabase
+                .from('recipes')
+                .delete()
+                .eq('id', id);
+
+            if (error) throw error;
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['recipes'] });
+        },
+    });
 };

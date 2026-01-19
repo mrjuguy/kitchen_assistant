@@ -104,3 +104,24 @@ export const useDeletePantryItem = () => {
         },
     });
 };
+
+export const useConsumeIngredients = () => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: async (updates: { id: string; newQuantity: number }[]) => {
+            const promises = updates.map(({ id, newQuantity }) => {
+                if (newQuantity <= 0) {
+                    return supabase.from('pantry_items').delete().eq('id', id);
+                } else {
+                    return supabase.from('pantry_items').update({ quantity: newQuantity }).eq('id', id);
+                }
+            });
+
+            await Promise.all(promises);
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['pantry'] });
+        },
+    });
+};

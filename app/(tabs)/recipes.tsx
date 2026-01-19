@@ -1,18 +1,21 @@
+import { useRouter } from 'expo-router';
 import { ChefHat, Search, SlidersHorizontal } from 'lucide-react-native';
 import React, { useMemo, useState } from 'react';
 import { FlatList, Pressable, RefreshControl, Text, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { RecipeCard } from '../../components/Recipes/RecipeCard';
-import { useGapAnalysis, useRecipes } from '../../hooks/useRecipes';
+import { useGapAnalysis } from '../../hooks/useGapAnalysis';
+import { useRecipes } from '../../hooks/useRecipes';
 
 export default function RecipesScreen() {
     const { data: recipes, isLoading, isError, refetch, isRefetching } = useRecipes();
-    const analysis = useGapAnalysis();
+    const router = useRouter(); // <--- Added this line
+    const analysisMap = useGapAnalysis() as Record<string, any> | null;
     const [searchQuery, setSearchQuery] = useState('');
     const [filter, setFilter] = useState<'all' | 'ready' | 'missing'>('all');
 
     const filteredRecipes = useMemo(() => {
-        if (!recipes) return [];
+        if (!recipes || !analysisMap) return [];
         let result = recipes;
 
         if (searchQuery.trim()) {
@@ -21,13 +24,13 @@ export default function RecipesScreen() {
         }
 
         if (filter === 'ready') {
-            result = result.filter(r => analysis.find(a => a.recipeId === r.id)?.canCook);
+            result = result.filter(r => analysisMap[r.id]?.status === 'Green');
         } else if (filter === 'missing') {
-            result = result.filter(r => !analysis.find(a => a.recipeId === r.id)?.canCook);
+            result = result.filter(r => analysisMap[r.id]?.status !== 'Green');
         }
 
         return result;
-    }, [recipes, searchQuery, filter, analysis]);
+    }, [recipes, searchQuery, filter, analysisMap]);
 
     if (isLoading) {
         return (
@@ -44,8 +47,8 @@ export default function RecipesScreen() {
     }
 
     return (
-        <SafeAreaView className="flex-1 bg-white" edges={['top']}>
-            <View className="flex-1 px-4 pt-6 bg-white">
+        <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }} edges={['top']}>
+            <View style={{ flex: 1, paddingHorizontal: 16, paddingTop: 24 }}>
                 <View className="flex-row items-center justify-between mb-6">
                     <View>
                         <Text style={{ fontSize: 30, fontWeight: 'bold', color: '#111827' }}>Recipes</Text>
@@ -102,15 +105,18 @@ export default function RecipesScreen() {
                 </View>
 
                 <FlatList
+                    style={{ flex: 1 }}
                     data={filteredRecipes}
                     keyExtractor={(item) => item.id}
                     renderItem={({ item }) => (
-                        <RecipeCard
-                            recipe={item}
-                            analysis={analysis.find(a => a.recipeId === item.id)}
-                        />
+                        <Pressable onPress={() => router.push(`/recipes/${item.id}` as any)}>
+                            <RecipeCard
+                                recipe={item}
+                                analysis={analysisMap?.[item.id]}
+                            />
+                        </Pressable>
                     )}
-                    contentContainerStyle={{ paddingBottom: 40 }}
+                    contentContainerStyle={{ paddingBottom: 100 }}
                     showsVerticalScrollIndicator={false}
                     ListEmptyComponent={
                         <View className="items-center justify-center mt-20 p-8">
@@ -127,6 +133,31 @@ export default function RecipesScreen() {
                     }
                 />
             </View>
+
+            {/* FAB to Add Recipe - Moved outside the padded view */}
+            <Pressable
+                onPress={() => router.push('/recipes/create' as any)}
+                style={{
+                    position: 'absolute',
+                    bottom: 40,
+                    right: 24,
+                    zIndex: 999,
+                    backgroundColor: '#10b981',
+                    width: 56,
+                    height: 56,
+                    borderRadius: 28,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    elevation: 5,
+                    shadowColor: '#000',
+                    shadowOffset: { width: 0, height: 2 },
+                    shadowOpacity: 0.25,
+                    shadowRadius: 3.84
+                }}
+            >
+                <ChefHat size={24} color="white" />
+                <View style={{ position: 'absolute', top: 14, right: 14, width: 10, height: 10, backgroundColor: 'white', borderRadius: 5, borderWidth: 2, borderColor: '#10b981', alignItems: 'center', justifyContent: 'center' }} />
+            </Pressable>
         </SafeAreaView>
     );
 }

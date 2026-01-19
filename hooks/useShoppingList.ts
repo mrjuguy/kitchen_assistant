@@ -146,3 +146,31 @@ export const useCheckoutShoppingList = () => {
         },
     });
 };
+
+export const useAddShoppingItems = () => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: async (newItems: CreateShoppingItem[]) => {
+            const { data: { user } } = await supabase.auth.getUser();
+            if (!user) throw new Error('User not authenticated');
+
+            const itemsWithUser = newItems.map(item => ({
+                ...item,
+                user_id: user.id,
+                bought: false
+            }));
+
+            const { data, error } = await supabase
+                .from('shopping_list')
+                .insert(itemsWithUser)
+                .select();
+
+            if (error) throw error;
+            return data as ShoppingItem[];
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['shopping_list'] });
+        },
+    });
+};

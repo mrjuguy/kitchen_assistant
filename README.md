@@ -6,18 +6,23 @@ A premium, inventory-first kitchen management application built with Expo and Su
 
 ### Completed
 - **Pantry Core**: Real-time inventory tracking with Supabase.
-- **Premium UI**: Modern design with skeleton loaders, haptic feedback, and smooth transitions.
+- **Smart Scanner**: Barcode identification via `expo-camera` and OpenFoodFacts integration.
+- **Shopping List**: Dynamic replenishment list with "Checkout to Pantry" transfer logic.
+- **Recipe Intelligence**: Discovery and gap analysis based on current pantry stock.
+- **Allergen Safety Guardrails**: Automatic "Unsafe" warnings if recipe ingredients match user profile allergens.
+- **Smart Recipe Actions**: "Cook This Now" (auto-deducts inventory) and "Add Missing" (auto-add to shopping list) workflows.
+- **Premium UI**: Modern design with skeleton loaders, haptic feedback, and robust inline styling.
 - **Optimistic Updates**: Instant UI response for quantity changes and item additions.
-- **Smart Filtering**: Real-time search and category filtering for ingredients.
-- **Full CRUD**: Add, update, and delete pantry items with safety confirmations.
+- **Full CRUD**: Manage pantry, recipes, and shopping items with safety confirmations.
 
 ## 🛠 Tech Stack
 
-- **Framework**: [Expo](https://expo.dev/) (React Native)
+- **Framework**: [Expo](https://expo.dev/) (React Native v54)
 - **Language**: TypeScript
 - **Backend**: [Supabase](https://supabase.com/) (PostgreSQL & Auth)
 - **State Management**: [TanStack Query](https://tanstack.com/query/latest)
-- **Styling**: [NativeWind](https://www.nativewind.dev/) (Tailwind CSS)
+- **Product Data**: [OpenFoodFacts API](https://world.openfoodfacts.org/)
+- **Styling**: [NativeWind](https://www.nativewind.dev/) & React Native Styles
 - **Icons**: [Lucide React Native](https://lucide.dev/)
 - **Animations**: [React Native Reanimated](https://docs.expo.dev/versions/latest/sdk/reanimated/)
 
@@ -52,12 +57,16 @@ A premium, inventory-first kitchen management application built with Expo and Su
    ```bash
    npx expo start
    ```
+   *Tip: Use `npx expo start -c` if you need to clear the packager cache after modifying environment variables or global styles.*
 
 5. **Run on device/emulator**:
    - Scan the QR code with the Expo Go app.
    - Press `a` for Android Emulator.
    - Press `i` for iOS Simulator.
    - Press `w` for Web.
+
+## 📱 Mobile Preview
+For the best experience, use a physical device via **Expo Go** to access the Smart Scanner (camera) and Haptic Feedback features.
 
 ## 📁 Project Structure
 

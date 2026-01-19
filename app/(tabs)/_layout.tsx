@@ -12,7 +12,7 @@ function TabBarIcon(props: {
   return <FontAwesome size={28} style={{ marginBottom: -3 }} {...props} />;
 }
 
-import { ChefHat, Refrigerator, ShoppingBasket } from 'lucide-react-native';
+import { ChefHat, Refrigerator, ShoppingBasket, User } from 'lucide-react-native';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
@@ -42,6 +42,13 @@ export default function TabLayout() {
         options={{
           title: 'Recipes',
           tabBarIcon: ({ color }) => <ChefHat size={24} color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="profile"
+        options={{
+          title: 'Profile',
+          tabBarIcon: ({ color }) => <User size={24} color={color} />,
         }}
       />
     </Tabs>
