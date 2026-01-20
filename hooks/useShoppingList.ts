@@ -124,6 +124,11 @@ export const useCheckoutShoppingList = () => {
                 category: item.category,
                 barcode: item.barcode,
                 image_url: item.image_url,
+                brand: item.brand,
+                nutritional_info: item.nutritional_info,
+                ingredients_text: item.ingredients_text,
+                allergens: item.allergens,
+                labels: item.labels,
             }));
 
             const { error: insertError } = await supabase

@@ -13,9 +13,10 @@ A premium, inventory-first kitchen management application built with Expo and Su
 - **Recipe Intelligence**: Discovery and gap analysis based on current pantry stock.
 - **Allergen Safety Guardrails**: Automatic "Unsafe" warnings if recipe ingredients match user profile allergens.
 - **Smart Recipe Actions**: "Cook This Now" (auto-deducts inventory) and "Add Missing" (auto-add to shopping list) workflows.
-- **Premium UI**: Modern design with skeleton loaders, haptic feedback, and robust inline styling.
-- **Optimistic Updates**: Instant UI response for quantity changes and item additions.
+- **Deep Pantry Intelligence**: Rich nutritional data, macro tracking (protein, carbs, fats), and allergen labels for scanned products via OpenFoodFacts.
+- **Optimistic Updates**: Instant UI response for quantity changes and item deletions.
 - **Full CRUD**: Manage pantry, recipes, meal plans, and shopping items with safety confirmations.
+- **Premium UI**: Modern design with skeleton loaders, haptic feedback, and robust inline styling.
 
 ## 🛠 Tech Stack
 

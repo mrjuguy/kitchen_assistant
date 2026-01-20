@@ -1,17 +1,20 @@
 import { useRouter } from 'expo-router';
 import { Plus, Refrigerator, Search, ShoppingBasket } from 'lucide-react-native';
 import React, { useMemo, useState } from 'react';
-import { FlatList, Pressable, RefreshControl, Text, TextInput, View } from 'react-native';
+import { FlatList, Modal, Pressable, RefreshControl, Text, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { PantryCard } from '../../components/Inventory/PantryCard';
+import { PantryItemDetail } from '../../components/Inventory/PantryItemDetail';
 import { usePantry } from '../../hooks/usePantry';
 import { supabase } from '../../services/supabase';
+import { PantryItem } from '../../types/schema';
 
 import { PantryCardSkeleton } from '../../components/Inventory/Skeleton';
 
 export default function PantryScreen() {
   const { data: items, isLoading, isError, refetch, isRefetching } = usePantry();
   const [searchQuery, setSearchQuery] = useState('');
+  const [selectedItem, setSelectedItem] = useState<PantryItem | null>(null);
   const router = useRouter();
 
   const filteredItems = useMemo(() => {
@@ -84,7 +87,12 @@ export default function PantryScreen() {
         <FlatList
           data={filteredItems}
           keyExtractor={(item) => item.id}
-          renderItem={({ item }) => <PantryCard item={item} />}
+          renderItem={({ item }) => (
+            <PantryCard
+              item={item}
+              onPress={() => setSelectedItem(item)}
+            />
+          )}
           contentContainerStyle={{ paddingBottom: 100 }}
           showsVerticalScrollIndicator={false}
           ListEmptyComponent={
@@ -130,6 +138,20 @@ export default function PantryScreen() {
       >
         <Plus size={32} color="white" />
       </Pressable>
+
+      <Modal
+        visible={!!selectedItem}
+        animationType="slide"
+        transparent={true}
+        onRequestClose={() => setSelectedItem(null)}
+      >
+        {selectedItem && (
+          <PantryItemDetail
+            item={selectedItem}
+            onClose={() => setSelectedItem(null)}
+          />
+        )}
+      </Modal>
     </SafeAreaView>
   );
 }

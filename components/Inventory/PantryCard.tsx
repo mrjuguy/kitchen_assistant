@@ -8,6 +8,7 @@ import { QuantityControl } from './QuantityControl';
 
 interface PantryCardProps {
     item: PantryItem;
+    onPress?: () => void;
 }
 
 const categoryStyles: Record<string, { bg: string, text: string }> = {
@@ -18,7 +19,7 @@ const categoryStyles: Record<string, { bg: string, text: string }> = {
     Pantry: { bg: '#f3f4f6', text: '#374151' },
 };
 
-export const PantryCard: React.FC<PantryCardProps> = ({ item }) => {
+export const PantryCard: React.FC<PantryCardProps> = ({ item, onPress }) => {
     const updateMutation = useUpdatePantryItem();
     const deleteMutation = useDeletePantryItem();
 
@@ -57,77 +58,79 @@ export const PantryCard: React.FC<PantryCardProps> = ({ item }) => {
     const colors = categoryStyles[item.category] || categoryStyles.Pantry;
 
     return (
-        <View style={{
-            backgroundColor: 'white',
-            borderRadius: 16,
-            padding: 16,
-            marginBottom: 12,
-            borderWidth: 1,
-            borderColor: '#f3f4f6',
-            flexDirection: 'row',
-            alignItems: 'center',
-            shadowColor: '#000',
-            shadowOffset: { width: 0, height: 2 },
-            shadowOpacity: 0.05,
-            shadowRadius: 4,
-            elevation: 2
-        }}>
-            {/* Product Image/Icon */}
+        <Pressable onPress={onPress}>
             <View style={{
-                width: 64,
-                height: 64,
-                backgroundColor: '#f9fafb',
-                borderRadius: 12,
+                backgroundColor: 'white',
+                borderRadius: 16,
+                padding: 16,
+                marginBottom: 12,
+                borderWidth: 1,
+                borderColor: '#f3f4f6',
+                flexDirection: 'row',
                 alignItems: 'center',
-                justifyContent: 'center',
-                overflow: 'hidden',
-                marginRight: 16
+                shadowColor: '#000',
+                shadowOffset: { width: 0, height: 2 },
+                shadowOpacity: 0.05,
+                shadowRadius: 4,
+                elevation: 2
             }}>
-                {item.image_url ? (
-                    <Image source={{ uri: item.image_url }} style={{ width: '100%', height: '100%' }} />
-                ) : (
-                    <Package size={32} color="#10b981" />
-                )}
-            </View>
+                {/* Product Image/Icon */}
+                <View style={{
+                    width: 64,
+                    height: 64,
+                    backgroundColor: '#f9fafb',
+                    borderRadius: 12,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    overflow: 'hidden',
+                    marginRight: 16
+                }}>
+                    {item.image_url ? (
+                        <Image source={{ uri: item.image_url }} style={{ width: '100%', height: '100%' }} />
+                    ) : (
+                        <Package size={32} color="#10b981" />
+                    )}
+                </View>
 
-            {/* Product Info */}
-            <View style={{ flex: 1 }}>
-                <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 4 }}>
-                    <View style={{
-                        backgroundColor: colors.bg,
-                        paddingHorizontal: 8,
-                        paddingVertical: 2,
-                        borderRadius: 99
-                    }}>
-                        <Text style={{
-                            fontSize: 10,
-                            fontWeight: 'bold',
-                            color: colors.text,
-                            textTransform: 'uppercase',
-                            letterSpacing: 0.5
+                {/* Product Info */}
+                <View style={{ flex: 1 }}>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 4 }}>
+                        <View style={{
+                            backgroundColor: colors.bg,
+                            paddingHorizontal: 8,
+                            paddingVertical: 2,
+                            borderRadius: 99
                         }}>
-                            {item.category}
-                        </Text>
+                            <Text style={{
+                                fontSize: 10,
+                                fontWeight: 'bold',
+                                color: colors.text,
+                                textTransform: 'uppercase',
+                                letterSpacing: 0.5
+                            }}>
+                                {item.category}
+                            </Text>
+                        </View>
+                        <Pressable
+                            onPress={handleDelete}
+                            style={{ padding: 4, borderRadius: 99 }}
+                        >
+                            <Trash2 size={16} color="#ef4444" />
+                        </Pressable>
                     </View>
-                    <Pressable
-                        onPress={handleDelete}
-                        style={{ padding: 4, borderRadius: 99 }}
-                    >
-                        <Trash2 size={16} color="#ef4444" />
-                    </Pressable>
-                </View>
-                <Text style={{ fontSize: 18, fontWeight: 'bold', color: '#111827', marginBottom: 4 }} numberOfLines={1}>
-                    {item.name}
-                </Text>
-                <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-                    <QuantityControl
-                        quantity={item.quantity}
-                        unit={item.unit}
-                        onIncrease={handleIncrease}
-                        onDecrease={handleDecrease}
-                    />
+                    <Text style={{ fontSize: 18, fontWeight: 'bold', color: '#111827', marginBottom: 4 }} numberOfLines={1}>
+                        {item.name}
+                    </Text>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                        <QuantityControl
+                            quantity={item.quantity}
+                            unit={item.unit}
+                            onIncrease={handleIncrease}
+                            onDecrease={handleDecrease}
+                        />
+                    </View>
                 </View>
             </View>
-        </View>
+        </Pressable>
     );
 };

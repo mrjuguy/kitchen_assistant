@@ -1,8 +1,14 @@
+import { NutritionalInfo } from '../types/schema';
+
 export interface ProductData {
     name: string;
     category: string;
     image_url?: string;
     brand?: string;
+    nutritional_info?: NutritionalInfo;
+    ingredients_text?: string;
+    allergens?: string[];
+    labels?: string[];
 }
 
 export const fetchProductByBarcode = async (barcode: string): Promise<ProductData | null> => {
@@ -28,6 +34,17 @@ export const fetchProductByBarcode = async (barcode: string): Promise<ProductDat
                 category: category,
                 image_url: product.image_url || product.image_front_url,
                 brand: product.brands,
+                nutritional_info: {
+                    calories: product.nutriments?.['energy-kcal_100g'],
+                    proteins: product.nutriments?.proteins_100g,
+                    carbohydrates: product.nutriments?.carbohydrates_100g,
+                    fat: product.nutriments?.fat_100g,
+                    sugar: product.nutriments?.sugars_100g,
+                    fiber: product.nutriments?.fiber_100g,
+                },
+                ingredients_text: product.ingredients_text,
+                allergens: product.allergens_tags || [],
+                labels: product.labels_tags || [],
             };
         }
         return null;

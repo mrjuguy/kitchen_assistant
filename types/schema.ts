@@ -1,3 +1,12 @@
+export interface NutritionalInfo {
+    calories?: number;
+    proteins?: number;
+    carbohydrates?: number;
+    fat?: number;
+    sugar?: number;
+    fiber?: number;
+}
+
 export interface PantryItem {
     id: string;
     user_id: string;
@@ -8,6 +17,11 @@ export interface PantryItem {
     expiry_date?: string;
     barcode?: string;
     image_url?: string;
+    brand?: string;
+    nutritional_info?: NutritionalInfo;
+    ingredients_text?: string;
+    allergens?: string[];
+    labels?: string[];
     created_at: string;
 }
 
@@ -24,6 +38,11 @@ export interface ShoppingItem {
     bought: boolean;
     barcode?: string;
     image_url?: string;
+    brand?: string;
+    nutritional_info?: NutritionalInfo;
+    ingredients_text?: string;
+    allergens?: string[];
+    labels?: string[];
     created_at: string;
 }
 

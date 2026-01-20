@@ -6,6 +6,7 @@ import { ActivityIndicator, Alert, Pressable, ScrollView, Text, TextInput, View 
 import { useAddPantryItem } from '../../hooks/usePantry';
 import { useAddShoppingItem } from '../../hooks/useShoppingList';
 import { fetchProductByBarcode } from '../../services/openFoodFacts';
+import { NutritionalInfo } from '../../types/schema';
 
 const CATEGORIES = ['Produce', 'Dairy', 'Spices', 'Protein', 'Pantry', 'Frozen', 'Bakery'];
 const UNITS = ['items', 'grams', 'ml', 'kg', 'oz', 'lb', 'cups'];
@@ -21,6 +22,11 @@ export const AddItemForm: React.FC<AddItemFormProps> = ({ onClose }) => {
     const [unit, setUnit] = useState(UNITS[0]);
     const [barcode, setBarcode] = useState<string | undefined>(undefined);
     const [imageUrl, setImageUrl] = useState<string | undefined>(undefined);
+    const [brand, setBrand] = useState<string | undefined>(undefined);
+    const [nutritionalInfo, setNutritionalInfo] = useState<NutritionalInfo | undefined>(undefined);
+    const [ingredientsText, setIngredientsText] = useState<string | undefined>(undefined);
+    const [allergens, setAllergens] = useState<string[] | undefined>(undefined);
+    const [labels, setLabels] = useState<string[] | undefined>(undefined);
     const [target, setTarget] = useState<'pantry' | 'shopping'>('pantry');
     const [isScanning, setIsScanning] = useState(false);
     const [isFetchingInfo, setIsFetchingInfo] = useState(false);
@@ -43,6 +49,11 @@ export const AddItemForm: React.FC<AddItemFormProps> = ({ onClose }) => {
             setName(product.name);
             setCategory(product.category);
             setImageUrl(product.image_url);
+            setBrand(product.brand);
+            setNutritionalInfo(product.nutritional_info);
+            setIngredientsText(product.ingredients_text);
+            setAllergens(product.allergens);
+            setLabels(product.labels);
         } else {
             Alert.alert('Product Not Found', 'Could not find product info for this barcode. You can still enter details manually.', [{ text: 'OK' }]);
         }
@@ -69,6 +80,11 @@ export const AddItemForm: React.FC<AddItemFormProps> = ({ onClose }) => {
             unit,
             barcode,
             image_url: imageUrl,
+            brand,
+            nutritional_info: nutritionalInfo,
+            ingredients_text: ingredientsText,
+            allergens,
+            labels,
         };
 
         if (target === 'pantry') {
@@ -186,6 +202,12 @@ export const AddItemForm: React.FC<AddItemFormProps> = ({ onClose }) => {
                     />
                     {isFetchingInfo && <ActivityIndicator color="#10b981" />}
                 </View>
+                {(nutritionalInfo || ingredientsText) && (
+                    <View style={{ marginTop: 8, flexDirection: 'row', alignItems: 'center' }}>
+                        <View style={{ width: 8, height: 8, borderRadius: 4, backgroundColor: '#10b981', marginRight: 6 }} />
+                        <Text style={{ fontSize: 12, color: '#059669', fontWeight: '600' }}>Nutrition data found</Text>
+                    </View>
+                )}
             </View>
 
             <View style={{ marginBottom: 24 }}>
