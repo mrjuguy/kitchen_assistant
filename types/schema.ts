@@ -46,7 +46,7 @@ export interface ShoppingItem {
     created_at: string;
 }
 
-export type CreateShoppingItem = Omit<ShoppingItem, 'id' | 'created_at' | 'user_id' | 'bought'>;
+export type CreateShoppingItem = Omit<ShoppingItem, 'id' | 'created_at' | 'user_id' | 'bought'> & { bought?: boolean };
 export type UpdateShoppingItem = Partial<ShoppingItem>;
 
 export interface UserProfile {

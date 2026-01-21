@@ -1,10 +1,10 @@
 import { useRouter } from 'expo-router';
 import { Plus, Refrigerator, Search, ShoppingBasket } from 'lucide-react-native';
 import React, { useMemo, useState } from 'react';
-import { FlatList, Modal, Pressable, RefreshControl, Text, TextInput, View } from 'react-native';
+import { FlatList, Pressable, RefreshControl, Text, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { PantryCard } from '../../components/Inventory/PantryCard';
-import { PantryItemDetail } from '../../components/Inventory/PantryItemDetail';
+import { ProductDetailModal } from '../../components/Inventory/ProductDetailModal';
 import { usePantry } from '../../hooks/usePantry';
 import { supabase } from '../../services/supabase';
 import { PantryItem } from '../../types/schema';
@@ -139,19 +139,11 @@ export default function PantryScreen() {
         <Plus size={32} color="white" />
       </Pressable>
 
-      <Modal
+      <ProductDetailModal
+        item={selectedItem}
         visible={!!selectedItem}
-        animationType="slide"
-        transparent={true}
-        onRequestClose={() => setSelectedItem(null)}
-      >
-        {selectedItem && (
-          <PantryItemDetail
-            item={selectedItem}
-            onClose={() => setSelectedItem(null)}
-          />
-        )}
-      </Modal>
+        onClose={() => setSelectedItem(null)}
+      />
     </SafeAreaView>
   );
 }

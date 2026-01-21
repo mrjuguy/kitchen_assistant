@@ -27,7 +27,7 @@ export const useAddShoppingItem = () => {
 
             const { data, error } = await supabase
                 .from('shopping_list')
-                .insert([{ ...newItem, user_id: user.id, bought: false }])
+                .insert([{ ...newItem, user_id: user.id }])
                 .select()
                 .single();
 
@@ -162,8 +162,7 @@ export const useAddShoppingItems = () => {
 
             const itemsWithUser = newItems.map(item => ({
                 ...item,
-                user_id: user.id,
-                bought: false
+                user_id: user.id
             }));
 
             const { data, error } = await supabase
@@ -173,6 +172,44 @@ export const useAddShoppingItems = () => {
 
             if (error) throw error;
             return data as ShoppingItem[];
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['shopping_list'] });
+        },
+    });
+};
+export const useClearBoughtItems = () => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: async () => {
+            const { error } = await supabase
+                .from('shopping_list')
+                .delete()
+                .eq('bought', true);
+
+            if (error) throw error;
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['shopping_list'] });
+        },
+    });
+};
+
+export const useDeleteAllShoppingItems = () => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: async () => {
+            const { data: { user } } = await supabase.auth.getUser();
+            if (!user) throw new Error('User not authenticated');
+
+            const { error } = await supabase
+                .from('shopping_list')
+                .delete()
+                .eq('user_id', user.id);
+
+            if (error) throw error;
         },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['shopping_list'] });

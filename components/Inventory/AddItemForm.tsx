@@ -13,9 +13,11 @@ const UNITS = ['items', 'grams', 'ml', 'kg', 'oz', 'lb', 'cups'];
 
 interface AddItemFormProps {
     onClose: () => void;
+    startWithScanner?: boolean;
+    defaultTarget?: 'pantry' | 'shopping';
 }
 
-export const AddItemForm: React.FC<AddItemFormProps> = ({ onClose }) => {
+export const AddItemForm: React.FC<AddItemFormProps> = ({ onClose, startWithScanner = false, defaultTarget = 'pantry' }) => {
     const [name, setName] = useState('');
     const [category, setCategory] = useState(CATEGORIES[0]);
     const [quantity, setQuantity] = useState('1');
@@ -27,8 +29,8 @@ export const AddItemForm: React.FC<AddItemFormProps> = ({ onClose }) => {
     const [ingredientsText, setIngredientsText] = useState<string | undefined>(undefined);
     const [allergens, setAllergens] = useState<string[] | undefined>(undefined);
     const [labels, setLabels] = useState<string[] | undefined>(undefined);
-    const [target, setTarget] = useState<'pantry' | 'shopping'>('pantry');
-    const [isScanning, setIsScanning] = useState(false);
+    const [target, setTarget] = useState<'pantry' | 'shopping'>(defaultTarget);
+    const [isScanning, setIsScanning] = useState(startWithScanner);
     const [isFetchingInfo, setIsFetchingInfo] = useState(false);
 
     const [permission, requestPermission] = useCameraPermissions();
