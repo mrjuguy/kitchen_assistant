@@ -19,6 +19,9 @@ A premium, inventory-first kitchen management application built with Expo and Su
 - **Deep Pantry Intelligence**: Rich nutritional data, macro tracking (protein, carbs, fats), and allergen labels for scanned products via OpenFoodFacts.
 - **Optimistic Updates**: Instant UI response for quantity changes and item deletions.
 - **Full CRUD**: Manage pantry, recipes, meal plans, and shopping items with safety confirmations.
+- **Smart Consumption Control**: Slider-based fractional usage tracking (e.g., "50% left") with auto-learning capacity for bulk items (learning that "12 oz" was the full box).
+- **Unit Normalization**: Automatic conversion of Metric scans to US Customary units (e.g. 3.78L -> 1 Gallon) for consistent inventory management.
+- **Inventory Audits**: Gentle, non-intrusive prompts to verify stock for stale items (untouched > 7 days).
 - **Premium UI**: Modern design with skeleton loaders, haptic feedback, and robust inline styling.
 
 ## 🛠 Tech Stack

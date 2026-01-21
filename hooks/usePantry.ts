@@ -60,6 +60,9 @@ export const useUpdatePantryItem = () => {
             // Cancel any outgoing refetches (so they don't overwrite our optimistic update)
             await queryClient.cancelQueries({ queryKey: ['pantry'] });
 
+            // Add updated_at if not present
+            const fullUpdates = { ...updates, updated_at: new Date().toISOString() };
+
             // Snapshot the previous value
             const previousItems = queryClient.getQueryData<PantryItem[]>(['pantry']);
 
@@ -67,7 +70,7 @@ export const useUpdatePantryItem = () => {
             if (previousItems) {
                 queryClient.setQueryData<PantryItem[]>(['pantry'], (old) =>
                     old?.map((item) =>
-                        item.id === id ? { ...item, ...updates } : item
+                        item.id === id ? { ...item, ...fullUpdates } : item
                     )
                 );
             }
@@ -124,4 +127,30 @@ export const useConsumeIngredients = () => {
             queryClient.invalidateQueries({ queryKey: ['pantry'] });
         },
     });
+};
+
+export const useStalePantryItems = () => {
+    const { data: pantryItems } = usePantry();
+
+    if (!pantryItems) return [];
+
+    const sevenDaysAgo = new Date();
+    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+
+    // Sort by updated_at ascending (oldest first)
+    // Filter items older than 7 days
+    return pantryItems
+        .filter(item => {
+            const lastUpdate = item.updated_at || item.created_at;
+            if (!lastUpdate) return false;
+            const date = new Date(lastUpdate);
+            // Ignore items created very recently (safety check, though created_at handles it)
+            return date < sevenDaysAgo;
+        })
+        .sort((a, b) => {
+            const dateA = new Date(a.updated_at || a.created_at).getTime();
+            const dateB = new Date(b.updated_at || b.created_at).getTime();
+            return dateA - dateB;
+        })
+        .slice(0, 3);
 };

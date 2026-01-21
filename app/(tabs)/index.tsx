@@ -3,6 +3,7 @@ import { Plus, Refrigerator, Search, ShoppingBasket } from 'lucide-react-native'
 import React, { useMemo, useState } from 'react';
 import { FlatList, Pressable, RefreshControl, Text, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { InventoryAuditWidget } from '../../components/Inventory/InventoryAuditWidget';
 import { PantryCard } from '../../components/Inventory/PantryCard';
 import { ProductDetailModal } from '../../components/Inventory/ProductDetailModal';
 import { usePantry } from '../../hooks/usePantry';
@@ -83,6 +84,8 @@ export default function PantryScreen() {
             onChangeText={setSearchQuery}
           />
         </View>
+
+        <InventoryAuditWidget />
 
         <FlatList
           data={filteredItems}

@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '../services/supabase';
 import { CreateShoppingItem, ShoppingItem, UpdateShoppingItem } from '../types/schema';
+import { normalizeToUS } from '../utils/units';
 
 export const useShoppingList = () => {
     return useQuery<ShoppingItem[]>({
@@ -116,20 +117,25 @@ export const useCheckoutShoppingList = () => {
             if (!boughtItems || boughtItems.length === 0) return;
 
             // 2. Transfer to pantry
-            const pantryItems = boughtItems.map(item => ({
-                user_id: user.id,
-                name: item.name,
-                quantity: item.quantity,
-                unit: item.unit,
-                category: item.category,
-                barcode: item.barcode,
-                image_url: item.image_url,
-                brand: item.brand,
-                nutritional_info: item.nutritional_info,
-                ingredients_text: item.ingredients_text,
-                allergens: item.allergens,
-                labels: item.labels,
-            }));
+            const pantryItems = boughtItems.map(item => {
+                const { value: normalizedQty, unit: normalizedUnit } = normalizeToUS(item.quantity, item.unit as any);
+
+                return {
+                    user_id: user.id,
+                    name: item.name,
+                    quantity: normalizedQty,
+                    unit: normalizedUnit,
+                    total_capacity: normalizedQty, // Capture original full amount for progress tracking
+                    category: item.category,
+                    barcode: item.barcode,
+                    image_url: item.image_url,
+                    brand: item.brand,
+                    nutritional_info: item.nutritional_info,
+                    ingredients_text: item.ingredients_text,
+                    allergens: item.allergens,
+                    labels: item.labels,
+                };
+            });
 
             const { error: insertError } = await supabase
                 .from('pantry_items')

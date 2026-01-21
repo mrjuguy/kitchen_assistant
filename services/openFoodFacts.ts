@@ -6,6 +6,8 @@ export interface ProductData {
     barcode?: string;
     image_url?: string;
     brand?: string;
+    quantity?: number;
+    unit?: string;
     nutritional_info?: NutritionalInfo;
     ingredients_text?: string;
     allergens?: string[];
@@ -25,7 +27,7 @@ const mapOFFCategory = (offCategories: string[] = []): string => {
 
 export const fetchProductByBarcode = async (barcode: string): Promise<ProductData | null> => {
     try {
-        const response = await fetch(`https://world.openfoodfacts.org/api/v0/product/${barcode}.json`);
+        const response = await fetch(`https://us.openfoodfacts.org/api/v0/product/${barcode}.json`);
         const data = await response.json();
 
         if (data.status === 1) {
@@ -36,6 +38,28 @@ export const fetchProductByBarcode = async (barcode: string): Promise<ProductDat
                 category: mapOFFCategory(product.categories_tags),
                 image_url: product.image_url || product.image_front_url,
                 brand: product.brands,
+                quantity: (() => {
+                    // 1. Try explicit float
+                    if (product.product_quantity) return parseFloat(product.product_quantity);
+
+                    // 2. Try parsing string "quantity" field (e.g. "946 ml")
+                    if (product.quantity) {
+                        const match = product.quantity.match(/([0-9.]+)\s*([a-zA-Z%]+)/);
+                        if (match) return parseFloat(match[1]);
+                    }
+                    return undefined;
+                })(),
+                unit: (() => {
+                    // 1. Try explicit unit
+                    if (product.product_quantity_unit) return product.product_quantity_unit;
+
+                    // 2. Try parsing string "quantity" field
+                    if (product.quantity) {
+                        const match = product.quantity.match(/([0-9.]+)\s*([a-zA-Z%]+)/);
+                        if (match) return match[2].toLowerCase();
+                    }
+                    return undefined;
+                })(),
                 nutritional_info: {
                     calories: product.nutriments?.['energy-kcal_100g'],
                     proteins: product.nutriments?.proteins_100g,
@@ -59,7 +83,7 @@ export const fetchProductByBarcode = async (barcode: string): Promise<ProductDat
 export const searchProducts = async (query: string): Promise<ProductData[]> => {
     if (!query || query.length < 3) return [];
     try {
-        const response = await fetch(`https://world.openfoodfacts.org/cgi/search.pl?search_terms=${encodeURIComponent(query)}&search_simple=1&action=process&json=1&page_size=10`);
+        const response = await fetch(`https://us.openfoodfacts.org/cgi/search.pl?search_terms=${encodeURIComponent(query)}&search_simple=1&action=process&json=1&page_size=10`);
         const data = await response.json();
 
         if (data.products && Array.isArray(data.products)) {

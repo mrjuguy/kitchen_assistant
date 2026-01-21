@@ -7,9 +7,10 @@ import { useAddPantryItem } from '../../hooks/usePantry';
 import { useAddShoppingItem } from '../../hooks/useShoppingList';
 import { fetchProductByBarcode } from '../../services/openFoodFacts';
 import { NutritionalInfo } from '../../types/schema';
+import { normalizeToUS, UNITS_DB } from '../../utils/units';
 
 const CATEGORIES = ['Produce', 'Dairy', 'Spices', 'Protein', 'Pantry', 'Frozen', 'Bakery'];
-const UNITS = ['items', 'grams', 'ml', 'kg', 'oz', 'lb', 'cups'];
+const UNITS = ['items', ...Object.keys(UNITS_DB)];
 
 interface AddItemFormProps {
     onClose: () => void;
@@ -56,6 +57,19 @@ export const AddItemForm: React.FC<AddItemFormProps> = ({ onClose, startWithScan
             setIngredientsText(product.ingredients_text);
             setAllergens(product.allergens);
             setLabels(product.labels);
+
+            // Normalize Units if present
+            if (product.quantity && product.unit) {
+                const { value: normQty, unit: normUnit } = normalizeToUS(product.quantity, product.unit as any);
+                setQuantity(normQty.toString());
+                // Only set unit if it's in our simple list, otherwise fallback to "items" or keep original if valid?
+                // Our UNITS list in this file is limited: ['items', 'grams', 'ml', 'kg', 'oz', 'lb', 'cups']
+                // But Pantry supports more.
+                // Let's verify if normUnit is in UNITS. If not, maybe we should expand UNITS or map it.
+                // Actually, the PRD says we support "Gallon", etc. The UNITS array here is hardcoded and limited!
+                // We should probably allow the normalized unit.
+                setUnit(normUnit);
+            }
         } else {
             Alert.alert('Product Not Found', 'Could not find product info for this barcode. You can still enter details manually.', [{ text: 'OK' }]);
         }

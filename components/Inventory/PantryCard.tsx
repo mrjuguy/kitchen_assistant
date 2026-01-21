@@ -3,7 +3,9 @@ import { Package, Trash2 } from 'lucide-react-native';
 import React from 'react';
 import { Alert, Image, Pressable, Text, View } from 'react-native';
 import { useDeletePantryItem, useUpdatePantryItem } from '../../hooks/usePantry';
-import { PantryItem } from '../../types/schema';
+import { PantryItem, UpdatePantryItem } from '../../types/schema';
+import { UNITS_DB } from '../../utils/units';
+import { ConsumptionSlider } from './ConsumptionSlider';
 import { QuantityControl } from './QuantityControl';
 
 interface PantryCardProps {
@@ -56,6 +58,11 @@ export const PantryCard: React.FC<PantryCardProps> = ({ item, onPress }) => {
     };
 
     const colors = categoryStyles[item.category] || categoryStyles.Pantry;
+
+    const isConsumable = React.useMemo(() => {
+        const def = UNITS_DB[item.unit as any];
+        return def && (def.category === 'volume' || def.category === 'weight'); // Only show for physical volumes
+    }, [item.unit]);
 
     return (
         <Pressable onPress={onPress}>
@@ -129,8 +136,32 @@ export const PantryCard: React.FC<PantryCardProps> = ({ item, onPress }) => {
                             onDecrease={handleDecrease}
                         />
                     </View>
+
+                    {/* Smart Consumption Slider (For all consumable items) */}
+                    {isConsumable && item.quantity > 0 && (
+                        <ConsumptionSlider
+                            value={item.quantity}
+                            max={item.total_capacity || (item.quantity > 1.25 ? item.quantity : 1)}
+                            onChange={(val) => {
+                                const updates: UpdatePantryItem = { quantity: val, updated_at: new Date().toISOString() };
+
+                                // Auto-Initialize Capacity for Bulk Items if missing
+                                // If we are interacting with the slider, and capacity is missing, 
+                                // it implies the *current* quantity (before this update) was the effective 'Full' capacity.
+                                if (!item.total_capacity && item.quantity > 1.25) {
+                                    updates.total_capacity = item.quantity;
+                                }
+
+                                updateMutation.mutate({
+                                    id: item.id,
+                                    updates: updates
+                                });
+                            }}
+                        />
+                    )}
                 </View>
             </View>
         </Pressable>
     );
+
 };

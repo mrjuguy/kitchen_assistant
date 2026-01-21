@@ -13,6 +13,7 @@ export interface PantryItem {
     name: string;
     quantity: number;
     unit: string;
+    total_capacity?: number; // The original full amount (e.g. 12 oz) for relative sliders
     category: string;
     expiry_date?: string;
     barcode?: string;
@@ -23,10 +24,11 @@ export interface PantryItem {
     allergens?: string[];
     labels?: string[];
     created_at: string;
+    updated_at: string;
 }
 
-export type CreatePantryItem = Omit<PantryItem, 'id' | 'created_at' | 'user_id'>;
-export type UpdatePantryItem = Partial<CreatePantryItem>;
+export type CreatePantryItem = Omit<PantryItem, 'id' | 'created_at' | 'updated_at' | 'user_id'>;
+export type UpdatePantryItem = Partial<Omit<PantryItem, 'id' | 'created_at' | 'user_id'>>;
 
 export interface ShoppingItem {
     id: string;
