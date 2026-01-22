@@ -38,11 +38,14 @@ export const useGapAnalysis = (recipeId?: string) => {
 
             // 1. Check Allergens first
             const ingredientNames = recipe.ingredients.map((i: RecipeIngredient) => i.name);
-            const allergenWarning = checkAllergen(
+            const userAllergens = profile?.allergens || [];
+
+            const allergenWarning = userAllergens.length > 0 ? checkAllergen(
                 recipe.allergens || [],
-                profile?.allergens || [],
+                userAllergens,
                 ingredientNames
-            );
+            ) : null;
+
             const isSafe = !allergenWarning;
 
             // 2. Check Ingredients
@@ -74,10 +77,10 @@ export const useGapAnalysis = (recipeId?: string) => {
 
             // 3. Determine Status
             let status: MatchStatus = 'Green';
-            if (!isSafe || missingCount > 2) {
-                status = 'Red';
+            if (!isSafe) {
+                status = 'Red'; // Explicit Danger (Allergens)
             } else if (missingCount > 0) {
-                status = 'Yellow';
+                status = 'Yellow'; // Needs Supplies (regardless of count)
             }
 
             return {

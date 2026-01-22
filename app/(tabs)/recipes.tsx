@@ -59,6 +59,8 @@ export default function RecipesScreen() {
         if (filter === 'ready') {
             result = result.filter(r => analysisMap[r.id]?.status === 'Green');
         } else if (filter === 'missing') {
+            // Include Yellow (Need Supplies) and Red (Unsafe/Need Supplies, though unsafe might not be wanted here?)
+            // Actually, usually user wants to see what they CANNOT cook yet.
             result = result.filter(r => analysisMap[r.id]?.status !== 'Green');
         }
 

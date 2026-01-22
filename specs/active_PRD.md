@@ -1,89 +1,89 @@
-# Feature: Smart Inventory & Unit Conversion
+# Active PRD: Kitchen Assistant Phase 2
 
-## Context
-The current pantry system uses simple text-based units and manual quantities, leading to disconnects between "Buying Units" (e.g., Loaf, Gallon) and "Consumption Units" (e.g., Slice, Cup, mL). Users need a system that normalizes units to US standards, allows easy fractional adjustments (e.g., "used 1/4 gallon"), and prompts for restocking.
+**Focus**: Enhancing Core Utility & Multi-User Collaboration
+**Current Status**: In Progress
 
-## User Stories
-1.  **As a Shopper**, I want my "1 Gallon of Milk" to be stored as "1 Gallon" (or 128 fl oz) in my pantry, not "3785 mL", so it matches how I think about it.
-2.  **As a Cook**, I want to quickly tap "Used 1 Cup" or slide a bar to "50% left" for my milk, so I don't have to calculate remaining milliliters manually.
-3.  **As a User**, I want the app to gently ask "Do you still have Spinach?" if I haven't updated it in a week, so my digital pantry stays real without me auditing everything constantly.
-4.  **As a Planner**, I want to see a visual "Low Stock" warning when I have less than 20% of my butter left, so I know to add it to the list.
+## 1. Feature Status Summary
 
-## UX & Design Guidelines
--   **Premium Feel**: The "Consumption" interaction should feel physical. Use a sliding "fluid level" animation for liquids (like a tank emptying) or a circular progress ring for solids.
--   **Gentle Audits**: The audit widget should not look like an error message. It should use soft colors (e.g., pastel info styling), smooth entry animations (FadeInDown), and be easily swipeable to dismiss.
--   **Unit Feedback**: When normalizing, briefly show the conversion (e.g., "Converted 3.7L to 1 Gallon") so the user understands the change.
+| Feature | Priority | Status |
+| :--- | :--- | :--- |
+| **Recipe Import** | High | ✅ **Completed** |
+| **Inventory UI (Sections)** | Medium | ✅ **Completed** |
+| **Household Management** | Critical | ⏳ **Next Up** |
 
-## Edge Cases & Constraints
--   **Non-Convertible Units**: If a user enters "1 Box" or "1 Bundle", we cannot convert to "oz" or "gal". In these cases, disable the "Smart Consumption" slider and fallback to simple numeric ([-1] [+1]) stepper.
--   **Mixed Locales**: If a user explicitly selects Metric in settings (future), we should respect that. For now, hardcode US Default as requested.
--   **Offline Updates**: If an audit response fails to save (offline), queue it. Do not block the user.
+---
 
-## Requirements
-1.  **Advanced Unit Support**: Support US Customary System (Gallon, Quart, Pint, Cup, fl oz, lb, oz) alongside Metric.
-2.  **Automatic Normalization**: Convert all liquid inputs to a standard base (e.g., fl oz or Gallon) and weights to (oz or lb) based on category, defaulting to US units.
-3.  **Smart Consumption**: Allow users to adjust pantry quantities by "Consumption Units" (e.g., "Used 1 Cup" subtracts from a Gallon jug).
-4.  **Low Stock Alerts**: Visual or notified reminders when stock dips below a threshold (e.g., < 20%).
-5.  **Refined Checkout**: When moving items from Shopping List to Pantry, normalize their units.
-6.  **Routine Inventory Audits**: "Gentle," non-intrusive prompts to update stock levels for items that haven't been modified in a while (e.g., "Do you still have Milk?"). This handles the "untracked consumption" drift.
+## 2. Feature: Recipe Import from URL
+**Goal**: Iterate on the existing Recipes feature to enhance functionality and user experience.
 
-## Technical Approach
+### User Stories
+- **Import**: As a user, I want to paste a URL from a recipe website and have the app automatically extract the title, ingredients, instructions, and image.
+- **Attribution**: As a user, I want to see the original author and source link for imported recipes.
+- **Safety**: As a user, I want to know if a recipe contains my specific allergens immediately.
 
-### 1. Unit Logic Core (`utils/units.ts`)
--   Create a comprehensive unit conversion utility.
--   **Categories**: Volume, Weight, Count (Item/Loaf/Slice - vague, stick to "Item" for now unless specific).
--   **Functions**: `convert(value, fromUnit, toUnit)`, `normalizeToUS(value, unit)`.
+### Checklist (Completed)
+- [x] Create `utils/recipeScraper.ts` with JSON-LD parsing logic.
+- [x] Implement `extractRecipeFromUrl` function with fallback handling.
+- [x] Update `recipes/create.tsx` UI to include prominent URL input.
+- [x] Connect Import Logic to Form State (pre-fill fields).
+- [x] Implement Author/Source attribution fields.
+- [x] Refine "Gap Analysis" (Red = Unsafe, Yellow = Missing Ingredients).
 
-### 2. Database & Schema
--   **Schema Change**: Add `updated_at` timestamp to `PantryItem` to track "freshness" of the data.
--   *Future*: Potentially add `low_stock_threshold` to `PantryItem`. For now, hardcode logic (e.g., < 25%).
+---
 
-### 3. UI Components
--   **`AddItemForm.tsx`**: Update unit selector to use the structured list from `utils/units.ts`.
--   **`PantryCard.tsx`**:
-    -   Replace simple quantity text with a `QuantityAdjuster` controls.
-    -   Add a "Fractional Consumption" mode (e.g., Slider 0-100% or "Used 1/4").
-    -   Visual indicator for Low Stock.
--   **`InventoryAudit.tsx`** (New):
-    -   A gentle, dismissible widget appearing at the top of the specific screens.
-    -   Logic: "Hey, you haven't updated [Milk] in 5 days. Still have it?"
-    -   Quick actions: [Yes, it's full] [It's half full] [It's gone].
+## 3. Feature: Inventory UI Refinement
+**Goal**: Improve organization of the pantry screen to reflect real-world kitchen storage.
 
-### 4. Logic Updates
--   **`hooks/useCheckoutShoppingList.ts`**: Intercept the transfer. Convert `ml` -> `fl oz` (or user's pref). Convert `kg` -> `lb`.
--   **`hooks/usePantry.ts`**: 
-    -   Update `useUpdatePantryItem` to handle unit conversions.
-    -   Add `useStalePantryItems`: Returns top 3 items not updated in > 7 days (prioritizing high-turnover categories like Dairy/Produce).
+### User Stories
+- **Storage Locations**: As a user, I want to categorize items as "Fridge", "Freezer", or "Pantry" so I know exactly where to look.
+- **Browsing**: As a user, I want to collapse sections I'm not looking at (e.g., hide Freezer items when checking the Fridge) to reduce clutter.
 
-## Implementation Plan
+### Checklist (Completed)
+- [x] **Database**: Add `storage_location` column to `pantry_items`.
+- [x] **UI**: Update `AddItemForm` to include a location selector (Pantry/Fridge/Freezer).
+- [x] **List View**: Convert Pantry list to a `SectionList` with collapsible headers.
 
-### Step 1: Unit Utilities
--   Create `utils/units.ts` with `UNITS_DB`, `convertUnit()`, `getUSUnit()`.
--   Test conversions (e.g., 1 Gallon = 128 fl oz).
+---
 
-### Step 2: Database & Schema
--   Migration: Add `updated_at` column to `pantry_items`.
--   Update Types: Add `updated_at` to `PantryItem` interface.
+## 4. Feature: Household Management (Invite Wife)
+**Goal**: Enable multiple users to manage a shared kitchen inventory and meal plan. **Critial Architecture Change**.
 
-### Step 3: Shopping to Pantry Handover
--   Update `hooks/useCheckoutShoppingList.ts` to run `normalizeToUS` on items before inserting into `pantry_items`.
+### User Stories
+- **Shared Access**: As a user, I want to invite my partner to my "Kitchen" so we both see the same Pantry and Shopping List.
+- **Real-time Sync**: As a user, I want to see items my partner adds to the shopping list immediately.
+- **Onboarding**: As a new user, I want to easily join an existing household via an invite code or link.
 
-### Step 4: Smart Pantry Card & Audit UI
--   Modify `components/Inventory/PantryCard.tsx` with consumption sliders.
--   Create `components/Inventory/InventoryAuditWidget.tsx`.
--   Integrate Audit Widget into the Pantry screen.
+### Technical Approach & Schema
+1.  **New Table**: `households`
+    - `id` (uuid, pk)
+    - `name` (text)
+    - `invite_code` (text, unique)
+    - `created_at`
+2.  **New Table**: `household_members`
+    - `household_id` (fk)
+    - `user_id` (fk)
+    - `role` (admin, member)
+3.  **Migration Strategy**:
+    - Create a "Personal Household" for every existing user.
+    - Move all existing user data (Pantry, Recipes, Shopping) to be owned by `household_id` instead of `user_id`.
+    - **CRITICAL**: Update all Row Level Security (RLS) policies.
+      - *Old*: `auth.uid() = user_id`
+      - *New*: `auth.uid() IN (SELECT user_id FROM household_members WHERE household_id = resource.household_id)`
 
-### Step 5: Verification
--   Test unit normalization.
--   Test "Stale Item" detection (manually set extensive backdated times).
-
-## Story Checklist
--   [ ] **Unit Utilities**: `utils/units.ts` created with conversions for US/Metric volumes and weights.
--   [ ] **Database Migration**: `updated_at` column added to `pantry_items` table.
--   [ ] **Type Update**: `PantryItem` type updated to include `updated_at`.
--   [ ] **Shopping Handover**: `useCheckoutShoppingList` updated to normalize units (e.g., L to Gal) on transfer.
--   [ ] **UI - Add Item**: `AddItemForm` updated to use new unit options.
--   [ ] **UI - Pantry Card**: `PantryCard` updated with "Smart Consumption" controls (slider/buttons).
--   [ ] **Logic - Stale Detection**: `useStalePantryItems` hook implemented to find old items.
--   [ ] **UI - Audit Widget**: `InventoryAuditWidget` created and integrated into Dashboard/Pantry top.
--   [ ] **Verification**: Smoke test "Milk Run" (Buy Gal -> Scan -> Consume Cup -> Audit Prompt).
+### Checklist (To Do)
+- [ ] **Schema Migration**:
+    - [ ] Create `households` and `settings/members` tables.
+    - [ ] Script to backfill households for existing users.
+    - [ ] Add `household_id` to `pantry_items`, `shopping_items`, `recipes`, `meal_plans`.
+    - [ ] Backfill `household_id` based on owner.
+- [ ] **Backend Security**:
+    - [ ] Update RLS policies for all tables to check household membership.
+- [ ] **App Logic Refactor**:
+    - [ ] Update `usePantry`, `useShoppingList`, etc. hooks to fetch by household (usually automatic via RLS, but double check).
+    - [ ] Remove hardcoded `user_id` inserts in favor of `household_id`.
+- [ ] **UI - Settings**:
+    - [ ] Create "Manage Household" screen.
+    - [ ] Implement "Invite User" flow (Share generic invite code).
+    - [ ] Implement "Join Household" flow (Input code).
+- [ ] **UI - Onboarding**:
+    - [ ] Update initial auth flow to Create vs Join household.

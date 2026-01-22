@@ -70,8 +70,10 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({ recipe, analysis }) => {
                             textTransform: 'uppercase'
                         }}>
                             {analysis.status === 'Green' ? 'Ready to Cook' :
-                                analysis.status === 'Yellow' ? `${analysis.missingCount} Missing` :
-                                    analysis.allergenWarning ? 'UNSAFE' : 'Incompatible'}
+                                analysis.status === 'Yellow' ? (
+                                    analysis.missingCount > 3 ? 'Need Supplies' : `${analysis.missingCount} Missing`
+                                ) :
+                                    analysis.allergenWarning ? 'UNSAFE' : 'Unsafe'}
                         </Text>
                     </View>
                 )}

@@ -1,47 +1,62 @@
 import { useRouter } from 'expo-router';
-import { Plus, Refrigerator, Search, ShoppingBasket } from 'lucide-react-native';
+import { ChevronDown, ChevronRight, Plus, Refrigerator, Search, ShoppingBasket } from 'lucide-react-native';
 import React, { useMemo, useState } from 'react';
-import { FlatList, Pressable, RefreshControl, Text, TextInput, View } from 'react-native';
+import { LayoutAnimation, Platform, Pressable, RefreshControl, SectionList, Text, TextInput, UIManager, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { InventoryAuditWidget } from '../../components/Inventory/InventoryAuditWidget';
 import { PantryCard } from '../../components/Inventory/PantryCard';
 import { ProductDetailModal } from '../../components/Inventory/ProductDetailModal';
+import { PantryCardSkeleton } from '../../components/Inventory/Skeleton';
 import { usePantry } from '../../hooks/usePantry';
 import { supabase } from '../../services/supabase';
 import { PantryItem } from '../../types/schema';
+import { groupItemsByLocation } from '../../utils/inventory';
 
-import { PantryCardSkeleton } from '../../components/Inventory/Skeleton';
+if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
+  UIManager.setLayoutAnimationEnabledExperimental(true);
+}
 
 export default function PantryScreen() {
   const { data: items, isLoading, isError, refetch, isRefetching } = usePantry();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedItem, setSelectedItem] = useState<PantryItem | null>(null);
+  const [collapsedSections, setCollapsedSections] = useState<Record<string, boolean>>({});
   const router = useRouter();
 
-  const filteredItems = useMemo(() => {
-    if (!items) return [];
-    if (!searchQuery.trim()) return items;
+  const toggleSection = (title: string) => {
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+    setCollapsedSections(prev => ({ ...prev, [title]: !prev[title] }));
+  };
 
-    const query = searchQuery.toLowerCase();
-    return items.filter(item =>
-      (item.name?.toLowerCase() || '').includes(query) ||
-      (item.category?.toLowerCase() || '').includes(query)
-    );
+  const sections = useMemo(() => {
+    if (!items) return [];
+
+    let filtered = items;
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase();
+      filtered = items.filter(item =>
+        (item.name?.toLowerCase() || '').includes(query) ||
+        (item.category?.toLowerCase() || '').includes(query)
+      );
+    }
+
+    const grouped = groupItemsByLocation(filtered);
+    return grouped.filter(section => section.data.length > 0 || !searchQuery.trim());
+    // Actually better to just show non-empty sections
   }, [items, searchQuery]);
 
   if (isLoading) {
     return (
       <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }} edges={['top']}>
         <View style={{ paddingHorizontal: 16, paddingVertical: 24 }}>
-          <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 32 }}>
-            <View>
-              <View style={{ height: 40, width: 128, backgroundColor: '#f3f4f6', borderRadius: 8, marginBottom: 8 }} />
-              <View style={{ height: 16, width: 96, backgroundColor: '#f3f4f6', borderRadius: 8 }} />
-            </View>
+          {/* Skeleton Content */}
+          <View>
+            <View style={{ height: 40, width: 128, backgroundColor: '#f3f4f6', borderRadius: 8, marginBottom: 8 }} />
+            <View style={{ height: 16, width: 96, backgroundColor: '#f3f4f6', borderRadius: 8 }} />
           </View>
-          {[1, 2, 3, 4, 5].map((i) => (
-            <PantryCardSkeleton key={i} />
-          ))}
+          <View style={{ marginTop: 32 }}>
+            {[1, 2, 3].map((i) => <PantryCardSkeleton key={i} />)}
+          </View>
         </View>
       </SafeAreaView>
     );
@@ -85,17 +100,41 @@ export default function PantryScreen() {
           />
         </View>
 
-        <InventoryAuditWidget />
-
-        <FlatList
-          data={filteredItems}
+        <SectionList
+          sections={sections.filter(s => s.data.length > 0)} // Only render sections with data
           keyExtractor={(item) => item.id}
-          renderItem={({ item }) => (
-            <PantryCard
-              item={item}
-              onPress={() => setSelectedItem(item)}
-            />
+          ListHeaderComponent={<InventoryAuditWidget />}
+          stickySectionHeadersEnabled={false}
+          renderSectionHeader={({ section: { title } }) => (
+            <Pressable
+              onPress={() => toggleSection(title)}
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                backgroundColor: 'white',
+                paddingVertical: 12,
+                marginTop: 8,
+                marginBottom: 4
+              }}
+            >
+              {collapsedSections[title] ? <ChevronRight size={20} color="#374151" /> : <ChevronDown size={20} color="#374151" />}
+              <Text style={{ fontSize: 18, fontWeight: '700', color: '#111827', marginLeft: 8 }}>{title}</Text>
+              <View style={{ marginLeft: 8, backgroundColor: '#f3f4f6', paddingHorizontal: 8, paddingVertical: 2, borderRadius: 99 }}>
+                <Text style={{ fontSize: 12, color: '#6b7280', fontWeight: 'bold' }}>
+                  {sections.find(s => s.title === title)?.data.length || 0}
+                </Text>
+              </View>
+            </Pressable>
           )}
+          renderItem={({ item, section }) => {
+            if (collapsedSections[section.title]) return null;
+            return (
+              <PantryCard
+                item={item}
+                onPress={() => setSelectedItem(item)}
+              />
+            );
+          }}
           contentContainerStyle={{ paddingBottom: 100 }}
           showsVerticalScrollIndicator={false}
           ListEmptyComponent={

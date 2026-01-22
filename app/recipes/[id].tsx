@@ -182,7 +182,7 @@ export default function RecipeDetailScreen() {
                             </>
                         )}
                     </Pressable>
-                ) : status === 'Yellow' ? (
+                ) : (status === 'Yellow') ? (
                     <Pressable
                         onPress={handleAddMissing}
                         disabled={addShoppingMutation.isPending}
@@ -319,9 +319,15 @@ export default function RecipeDetailScreen() {
                         <View style={{ width: 1, height: 16, backgroundColor: '#e5e7eb', marginHorizontal: 16 }} />
                         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                             <Users size={16} color="#6b7280" />
-                            <Text style={{ color: '#6b7280', marginLeft: 6, fontWeight: '500' }}>2 servings</Text>
+                            <Text style={{ color: '#6b7280', marginLeft: 6, fontWeight: '500' }}>{recipe.servings || 2} servings</Text>
                         </View>
                     </View>
+
+                    {recipe.author && (
+                        <Text style={{ fontSize: 14, color: '#6b7280', fontStyle: 'italic', marginBottom: 16 }}>
+                            By {recipe.author}
+                        </Text>
+                    )}
 
                     {/* Description */}
                     {recipe.description && (

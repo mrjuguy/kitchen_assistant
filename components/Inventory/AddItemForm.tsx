@@ -23,6 +23,7 @@ export const AddItemForm: React.FC<AddItemFormProps> = ({ onClose, startWithScan
     const [category, setCategory] = useState(CATEGORIES[0]);
     const [quantity, setQuantity] = useState('1');
     const [unit, setUnit] = useState(UNITS[0]);
+    const [storageLocation, setStorageLocation] = useState<'pantry' | 'fridge' | 'freezer'>('pantry');
     const [barcode, setBarcode] = useState<string | undefined>(undefined);
     const [imageUrl, setImageUrl] = useState<string | undefined>(undefined);
     const [brand, setBrand] = useState<string | undefined>(undefined);
@@ -101,6 +102,7 @@ export const AddItemForm: React.FC<AddItemFormProps> = ({ onClose, startWithScan
             ingredients_text: ingredientsText,
             allergens,
             labels,
+            storage_location: storageLocation,
         };
 
         if (target === 'pantry') {
@@ -251,6 +253,39 @@ export const AddItemForm: React.FC<AddItemFormProps> = ({ onClose, startWithScan
                 </ScrollView>
             </View>
 
+            <View style={{ marginBottom: 24 }}>
+                <Text style={{ fontSize: 14, fontWeight: '600', color: '#9ca3af', marginBottom: 8, textTransform: 'uppercase', letterSpacing: 1.25 }}>Storage Location</Text>
+                <View style={{ flexDirection: 'row', backgroundColor: '#f9fafb', padding: 4, borderRadius: 12, borderWidth: 1, borderColor: '#f3f4f6' }}>
+                    {(['pantry', 'fridge', 'freezer'] as const).map((loc) => (
+                        <Pressable
+                            key={loc}
+                            onPress={() => setStorageLocation(loc)}
+                            style={{
+                                flex: 1,
+                                paddingVertical: 10,
+                                borderRadius: 10,
+                                alignItems: 'center',
+                                backgroundColor: storageLocation === loc ? 'white' : 'transparent',
+                                shadowColor: '#000',
+                                shadowOffset: { width: 0, height: 1 },
+                                shadowOpacity: storageLocation === loc ? 0.05 : 0,
+                                shadowRadius: 2,
+                                borderWidth: 1,
+                                borderColor: storageLocation === loc ? '#e5e7eb' : 'transparent'
+                            }}
+                        >
+                            <Text style={{
+                                color: storageLocation === loc ? '#111827' : '#6b7280',
+                                fontWeight: storageLocation === loc ? 'bold' : '500',
+                                textTransform: 'capitalize'
+                            }}>
+                                {loc}
+                            </Text>
+                        </Pressable>
+                    ))}
+                </View>
+            </View>
+
             <View style={{ flexDirection: 'row', marginBottom: 32 }}>
                 <View style={{ flex: 1, marginRight: 16 }}>
                     <Text style={{ fontSize: 14, fontWeight: '600', color: '#9ca3af', marginBottom: 8, textTransform: 'uppercase', letterSpacing: 1.25 }}>Quantity</Text>
@@ -310,6 +345,6 @@ export const AddItemForm: React.FC<AddItemFormProps> = ({ onClose, startWithScan
                     </Text>
                 )}
             </Pressable>
-        </ScrollView>
+        </ScrollView >
     );
 };

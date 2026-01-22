@@ -15,6 +15,7 @@ export interface PantryItem {
     unit: string;
     total_capacity?: number; // The original full amount (e.g. 12 oz) for relative sliders
     category: string;
+    storage_location?: 'pantry' | 'fridge' | 'freezer'; // <--- Added
     expiry_date?: string;
     barcode?: string;
     image_url?: string;
@@ -71,9 +72,11 @@ export interface Recipe {
     image_url?: string;
     prep_time?: number; // in minutes
     cook_time?: number; // in minutes
-    servings?: number; // <--- Added
+    servings?: number;
     tags: string[]; // for Keto, Vegan, etc.
     allergens: string[]; // list of allergens present in the recipe
+    author?: string;
+    source_url?: string;
     created_at: string;
 }
 
