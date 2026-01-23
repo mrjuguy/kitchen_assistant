@@ -9,7 +9,7 @@
 | :--- | :--- | :--- |
 | **Recipe Import** | High | ✅ **Completed** |
 | **Inventory UI (Sections)** | Medium | ✅ **Completed** |
-| **Household Management** | Critical | ⏳ **Next Up** |
+| **Household Management** | Critical | ✅ **Completed** |
 
 ---
 
@@ -70,20 +70,20 @@
       - *Old*: `auth.uid() = user_id`
       - *New*: `auth.uid() IN (SELECT user_id FROM household_members WHERE household_id = resource.household_id)`
 
-### Checklist (To Do)
-- [ ] **Schema Migration**:
-    - [ ] Create `households` and `settings/members` tables.
-    - [ ] Script to backfill households for existing users.
-    - [ ] Add `household_id` to `pantry_items`, `shopping_items`, `recipes`, `meal_plans`.
-    - [ ] Backfill `household_id` based on owner.
-- [ ] **Backend Security**:
-    - [ ] Update RLS policies for all tables to check household membership.
-- [ ] **App Logic Refactor**:
-    - [ ] Update `usePantry`, `useShoppingList`, etc. hooks to fetch by household (usually automatic via RLS, but double check).
-    - [ ] Remove hardcoded `user_id` inserts in favor of `household_id`.
-- [ ] **UI - Settings**:
-    - [ ] Create "Manage Household" screen.
-    - [ ] Implement "Invite User" flow (Share generic invite code).
-    - [ ] Implement "Join Household" flow (Input code).
-- [ ] **UI - Onboarding**:
-    - [ ] Update initial auth flow to Create vs Join household.
+### Checklist (Completed)
+- [x] **Schema Migration**:
+    - [x] Create `households` and `settings/members` tables.
+    - [x] Script to backfill households for existing users.
+    - [x] Add `household_id` to `pantry_items`, `shopping_items`, `recipes`, `meal_plans`.
+    - [x] Backfill `household_id` based on owner.
+- [x] **Backend Security**:
+    - [x] Update RLS policies for all tables to check household membership.
+- [x] **App Logic Refactor**:
+    - [x] Update `usePantry`, `useShoppingList`, etc. hooks to fetch by household (usually automatic via RLS, but double check).
+    - [x] Remove hardcoded `user_id` inserts in favor of `household_id`.
+- [x] **UI - Settings**:
+    - [x] Create "Manage Household" screen.
+    - [x] Implement "Invite User" flow (Share generic invite code).
+    - [x] Implement "Join Household" flow (Input code).
+- [x] **UI - Onboarding**:
+    - [x] Update initial auth flow to Create vs Join household.

@@ -25,7 +25,7 @@ export const useMealPlan = (startDate?: string, endDate?: string) => {
             if (error) throw error;
 
             // Map the data to include ingredients in the joined recipe
-            return (data || []).map((plan: any) => ({
+            return (data || []).map((plan) => ({
                 ...plan,
                 recipe: plan.recipe ? {
                     ...plan.recipe,
@@ -36,21 +36,26 @@ export const useMealPlan = (startDate?: string, endDate?: string) => {
     });
 };
 
+import { useCurrentHousehold } from './useHousehold';
+
 export const useAddToPlan = () => {
     const queryClient = useQueryClient();
+    const { currentHousehold } = useCurrentHousehold();
 
     return useMutation({
         mutationFn: async (plan: CreateMealPlan) => {
             const { data: { user } } = await supabase.auth.getUser();
             if (!user) throw new Error('User not authenticated');
+            if (!currentHousehold) throw new Error('No household selected');
 
             const { data, error } = await supabase
                 .from('meal_plans')
                 .upsert({
                     ...plan,
                     user_id: user.id,
+                    household_id: currentHousehold.id
                 }, {
-                    onConflict: 'user_id,date,meal_type'
+                    onConflict: 'household_id,date,meal_type'
                 })
                 .select('*, recipe:recipes(*)')
                 .single();

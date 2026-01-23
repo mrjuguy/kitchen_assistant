@@ -7,15 +7,30 @@ export interface NutritionalInfo {
     fiber?: number;
 }
 
+export interface Household {
+    id: string;
+    name: string;
+    invite_code: string;
+    created_at: string;
+}
+
+export interface HouseholdMember {
+    household_id: string;
+    user_id: string;
+    role: 'admin' | 'member';
+    created_at: string;
+}
+
 export interface PantryItem {
     id: string;
     user_id: string;
+    household_id: string; // Added
     name: string;
     quantity: number;
     unit: string;
     total_capacity?: number; // The original full amount (e.g. 12 oz) for relative sliders
     category: string;
-    storage_location?: 'pantry' | 'fridge' | 'freezer'; // <--- Added
+    storage_location?: 'pantry' | 'fridge' | 'freezer';
     expiry_date?: string;
     barcode?: string;
     image_url?: string;
@@ -28,12 +43,13 @@ export interface PantryItem {
     updated_at: string;
 }
 
-export type CreatePantryItem = Omit<PantryItem, 'id' | 'created_at' | 'updated_at' | 'user_id'>;
-export type UpdatePantryItem = Partial<Omit<PantryItem, 'id' | 'created_at' | 'user_id'>>;
+export type CreatePantryItem = Omit<PantryItem, 'id' | 'created_at' | 'updated_at' | 'user_id' | 'household_id'> & { household_id?: string }; // Make optional for transition or require it? Better to make it optional in type but required in logic if possible, or just require it. Let's make it optional in type for now to avoid breaking everything immediately, but we will fill it.
+export type UpdatePantryItem = Partial<Omit<PantryItem, 'id' | 'created_at' | 'user_id' | 'household_id'>>;
 
 export interface ShoppingItem {
     id: string;
     user_id: string;
+    household_id: string; // Added
     name: string;
     quantity: number;
     unit: string;
@@ -49,7 +65,7 @@ export interface ShoppingItem {
     created_at: string;
 }
 
-export type CreateShoppingItem = Omit<ShoppingItem, 'id' | 'created_at' | 'user_id' | 'bought'> & { bought?: boolean };
+export type CreateShoppingItem = Omit<ShoppingItem, 'id' | 'created_at' | 'user_id' | 'household_id' | 'bought'> & { bought?: boolean; household_id?: string };
 export type UpdateShoppingItem = Partial<ShoppingItem>;
 
 export interface UserProfile {
@@ -66,6 +82,7 @@ export type UpdateUserProfile = Partial<CreateUserProfile>;
 export interface Recipe {
     id: string;
     user_id: string;
+    household_id: string; // Added
     name: string;
     description?: string;
     instructions: string[];
@@ -92,11 +109,12 @@ export interface RecipeWithIngredients extends Recipe {
     ingredients: RecipeIngredient[];
 }
 
-export type CreateRecipe = Omit<Recipe, 'id' | 'created_at' | 'user_id'>;
+export type CreateRecipe = Omit<Recipe, 'id' | 'created_at' | 'user_id' | 'household_id'> & { household_id?: string };
 
 export interface MealPlan {
     id: string;
     user_id: string;
+    household_id: string; // Added
     date: string; // ISO date string (YYYY-MM-DD)
     meal_type: 'breakfast' | 'lunch' | 'dinner';
     recipe_id: string;
@@ -105,4 +123,4 @@ export interface MealPlan {
     recipe?: RecipeWithIngredients;
 }
 
-export type CreateMealPlan = Omit<MealPlan, 'id' | 'created_at' | 'user_id' | 'recipe'>;
+export type CreateMealPlan = Omit<MealPlan, 'id' | 'created_at' | 'user_id' | 'household_id' | 'recipe'> & { household_id?: string };

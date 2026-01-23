@@ -24,6 +24,7 @@ A premium, inventory-first kitchen management application built with Expo and Su
 - **Smart Consumption Control**: Slider-based fractional usage tracking (e.g., "50% left") with auto-learning capacity for bulk items (learning that "12 oz" was the full box).
 - **Unit Normalization**: Automatic conversion of Metric scans to US Customary units (e.g. 3.78L -> 1 Gallon) for consistent inventory management.
 - **Inventory Audits**: Gentle, non-intrusive prompts to verify stock for stale items (untouched > 7 days).
+- **Household Management**: Multi-user collaboration with invite codes. Shared pantry, recipes, and shopping lists across members with granular security.
 - **Premium UI**: Modern design with skeleton loaders, haptic feedback, and robust inline styling.
 
 ## 🛠 Tech Stack

@@ -11,7 +11,7 @@ export const useRecipes = () => {
                 .select('*, recipe_ingredients(*)');
 
             if (error) throw error;
-            return data.map((recipe: any) => ({
+            return data.map((recipe) => ({
                 ...recipe,
                 ingredients: recipe.recipe_ingredients || [],
             }));
@@ -19,8 +19,11 @@ export const useRecipes = () => {
     });
 };
 
+import { useCurrentHousehold } from './useHousehold';
+
 export const useAddRecipe = () => {
     const queryClient = useQueryClient();
+    const { currentHousehold } = useCurrentHousehold();
 
     return useMutation({
         mutationFn: async (recipeData: {
@@ -36,6 +39,7 @@ export const useAddRecipe = () => {
         }) => {
             const { data: { user } } = await supabase.auth.getUser();
             if (!user) throw new Error('User not authenticated');
+            if (!currentHousehold) throw new Error('No household selected');
 
             // 1. Create Recipe
             const { data: recipe, error: recipeError } = await supabase
@@ -49,7 +53,8 @@ export const useAddRecipe = () => {
                     instructions: recipeData.instructions,
                     author: recipeData.author,
                     source_url: recipeData.source_url,
-                    user_id: user.id
+                    user_id: user.id,
+                    household_id: currentHousehold.id
                 }])
                 .select()
                 .single();

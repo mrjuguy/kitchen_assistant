@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '../services/supabase';
 import { CreateShoppingItem, ShoppingItem, UpdateShoppingItem } from '../types/schema';
-import { normalizeToUS } from '../utils/units';
+import { normalizeToUS, UnitKey } from '../utils/units';
 
 export const useShoppingList = () => {
     return useQuery<ShoppingItem[]>({
@@ -18,17 +18,21 @@ export const useShoppingList = () => {
     });
 };
 
+import { useCurrentHousehold } from './useHousehold';
+
 export const useAddShoppingItem = () => {
     const queryClient = useQueryClient();
+    const { currentHousehold } = useCurrentHousehold();
 
     return useMutation({
         mutationFn: async (newItem: CreateShoppingItem) => {
             const { data: { user } } = await supabase.auth.getUser();
             if (!user) throw new Error('User not authenticated');
+            if (!currentHousehold) throw new Error('No household selected');
 
             const { data, error } = await supabase
                 .from('shopping_list')
-                .insert([{ ...newItem, user_id: user.id }])
+                .insert([{ ...newItem, user_id: user.id, household_id: currentHousehold.id }])
                 .select()
                 .single();
 
@@ -118,10 +122,13 @@ export const useCheckoutShoppingList = () => {
 
             // 2. Transfer to pantry
             const pantryItems = boughtItems.map(item => {
-                const { value: normalizedQty, unit: normalizedUnit } = normalizeToUS(item.quantity, item.unit as any);
+                // Ensure unit from DB matches UnitKey, fallback to 'unit' if unknown
+                const safeUnit = (item.unit as UnitKey) || 'unit';
+                const { value: normalizedQty, unit: normalizedUnit } = normalizeToUS(item.quantity, safeUnit);
 
                 return {
                     user_id: user.id,
+                    household_id: item.household_id, // Copy household_id
                     name: item.name,
                     quantity: normalizedQty,
                     unit: normalizedUnit,
@@ -160,15 +167,18 @@ export const useCheckoutShoppingList = () => {
 
 export const useAddShoppingItems = () => {
     const queryClient = useQueryClient();
+    const { currentHousehold } = useCurrentHousehold();
 
     return useMutation({
         mutationFn: async (newItems: CreateShoppingItem[]) => {
             const { data: { user } } = await supabase.auth.getUser();
             if (!user) throw new Error('User not authenticated');
+            if (!currentHousehold) throw new Error('No household selected');
 
             const itemsWithUser = newItems.map(item => ({
                 ...item,
-                user_id: user.id
+                user_id: user.id,
+                household_id: currentHousehold.id
             }));
 
             const { data, error } = await supabase

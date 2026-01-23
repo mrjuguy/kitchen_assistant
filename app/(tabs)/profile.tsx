@@ -1,4 +1,5 @@
-import { Heart, LogOut, Save, ShieldCheck, User } from 'lucide-react-native';
+import { useRouter } from 'expo-router';
+import { ArrowRight, Heart, LogOut, Save, ShieldCheck, User, Users } from 'lucide-react-native';
 import React, { useEffect, useState } from 'react';
 import {
     ActivityIndicator,
@@ -20,6 +21,7 @@ const DIETARY_PREFERENCES = ['Vegan', 'Vegetarian', 'Keto', 'Paleo', 'Low Carb',
 export default function ProfileScreen() {
     const { data: profile, isLoading } = useProfile();
     const updateProfile = useUpdateProfile();
+    const router = useRouter();
 
     const [displayName, setDisplayName] = useState('');
     const [selectedAllergens, setSelectedAllergens] = useState<string[]>([]);
@@ -80,6 +82,21 @@ export default function ProfileScreen() {
                     </View>
                     <TouchableOpacity onPress={handleSignOut} style={styles.logoutButton}>
                         <LogOut size={20} color="#ef4444" />
+                    </TouchableOpacity>
+                </View>
+
+                {/* Household */}
+                <View style={styles.section}>
+                    <View style={styles.sectionHeader}>
+                        <Users size={20} color="#10b981" style={styles.sectionIcon} />
+                        <Text style={styles.sectionTitle}>Household</Text>
+                    </View>
+                    <TouchableOpacity
+                        style={styles.actionButton}
+                        onPress={() => router.push('/settings/household')}
+                    >
+                        <Text style={styles.actionButtonText}>Manage Household</Text>
+                        <ArrowRight size={20} color="#9ca3af" />
                     </TouchableOpacity>
                 </View>
 
@@ -298,5 +315,20 @@ const styles = StyleSheet.create({
         color: 'white',
         fontSize: 16,
         fontWeight: 'bold',
+    },
+    actionButton: {
+        backgroundColor: '#f9fafb',
+        borderWidth: 1,
+        borderColor: '#f3f4f6',
+        borderRadius: 16,
+        padding: 16,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+    },
+    actionButtonText: {
+        fontSize: 16,
+        color: '#111827',
+        fontWeight: '500',
     },
 });

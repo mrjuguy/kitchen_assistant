@@ -17,17 +17,21 @@ export const usePantry = () => {
     });
 };
 
+import { useCurrentHousehold } from './useHousehold';
+
 export const useAddPantryItem = () => {
     const queryClient = useQueryClient();
+    const { currentHousehold } = useCurrentHousehold();
 
     return useMutation({
         mutationFn: async (newItem: CreatePantryItem) => {
             const { data: { user } } = await supabase.auth.getUser();
             if (!user) throw new Error('User not authenticated');
+            if (!currentHousehold) throw new Error('No household selected');
 
             const { data, error } = await supabase
                 .from('pantry_items')
-                .insert([{ ...newItem, user_id: user.id }])
+                .insert([{ ...newItem, user_id: user.id, household_id: currentHousehold.id }])
                 .select()
                 .single();
 
