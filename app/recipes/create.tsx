@@ -18,6 +18,7 @@ export default function CreateRecipeScreen() {
     const [prepTime, setPrepTime] = useState('');
     const [cookTime, setCookTime] = useState('');
     const [servings, setServings] = useState('');
+    const [tags, setTags] = useState('');
 
     // Ingredients State
     const [ingredients, setIngredients] = useState<{ id: string; name: string; quantity: string; unit: string }[]>([
@@ -128,6 +129,7 @@ export default function CreateRecipeScreen() {
                 unit: i.unit.trim() || 'items'
             })),
             instructions: validInstructions.map(i => i.text.trim()),
+            tags: tags.split(',').map(t => t.trim()).filter(t => t !== ''),
             author: author.trim(),
             source_url: sourceUrlData || undefined
         };
@@ -248,6 +250,13 @@ export default function CreateRecipeScreen() {
                         />
                     </View>
                 </View>
+
+                <TextInput
+                    placeholder="Tags (e.g. Keto, Breakfast, Italian)"
+                    value={tags}
+                    onChangeText={setTags}
+                    style={{ backgroundColor: '#f9fafb', padding: 16, borderRadius: 12, marginBottom: 24, fontSize: 16 }}
+                />
 
                 {/* Ingredients */}
                 <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 16, marginBottom: 8 }}>

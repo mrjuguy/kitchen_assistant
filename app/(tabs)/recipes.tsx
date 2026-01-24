@@ -1,12 +1,13 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { ChefHat, Search, SlidersHorizontal } from 'lucide-react-native';
+import { ChefHat, Search, X } from 'lucide-react-native';
 import React, { useMemo, useState } from 'react';
-import { Alert, FlatList, Pressable, RefreshControl, Text, TextInput, View } from 'react-native';
+import { Alert, FlatList, Pressable, RefreshControl, ScrollView, Text, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { RecipeCard } from '../../components/Recipes/RecipeCard';
 import { useGapAnalysis } from '../../hooks/useGapAnalysis';
 import { useAddToPlan } from '../../hooks/useMealPlan';
 import { useRecipes } from '../../hooks/useRecipes';
+import { filterRecipes, getAvailableTags } from '../../utils/recipeFilters';
 
 export default function RecipesScreen() {
     const { data: recipes, isLoading, isError, refetch, isRefetching } = useRecipes();
@@ -17,6 +18,8 @@ export default function RecipesScreen() {
     const analysisMap = useGapAnalysis() as Record<string, any> | null;
     const [searchQuery, setSearchQuery] = useState('');
     const [filter, setFilter] = useState<'all' | 'ready' | 'missing'>('all');
+    const [selectedTags, setSelectedTags] = useState<string[]>([]);
+    const [isSearchFocused, setIsSearchFocused] = useState(false);
 
     const handleRecipePress = (recipeId: string, recipeName: string) => {
         if (mode === 'select' && date && meal_type) {
@@ -47,25 +50,25 @@ export default function RecipesScreen() {
         }
     };
 
+    const availableTags = useMemo(() => {
+        return getAvailableTags(recipes || []);
+    }, [recipes]);
+
     const filteredRecipes = useMemo(() => {
-        if (!recipes || !analysisMap) return [];
-        let result = recipes;
+        if (!recipes) return [];
+        return filterRecipes(recipes, {
+            searchQuery,
+            statusFilter: filter,
+            tags: selectedTags,
+            analysisMap: analysisMap || {}
+        });
+    }, [recipes, searchQuery, filter, selectedTags, analysisMap]);
 
-        if (searchQuery.trim()) {
-            const query = searchQuery.toLowerCase();
-            result = result.filter(r => (r.name?.toLowerCase() || '').includes(query));
-        }
-
-        if (filter === 'ready') {
-            result = result.filter(r => analysisMap[r.id]?.status === 'Green');
-        } else if (filter === 'missing') {
-            // Include Yellow (Need Supplies) and Red (Unsafe/Need Supplies, though unsafe might not be wanted here?)
-            // Actually, usually user wants to see what they CANNOT cook yet.
-            result = result.filter(r => analysisMap[r.id]?.status !== 'Green');
-        }
-
-        return result;
-    }, [recipes, searchQuery, filter, analysisMap]);
+    const toggleTag = (tag: string) => {
+        setSelectedTags(prev =>
+            prev.includes(tag) ? prev.filter(t => t !== tag) : [...prev, tag]
+        );
+    };
 
     if (isLoading) {
         return (
@@ -122,49 +125,122 @@ export default function RecipesScreen() {
                 )}
 
                 {/* Search & Filter */}
-                <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 24 }}>
-                    <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', backgroundColor: '#f9fafb', paddingHorizontal: 16, paddingVertical: 12, borderRadius: 16, borderWidth: 1, borderColor: '#f3f4f6', marginRight: 12 }}>
-                        <Search size={20} color="#999" />
+                <View style={{ marginBottom: 20 }}>
+                    <View style={{
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        backgroundColor: isSearchFocused ? 'white' : '#f8fafc',
+                        paddingHorizontal: 16,
+                        height: 56,
+                        borderRadius: 16,
+                        borderWidth: 2,
+                        borderColor: isSearchFocused ? '#0d7ff2' : '#f1f5f9',
+                        shadowColor: '#000',
+                        shadowOffset: { width: 0, height: 2 },
+                        shadowOpacity: isSearchFocused ? 0.1 : 0,
+                        shadowRadius: 4,
+                        elevation: isSearchFocused ? 3 : 0,
+                    }}>
+                        <Search size={20} color={isSearchFocused ? '#0d7ff2' : '#94a3b8'} />
                         <TextInput
                             placeholder="Find inspiration..."
-                            placeholderTextColor="#999"
-                            style={{ flex: 1, marginLeft: 12, color: '#111827', fontSize: 16 }}
+                            placeholderTextColor="#94a3b8"
+                            style={{
+                                flex: 1,
+                                marginLeft: 12,
+                                color: '#1e293b',
+                                fontSize: 16,
+                                fontWeight: '500'
+                            }}
                             value={searchQuery}
                             onChangeText={setSearchQuery}
+                            onFocus={() => setIsSearchFocused(true)}
+                            onBlur={() => setIsSearchFocused(false)}
                         />
+                        {searchQuery.length > 0 && (
+                            <Pressable
+                                onPress={() => setSearchQuery('')}
+                                style={{ padding: 4 }}
+                            >
+                                <X size={18} color="#94a3b8" />
+                            </Pressable>
+                        )}
                     </View>
-                    <Pressable style={{ backgroundColor: 'white', padding: 14, borderRadius: 16, borderWidth: 1, borderColor: '#f3f4f6', elevation: 2 }}>
-                        <SlidersHorizontal size={20} color="#666" />
-                    </Pressable>
                 </View>
 
                 {/* Filter Tabs */}
-                <View style={{ flexDirection: 'row', marginBottom: 24 }}>
-                    {(['all', 'ready', 'missing'] as const).map((f) => (
-                        <Pressable
-                            key={f}
-                            onPress={() => setFilter(f)}
-                            style={{
-                                paddingHorizontal: 16,
-                                paddingVertical: 8,
-                                borderRadius: 99,
-                                borderWidth: 1,
-                                marginRight: 8,
-                                backgroundColor: filter === f ? '#111827' : 'transparent',
-                                borderColor: filter === f ? '#111827' : '#e5e7eb'
-                            }}
-                        >
-                            <Text style={{
-                                fontSize: 12,
-                                fontWeight: 'bold',
-                                textTransform: 'capitalize',
-                                color: filter === f ? 'white' : '#6b7280'
-                            }}>
-                                {f}
-                            </Text>
-                        </Pressable>
-                    ))}
+                <View style={{ flexDirection: 'row', marginBottom: 16 }}>
+                    {[
+                        { id: 'all', label: 'All Recipes' },
+                        { id: 'ready', label: 'Ready to Cook' },
+                        { id: 'missing', label: 'Missing Ingredients' }
+                    ].map((f) => {
+                        const isActive = filter === f.id;
+                        return (
+                            <Pressable
+                                key={f.id}
+                                onPress={() => setFilter(f.id as any)}
+                                style={{
+                                    paddingHorizontal: 16,
+                                    paddingVertical: 10,
+                                    borderRadius: 99,
+                                    backgroundColor: isActive ? '#1e293b' : '#f1f5f9',
+                                    marginRight: 8,
+                                    borderWidth: 1,
+                                    borderColor: isActive ? '#1e293b' : '#e2e8f0'
+                                }}
+                            >
+                                <Text style={{
+                                    fontSize: 13,
+                                    fontWeight: '600',
+                                    color: isActive ? 'white' : '#64748b'
+                                }}>
+                                    {f.label}
+                                </Text>
+                            </Pressable>
+                        );
+                    })}
                 </View>
+
+                {/* Tag Chips */}
+                {availableTags.length > 0 && (
+                    <ScrollView
+                        horizontal
+                        showsHorizontalScrollIndicator={false}
+                        style={{ marginBottom: 24, maxHeight: 40 }}
+                        contentContainerStyle={{ paddingRight: 16 }}
+                    >
+                        {availableTags.map((tag) => {
+                            const isSelected = selectedTags.includes(tag);
+                            return (
+                                <Pressable
+                                    key={tag}
+                                    onPress={() => toggleTag(tag)}
+                                    style={{
+                                        paddingHorizontal: 14,
+                                        paddingVertical: 6,
+                                        borderRadius: 12,
+                                        backgroundColor: isSelected ? '#eff6ff' : 'white',
+                                        marginRight: 8,
+                                        borderWidth: 1,
+                                        borderColor: isSelected ? '#3b82f6' : '#e2e8f0',
+                                    }}
+                                >
+                                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                        {isSelected && <View style={{ width: 6, height: 6, borderRadius: 3, backgroundColor: '#3b82f6', marginRight: 6 }} />}
+                                        <Text style={{
+                                            fontSize: 12,
+                                            fontWeight: '500',
+                                            color: isSelected ? '#1d4ed8' : '#64748b'
+                                        }}>
+                                            {tag}
+                                        </Text>
+                                    </View>
+                                </Pressable>
+                            );
+                        })}
+                    </ScrollView>
+                )}
 
                 <FlatList
                     style={{ flex: 1 }}

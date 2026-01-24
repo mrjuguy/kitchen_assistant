@@ -36,6 +36,7 @@ export const useAddRecipe = () => {
             instructions: string[];
             author?: string;
             source_url?: string;
+            tags: string[];
         }) => {
             const { data: { user } } = await supabase.auth.getUser();
             if (!user) throw new Error('User not authenticated');
@@ -51,6 +52,7 @@ export const useAddRecipe = () => {
                     cook_time: recipeData.cook_time,
                     servings: recipeData.servings,
                     instructions: recipeData.instructions,
+                    tags: recipeData.tags,
                     author: recipeData.author,
                     source_url: recipeData.source_url,
                     user_id: user.id,

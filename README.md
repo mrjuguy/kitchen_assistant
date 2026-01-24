@@ -14,10 +14,12 @@ A premium, inventory-first kitchen management application built with Expo and Su
 - **Advanced List Actions**: Batch actions for "Clear Bought" (remove without stocking) and "Delete All" for list management.
 - **Meal Planner (Chef's Weekly)**: Proactive weekly meal scheduling with a dedicated calendar view.
 - **Smart "Shop for Week"**: One-click generation of shopping lists based on planned meals minus current pantry inventory.
-- **Recipe Intelligence**: Discovery and gap analysis based on current pantry stock.
-- **Recipe Import (Web Scraper)**: Paste any recipe URL to automatically extract ingredients, steps, and photos. Includes author attribution and safety checks.
+- **Recipe Intelligence (Phase 3 Premium Reflect)**: Comprehensive "Chef's Interface" for recipe discovery. Includes immersive Hero headers with `expo-linear-gradient`, sticky action bars, and portion scaling.
+- **Visual Gap Analysis**: Instant visual feedback on recipe readiness via segmented progress bars (Pantry Match %) and status-coded ingredient cards (In Stock vs. Missing).
+- **Advanced Recipe Search & Filtering**: Multi-select tag filtering (OR logic), premium search focus states, and quick-filter tabs for "Ready to Cook" vs "Missing Ingredients".
+- **Enhanced Recipe Import**: Smart web scraper for ingredients, steps, and photos with automated tag extraction and manual tag management.
 - **Allergen Safety Guardrails**: Automatic "Unsafe" warnings if recipe ingredients match user profile allergens.
-- **Smart Recipe Actions**: "Cook This Now" (auto-deducts inventory) and "Add Missing" (auto-add to shopping list) workflows.
+- **Smart Recipe Actions**: Adaptive "Cook This Now" (auto-deducts inventory) and "Shop Missing" (bridges stock gaps) workflows based on pantry analysis.
 - **Deep Pantry Intelligence**: Rich nutritional data, macro tracking (protein, carbs, fats), and allergen labels for scanned products via OpenFoodFacts.
 - **Optimistic Updates**: Instant UI response for quantity changes and item deletions.
 - **Full CRUD**: Manage pantry, recipes, meal plans, and shopping items with safety confirmations.
@@ -37,7 +39,7 @@ A premium, inventory-first kitchen management application built with Expo and Su
 - **Backend**: [Supabase](https://supabase.com/) (PostgreSQL & Auth)
 - **State Management**: [TanStack Query](https://tanstack.com/query/latest)
 - **Product Data**: [OpenFoodFacts API](https://world.openfoodfacts.org/)
-- **Styling**: [NativeWind](https://www.nativewind.dev/) & React Native Styles
+- **Styling**: [NativeWind](https://www.nativewind.dev/) & `expo-linear-gradient`
 - **Icons**: [Lucide React Native](https://lucide.dev/)
 - **Animations**: [React Native Reanimated](https://docs.expo.dev/versions/latest/sdk/reanimated/)
 

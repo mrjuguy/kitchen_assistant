@@ -20,11 +20,14 @@ export interface GapAnalysis {
     status: MatchStatus;
     missingCount: number;
     ingredientMatches: IngredientMatch[];
+    missingIngredients: IngredientMatch[];
+    totalIngredients: number;
+    percentage: number;
     allergenWarning: string | null;
     isSafe: boolean;
 }
 
-export const useGapAnalysis = (recipeId?: string) => {
+export const useGapAnalysis = (recipeId?: string, servings?: number) => {
     const { data: recipes } = useRecipes();
     const { data: pantry } = usePantry();
     const { data: profile } = useProfile();
@@ -32,9 +35,13 @@ export const useGapAnalysis = (recipeId?: string) => {
     return useMemo(() => {
         if (!recipes || !pantry) return null;
 
-        const processRecipe = (recipe: RecipeWithIngredients): GapAnalysis => {
+        const processRecipe = (recipe: RecipeWithIngredients, targetServings?: number): GapAnalysis => {
             const ingredientMatches: IngredientMatch[] = [];
             let missingCount = 0;
+
+            const scaleFactor = targetServings && recipe.servings
+                ? targetServings / recipe.servings
+                : 1;
 
             // 1. Check Allergens first
             const ingredientNames = recipe.ingredients.map((i: RecipeIngredient) => i.name);
@@ -55,7 +62,10 @@ export const useGapAnalysis = (recipeId?: string) => {
 
                 // Sum available quantity
                 const available = matchingItems.reduce((sum, item) => sum + item.quantity, 0);
-                const isInStock = available >= reqIng.quantity;
+
+                // Scale the requirement
+                const required = reqIng.quantity * scaleFactor;
+                const isInStock = available >= required;
 
                 // Pick the "best" match (exact match first, then most quantity) for the ID
                 const exactMatch = matchingItems.find(p => p.name.toLowerCase().trim() === reqIng.name.toLowerCase().trim());
@@ -68,7 +78,7 @@ export const useGapAnalysis = (recipeId?: string) => {
                 ingredientMatches.push({
                     name: reqIng.name,
                     pantryItemId: bestMatch?.id,
-                    required: reqIng.quantity,
+                    required,
                     available,
                     unit: reqIng.unit,
                     isInStock
@@ -83,10 +93,20 @@ export const useGapAnalysis = (recipeId?: string) => {
                 status = 'Yellow'; // Needs Supplies (regardless of count)
             }
 
+            const totalIngredients = recipe.ingredients.length;
+            const percentage = totalIngredients > 0
+                ? (totalIngredients - missingCount) / totalIngredients
+                : 1;
+
+            const missingIngredients = ingredientMatches.filter(m => !m.isInStock);
+
             return {
                 status,
                 missingCount,
                 ingredientMatches,
+                missingIngredients,
+                totalIngredients,
+                percentage,
                 allergenWarning,
                 isSafe
             };
@@ -94,7 +114,7 @@ export const useGapAnalysis = (recipeId?: string) => {
 
         if (recipeId) {
             const recipe = recipes.find(r => r.id === recipeId);
-            return recipe ? processRecipe(recipe) : null;
+            return recipe ? processRecipe(recipe, servings) : null;
         }
 
         // If no recipeId, return a map of all analyses (useful for lists)
@@ -104,5 +124,5 @@ export const useGapAnalysis = (recipeId?: string) => {
         });
 
         return analysisMap;
-    }, [recipeId, recipes, pantry, profile]);
+    }, [recipeId, recipes, pantry, profile, servings]);
 };

@@ -1,39 +1,48 @@
+import { LinearGradient } from 'expo-linear-gradient';
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
-import { CalendarDays, ChefHat, ChevronLeft, Clock, ShoppingCart, Trash2, Users } from 'lucide-react-native';
-import React from 'react';
+import { Activity, AlertCircle, ArrowLeft, CheckCircle, Clock, Flame, Minus, Plus, Share2, ShoppingCart, Trash2, Utensils } from 'lucide-react-native';
+import React, { useState } from 'react';
 import { ActivityIndicator, Alert, Image, Pressable, ScrollView, Text, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { IngredientMatcher } from '../../components/Recipes/IngredientMatcher';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { GapAnalysis, useGapAnalysis } from '../../hooks/useGapAnalysis';
-import { useAddToPlan } from '../../hooks/useMealPlan';
 import { useConsumeIngredients } from '../../hooks/usePantry';
 import { useDeleteRecipe, useRecipes } from '../../hooks/useRecipes';
 import { useAddShoppingItems } from '../../hooks/useShoppingList';
-import { formatDate } from '../../utils/date';
 
 export default function RecipeDetailScreen() {
     const { id } = useLocalSearchParams<{ id: string }>();
     const router = useRouter();
+    const insets = useSafeAreaInsets();
     const { data: recipes, isLoading } = useRecipes();
-    const analysis = useGapAnalysis(id) as GapAnalysis | null;
+    const [servings, setServings] = useState(4); // Default to generic 4, will update via useEffect
+    const analysis = useGapAnalysis(id, servings) as GapAnalysis | null;
 
     const consumeMutation = useConsumeIngredients();
     const addShoppingMutation = useAddShoppingItems();
     const deleteMutation = useDeleteRecipe();
-    const addToPlanMutation = useAddToPlan();
+    // const addToPlanMutation = useAddToPlan(); // Kept for future use if we add Schedule button back
+
+    // const [servings, setServings] = useState(4); // Moved up to use in hook
+    const [showFullMethod, setShowFullMethod] = useState(false);
 
     const recipe = recipes?.find(r => r.id === id);
 
     if (isLoading || !recipe) {
         return (
-            <SafeAreaView style={{ flex: 1, backgroundColor: 'white', justifyContent: 'center', alignItems: 'center' }}>
-                <ActivityIndicator size="large" color="#10b981" />
-            </SafeAreaView>
+            <View className="flex-1 bg-white items-center justify-center">
+                <ActivityIndicator size="large" color="#0d7ff2" />
+            </View>
         );
     }
 
-    const totalTime = (recipe.prep_time || 0) + (recipe.cook_time || 0);
-    const status = analysis?.status || 'Red';
+    // Set initial servings from recipe on mount
+    React.useEffect(() => {
+        if (recipe?.servings) setServings(recipe.servings);
+    }, [recipe?.servings]);
+
+    const percentage = analysis ? Math.round(analysis.percentage * 100) : 0;
+    const missingCount = analysis ? analysis.missingIngredients.length : 0;
+    const hasItems = analysis ? analysis.totalIngredients - missingCount : 0;
 
     const handleCookNow = () => {
         if (!analysis) return;
@@ -67,7 +76,7 @@ export default function RecipeDetailScreen() {
     };
 
     const handleAddMissing = () => {
-        if (!analysis) return;
+        if (!analysis || missingCount === 0) return;
 
         const missingItems = analysis.ingredientMatches
             .filter(m => !m.isInStock)
@@ -75,10 +84,8 @@ export default function RecipeDetailScreen() {
                 name: m.name,
                 quantity: Math.max(0, m.required - m.available),
                 unit: m.unit,
-                category: 'produce'
+                category: 'produce' // Default category
             }));
-
-        if (missingItems.length === 0) return;
 
         Alert.alert(
             "Add to Shopping List?",
@@ -102,289 +109,263 @@ export default function RecipeDetailScreen() {
         );
     };
 
-    const handleSchedule = () => {
-        // For now, simpler implementation: schedule for tonight's dinner
-        // In a real app, this would open a DatePicker modal
-        const today = formatDate(new Date());
-
-        Alert.alert(
-            "Schedule Meal",
-            "When would you like to cook this?",
-            [
-                { text: "Cancel", style: "cancel" },
-                {
-                    text: "Tonight for Dinner",
-                    onPress: () => {
-                        addToPlanMutation.mutate({
-                            date: today,
-                            meal_type: 'dinner',
-                            recipe_id: id!
-                        }, {
-                            onSuccess: () => {
-                                Alert.alert("Scheduled!", "Meal added to your planner.", [
-                                    { text: "Go to Planner", onPress: () => router.push('/(tabs)/planner') },
-                                    { text: "OK" }
-                                ]);
-                            }
-                        });
-                    }
-                }
-            ]
-        );
-    };
-
-    const getActionButton = () => {
-        return (
-            <View style={{ flexDirection: 'row', gap: 12 }}>
-                <Pressable
-                    onPress={handleSchedule}
-                    style={{
-                        flex: 1,
-                        backgroundColor: 'white',
-                        paddingVertical: 16,
-                        borderRadius: 16,
-                        alignItems: 'center',
-                        flexDirection: 'row',
-                        justifyContent: 'center',
-                        borderWidth: 1,
-                        borderColor: '#e5e7eb'
-                    }}
-                >
-                    <CalendarDays size={20} color="#111827" style={{ marginRight: 8 }} />
-                    <Text style={{ color: '#111827', fontSize: 16, fontWeight: 'bold' }}>
-                        Schedule
-                    </Text>
-                </Pressable>
-
-                {status === 'Green' ? (
-                    <Pressable
-                        onPress={handleCookNow}
-                        disabled={consumeMutation.isPending}
-                        style={{
-                            flex: 2,
-                            backgroundColor: '#10b981',
-                            paddingVertical: 16,
-                            borderRadius: 16,
-                            alignItems: 'center',
-                            flexDirection: 'row',
-                            justifyContent: 'center',
-                            elevation: 4
-                        }}
-                    >
-                        {consumeMutation.isPending ? (
-                            <ActivityIndicator color="white" />
-                        ) : (
-                            <>
-                                <ChefHat size={20} color="white" style={{ marginRight: 8 }} />
-                                <Text style={{ color: 'white', fontSize: 16, fontWeight: 'bold' }}>
-                                    Cook This Now
-                                </Text>
-                            </>
-                        )}
-                    </Pressable>
-                ) : (status === 'Yellow') ? (
-                    <Pressable
-                        onPress={handleAddMissing}
-                        disabled={addShoppingMutation.isPending}
-                        style={{
-                            flex: 2,
-                            backgroundColor: '#f59e0b',
-                            paddingVertical: 16,
-                            borderRadius: 16,
-                            alignItems: 'center',
-                            flexDirection: 'row',
-                            justifyContent: 'center',
-                            elevation: 4
-                        }}
-                    >
-                        {addShoppingMutation.isPending ? (
-                            <ActivityIndicator color="white" />
-                        ) : (
-                            <>
-                                <ShoppingCart size={20} color="white" style={{ marginRight: 8 }} />
-                                <Text style={{ color: 'white', fontSize: 16, fontWeight: 'bold' }}>
-                                    Add Missing
-                                </Text>
-                            </>
-                        )}
-                    </Pressable>
-                ) : (
-                    <View
-                        style={{
-                            flex: 2,
-                            backgroundColor: '#ef4444',
-                            paddingVertical: 16,
-                            borderRadius: 16,
-                            alignItems: 'center',
-                            flexDirection: 'row',
-                            justifyContent: 'center',
-                            opacity: 0.8
-                        }}
-                    >
-                        <Text style={{ color: 'white', fontSize: 16, fontWeight: 'bold' }}>
-                            Unsafe
-                        </Text>
-                    </View>
-                )}
-            </View>
-        );
-    };
+    // Calculate scaled quantities are now handled by hooks
+    // const scaleFactor = servings / (recipe.servings || 4);
 
     return (
-        <View style={{ flex: 1, backgroundColor: 'white' }}>
+        <View className="flex-1 bg-[#f5f7f8] dark:bg-[#101922]">
             <Stack.Screen options={{ headerShown: false }} />
 
-            <ScrollView contentContainerStyle={{ paddingBottom: 100 }}>
-                {/* Header Image */}
-                <View style={{ height: 300, backgroundColor: '#f3f4f6', position: 'relative' }}>
+            <ScrollView contentContainerStyle={{ paddingBottom: 120 }} showsVerticalScrollIndicator={false}>
+                {/* Hero Image */}
+                <View className="w-full h-[45vh] relative shrink-0">
                     {recipe.image_url ? (
-                        <Image source={{ uri: recipe.image_url }} style={{ width: '100%', height: '100%' }} />
+                        <Image source={{ uri: recipe.image_url }} className="absolute inset-0 w-full h-full" resizeMode="cover" />
                     ) : (
-                        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-                            <ChefHat size={64} color="#9ca3af" strokeWidth={1} />
+                        <View className="absolute inset-0 bg-gray-200 items-center justify-center">
+                            <Utensils size={64} color="#9ca3af" />
                         </View>
                     )}
+                    <LinearGradient
+                        colors={['rgba(0,0,0,0.6)', 'transparent', 'rgba(0,0,0,0.4)']}
+                        className="absolute inset-0"
+                    />
 
-                    {/* Back Button */}
-                    <Pressable
-                        onPress={() => router.back()}
-                        style={{
-                            position: 'absolute',
-                            top: 60,
-                            left: 20,
-                            width: 40,
-                            height: 40,
-                            backgroundColor: 'white',
-                            borderRadius: 20,
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            elevation: 5,
-                            shadowColor: '#000',
-                            shadowOffset: { width: 0, height: 2 },
-                            shadowOpacity: 0.2,
-                            shadowRadius: 4
-                        }}
-                    >
-                        <ChevronLeft size={24} color="#111827" />
-                    </Pressable>
-
-                    {/* Delete Button */}
-                    <Pressable
-                        onPress={() => {
-                            Alert.alert("Delete Recipe", "Are you sure you want to delete this recipe?", [
-                                { text: "Cancel", style: "cancel" },
-                                {
-                                    text: "Delete",
-                                    style: "destructive",
-                                    onPress: () => {
-                                        deleteMutation.mutate(id, {
-                                            onSuccess: () => router.back()
-                                        });
-                                    }
-                                }
-                            ]);
-                        }}
-                        style={{
-                            position: 'absolute',
-                            top: 60,
-                            right: 20,
-                            width: 40,
-                            height: 40,
-                            backgroundColor: 'white',
-                            borderRadius: 20,
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            elevation: 5,
-                            shadowColor: '#000',
-                            shadowOffset: { width: 0, height: 2 },
-                            shadowOpacity: 0.2,
-                            shadowRadius: 4
-                        }}
-                    >
-                        <Trash2 size={20} color="#ef4444" />
-                    </Pressable>
+                    {/* Header Navigation (Absolute) */}
+                    <View style={{ paddingTop: insets.top + 10 }} className="absolute top-0 left-0 right-0 z-50 px-4 flex-row justify-between items-center">
+                        <Pressable
+                            onPress={() => router.back()}
+                            className="w-10 h-10 rounded-full bg-white/20 items-center justify-center backdrop-blur-md"
+                        >
+                            <ArrowLeft size={24} color="white" />
+                        </Pressable>
+                        <View className="flex-row gap-3">
+                            <Pressable className="w-10 h-10 rounded-full bg-white/20 items-center justify-center backdrop-blur-md">
+                                <Share2 size={20} color="white" />
+                            </Pressable>
+                            <Pressable
+                                onPress={() => {
+                                    Alert.alert("Delete Recipe", "Are you sure?", [
+                                        { text: "Cancel", style: "cancel" },
+                                        { text: "Delete", style: "destructive", onPress: () => deleteMutation.mutate(id!, { onSuccess: () => router.back() }) }
+                                    ]);
+                                }}
+                                className="w-10 h-10 rounded-full bg-white/20 items-center justify-center backdrop-blur-md"
+                            >
+                                <Trash2 size={20} color="white" />
+                            </Pressable>
+                        </View>
+                    </View>
                 </View>
 
-                <View style={{ padding: 24, marginTop: -32, backgroundColor: 'white', borderTopLeftRadius: 32, borderTopRightRadius: 32 }}>
-                    {/* Title & Stats */}
-                    <Text style={{ fontSize: 28, fontWeight: 'bold', color: '#111827', marginBottom: 8 }}>
-                        {recipe.name}
-                    </Text>
-
-                    <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 24 }}>
-                        <View style={{ flexDirection: 'row', alignItems: 'center', marginRight: 16 }}>
-                            <Clock size={16} color="#6b7280" />
-                            <Text style={{ color: '#6b7280', marginLeft: 6, fontWeight: '500' }}>{totalTime} mins</Text>
-                        </View>
-                        <View style={{ width: 1, height: 16, backgroundColor: '#e5e7eb', marginHorizontal: 16 }} />
-                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                            <Users size={16} color="#6b7280" />
-                            <Text style={{ color: '#6b7280', marginLeft: 6, fontWeight: '500' }}>{recipe.servings || 2} servings</Text>
+                {/* Main Content Card */}
+                <View className="relative -mt-10 rounded-t-3xl bg-[#f5f7f8] dark:bg-[#101922] w-full flex-col px-5 pt-8 shadow-lg">
+                    {/* Title & Meta */}
+                    <View className="flex-col gap-3 mb-6">
+                        <Text className="text-3xl font-extrabold tracking-tight text-gray-900 dark:text-white leading-tight">
+                            {recipe.name}
+                        </Text>
+                        <View className="flex-row flex-wrap gap-2 items-center">
+                            <View className="flex-row items-center gap-1.5 px-3 py-1.5 rounded-full bg-white dark:bg-[#1a2632] border border-gray-200 dark:border-gray-700 shadow-sm">
+                                <Clock size={16} color="#0d7ff2" />
+                                <Text className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                                    {((recipe.prep_time || 0) + (recipe.cook_time || 0))} min
+                                </Text>
+                            </View>
+                            <View className="flex-row items-center gap-1.5 px-3 py-1.5 rounded-full bg-white dark:bg-[#1a2632] border border-gray-200 dark:border-gray-700 shadow-sm">
+                                <Activity size={16} color="#0d7ff2" />
+                                <Text className="text-sm font-medium text-gray-700 dark:text-gray-300">Easy</Text>
+                            </View>
+                            <View className="flex-row items-center gap-1.5 px-3 py-1.5 rounded-full bg-white dark:bg-[#1a2632] border border-gray-200 dark:border-gray-700 shadow-sm">
+                                <Flame size={16} color="#0d7ff2" />
+                                <Text className="text-sm font-medium text-gray-700 dark:text-gray-300">540 kcal</Text>
+                            </View>
                         </View>
                     </View>
 
-                    {recipe.author && (
-                        <Text style={{ fontSize: 14, color: '#6b7280', fontStyle: 'italic', marginBottom: 16 }}>
-                            By {recipe.author}
-                        </Text>
-                    )}
+                    <View className="h-[1px] bg-gray-200 dark:bg-gray-800 w-full mb-6" />
 
-                    {/* Description */}
-                    {recipe.description && (
-                        <Text style={{ fontSize: 16, color: '#4b5563', lineHeight: 24, marginBottom: 24 }}>
-                            {recipe.description}
-                        </Text>
-                    )}
-
-                    {/* Gap Analysis / Matcher */}
+                    {/* Gap Analysis Section */}
                     {analysis && (
-                        <IngredientMatcher
-                            ingredients={recipe.ingredients}
-                            analysis={analysis}
-                        />
+                        <View className="flex-col gap-4 mb-6">
+                            <View className="flex-row justify-between items-end">
+                                <View className="flex-col gap-1">
+                                    <Text className="text-lg font-bold text-gray-900 dark:text-white">Pantry Match</Text>
+                                    <Text className="text-sm text-gray-500 dark:text-gray-400">
+                                        You have {hasItems} of {analysis.totalIngredients} ingredients
+                                    </Text>
+                                </View>
+                                <Text className="text-2xl font-bold text-green-500">{percentage}%</Text>
+                            </View>
+
+                            <View className="h-3 w-full bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden flex-row">
+                                <View
+                                    className="h-full bg-green-500 rounded-l-full"
+                                    style={{ width: `${percentage}%` }}
+                                />
+                                <View
+                                    className="h-full bg-red-500/80 rounded-r-full"
+                                    style={{ width: `${100 - percentage}%` }}
+                                />
+                            </View>
+
+                            <View className="flex-row gap-4">
+                                <View className="flex-row items-center gap-2">
+                                    <View className="w-2 h-2 rounded-full bg-green-500" />
+                                    <Text className="text-xs font-medium text-gray-600 dark:text-gray-400">What you have</Text>
+                                </View>
+                                <View className="flex-row items-center gap-2">
+                                    <View className="w-2 h-2 rounded-full bg-red-500" />
+                                    <Text className="text-xs font-medium text-gray-600 dark:text-gray-400">What you need</Text>
+                                </View>
+                            </View>
+                        </View>
                     )}
 
-                    {/* Instructions */}
-                    <View style={{ marginTop: 32 }}>
-                        <Text style={{ fontSize: 18, fontWeight: 'bold', color: '#111827', marginBottom: 16 }}>
-                            Instructions
-                        </Text>
-                        {/* Instructions */}
-                        {(recipe.instructions || []).map((step, index) => (
-                            <View key={index} style={{ flexDirection: 'row', marginBottom: 20 }}>
-                                <View style={{
-                                    width: 24,
-                                    height: 24,
-                                    borderRadius: 12,
-                                    backgroundColor: '#ecfdf5',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    marginRight: 12,
-                                    marginTop: 2
-                                }}>
-                                    <Text style={{ color: '#059669', fontSize: 12, fontWeight: 'bold' }}>{index + 1}</Text>
-                                </View>
-                                <Text style={{ flex: 1, fontSize: 16, color: '#374151', lineHeight: 24 }}>
-                                    {step}
+                    {/* Portion Controller */}
+                    <View className="flex-row items-center justify-between p-4 bg-white dark:bg-[#1a2632] rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 mb-6">
+                        <View className="flex-col">
+                            <Text className="text-sm font-semibold text-gray-900 dark:text-white">Serving Size</Text>
+                            <Text className="text-xs text-gray-500">Adjusts quantities</Text>
+                        </View>
+                        <View className="flex-row items-center gap-4">
+                            <Pressable
+                                onPress={() => setServings(Math.max(1, servings - 1))}
+                                className="w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-700 items-center justify-center"
+                            >
+                                <Minus size={16} color="#4b5563" />
+                            </Pressable>
+                            <Text className="font-bold text-lg min-w-[30px] text-center text-gray-900 dark:text-white">{servings}</Text>
+                            <Pressable
+                                onPress={() => setServings(servings + 1)}
+                                className="w-8 h-8 rounded-full bg-[#0d7ff2] items-center justify-center shadow-sm"
+                            >
+                                <Plus size={16} color="white" />
+                            </Pressable>
+                        </View>
+                    </View>
+
+                    {/* Ingredients List */}
+                    <View className="flex-col gap-4 mb-8">
+                        <Text className="text-xl font-bold text-gray-900 dark:text-white">Ingredients</Text>
+                        <View className="flex-col gap-3">
+                            {analysis?.ingredientMatches.map((item, index) => {
+                                const isMissing = !item.isInStock;
+
+                                return (
+                                    <View
+                                        key={index}
+                                        className={`flex-row items-center gap-4 p-3 rounded-xl border shadow-sm ${isMissing
+                                            ? 'bg-white dark:bg-[#1a2632] border-red-100 dark:border-red-900/30'
+                                            : 'bg-white dark:bg-[#1a2632] border-gray-100 dark:border-gray-800'
+                                            }`}
+                                    >
+                                        <View className={`w-10 h-10 rounded-full items-center justify-center ${isMissing
+                                            ? 'bg-red-50 dark:bg-red-900/20'
+                                            : 'bg-emerald-50 dark:bg-emerald-900/20'
+                                            }`}>
+                                            {isMissing ? (
+                                                <AlertCircle size={20} color="#ef4444" />
+                                            ) : (
+                                                <CheckCircle size={20} color="#10b981" />
+                                            )}
+                                        </View>
+
+                                        <View className="flex-1">
+                                            <Text className="font-medium text-gray-900 dark:text-gray-200">{item.name}</Text>
+                                            <Text className="text-sm text-gray-500">
+                                                {parseFloat(item.required.toFixed(2))} {item.unit} ·
+                                                <Text className={`text-xs font-bold uppercase tracking-wider ${isMissing ? 'text-red-500' : 'text-green-500'}`}>
+                                                    {isMissing ? ' MISSING' : ' IN PANTRY'}
+                                                </Text>
+                                            </Text>
+                                        </View>
+
+                                        {isMissing && (
+                                            <Pressable
+                                                onPress={() => {
+                                                    addShoppingMutation.mutate([{
+                                                        name: item.name,
+                                                        quantity: Math.max(0, item.required - item.available),
+                                                        unit: item.unit,
+                                                        category: 'pantry'
+                                                    }], {
+                                                        onSuccess: () => Alert.alert("Added", `${item.name} added to shopping list.`)
+                                                    });
+                                                }}
+                                                className="w-10 h-10 items-center justify-center rounded-lg bg-red-50 dark:bg-red-900/30 active:bg-red-100"
+                                            >
+                                                <Plus size={20} color="#ef4444" />
+                                            </Pressable>
+                                        )}
+                                    </View>
+                                );
+                            })}
+                        </View>
+                    </View>
+
+                    {/* Method */}
+                    <View className="flex-col gap-3 mb-8">
+                        <View className="flex-row items-center justify-between">
+                            <Text className="text-xl font-bold text-gray-900 dark:text-white">Method</Text>
+                            <Pressable onPress={() => setShowFullMethod(!showFullMethod)}>
+                                <Text className="text-[#0d7ff2] text-sm font-semibold">
+                                    {showFullMethod ? 'View Less' : 'View Full'}
                                 </Text>
-                            </View>
-                        ))}
+                            </Pressable>
+                        </View>
+                        <View className="p-4 bg-gray-50 dark:bg-[#1a2632] rounded-xl">
+                            {(recipe.instructions || []).slice(0, showFullMethod ? undefined : 2).map((step, idx) => (
+                                <View key={idx} className="mb-3 flex-row gap-3">
+                                    <Text className="font-bold text-gray-400">{idx + 1}.</Text>
+                                    <Text className="text-gray-600 dark:text-gray-400 leading-relaxed">
+                                        {step}
+                                    </Text>
+                                </View>
+                            ))}
+                            {!showFullMethod && recipe.instructions?.length > 2 && (
+                                <Text className="text-gray-400 mt-2 italic">... {recipe.instructions.length - 2} more steps</Text>
+                            )}
+                        </View>
                     </View>
                 </View>
             </ScrollView>
 
-            {/* Action Bar */}
-            <View style={{
-                position: 'absolute',
-                bottom: 0,
-                left: 0,
-                right: 0,
-                padding: 24,
-                backgroundColor: 'white',
-                borderTopWidth: 1,
-                borderTopColor: '#f3f4f6'
-            }}>
-                {getActionButton()}
+            {/* Sticky Footer */}
+            <View
+                style={{ paddingBottom: Math.max(24, insets.bottom + 8) }}
+                className="absolute bottom-0 left-0 right-0 bg-white/95 dark:bg-[#101922]/95 border-t border-gray-200 dark:border-gray-800 pt-4 px-5 shadow-2xl rounded-t-2xl backdrop-blur-lg"
+            >
+                <View className="flex-row gap-3 w-full">
+                    {missingCount === 0 || percentage === 100 ? (
+                        <Pressable
+                            className="flex-1 h-14 rounded-xl bg-[#0d7ff2] items-center justify-center flex-row gap-2 shadow-lg shadow-blue-500/30"
+                            onPress={handleCookNow}
+                        >
+                            <Utensils size={20} color="white" />
+                            <Text className="text-white font-bold text-base">Cook This Now</Text>
+                        </Pressable>
+                    ) : (
+                        <>
+                            <Pressable
+                                className="flex-1 h-14 rounded-xl border border-gray-200 dark:border-gray-700 bg-transparent items-center justify-center flex-row gap-2"
+                                onPress={handleCookNow}
+                            >
+                                <Utensils size={20} color="#111827" />
+                                <Text className="text-gray-900 dark:text-white font-bold text-base">Cook ({percentage}%)</Text>
+                            </Pressable>
+                            <Pressable
+                                className="flex-1 h-14 rounded-xl bg-[#0d7ff2] items-center justify-center flex-row gap-2 shadow-lg shadow-blue-500/30"
+                                onPress={handleAddMissing}
+                            >
+                                <ShoppingCart size={20} color="white" />
+                                <Text className="text-white font-bold text-base">
+                                    Shop {missingCount} Missing
+                                </Text>
+                            </Pressable>
+                        </>
+                    )}
+                </View>
             </View>
         </View>
     );
