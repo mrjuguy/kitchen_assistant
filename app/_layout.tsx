@@ -8,6 +8,7 @@ import * as SplashScreen from 'expo-splash-screen';
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, View } from 'react-native';
 import 'react-native-reanimated';
+import '../global.css';
 
 
 import { useColorScheme } from '@/components/useColorScheme';
@@ -27,6 +28,24 @@ export const unstable_settings = {
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
+import Constants, { ExecutionEnvironment } from 'expo-constants';
+
+const isExpoGo = Constants.executionEnvironment === ExecutionEnvironment.StoreClient;
+
+if (!isExpoGo) {
+  const Notifications = require('expo-notifications');
+  Notifications.setNotificationHandler({
+    handleNotification: async () => ({
+      shouldShowAlert: true,
+      shouldPlaySound: true,
+      shouldSetBadge: true,
+      shouldShowBanner: true,
+      shouldShowList: true,
+      priority: Notifications.AndroidNotificationPriority.MAX,
+    }),
+  });
+}
+
 const queryClient = new QueryClient();
 
 export default function RootLayout() {
@@ -43,6 +62,11 @@ export default function RootLayout() {
   useEffect(() => {
     if (loaded) {
       SplashScreen.hideAsync();
+      // Request notification permissions only if not in Expo Go (or if needed)
+      if (!isExpoGo) {
+        const Notifications = require('expo-notifications');
+        Notifications.requestPermissionsAsync();
+      }
     }
   }, [loaded]);
 

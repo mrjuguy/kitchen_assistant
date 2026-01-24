@@ -19,6 +19,8 @@ export const usePantry = () => {
 
 import { useCurrentHousehold } from './useHousehold';
 
+import { scheduleExpiryNotification } from '../utils/notifications';
+
 export const useAddPantryItem = () => {
     const queryClient = useQueryClient();
     const { currentHousehold } = useCurrentHousehold();
@@ -38,8 +40,9 @@ export const useAddPantryItem = () => {
             if (error) throw error;
             return data as PantryItem;
         },
-        onSuccess: () => {
+        onSuccess: (data) => {
             queryClient.invalidateQueries({ queryKey: ['pantry'] });
+            scheduleExpiryNotification(data);
         },
     });
 };

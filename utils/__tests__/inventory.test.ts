@@ -1,6 +1,6 @@
-
+import { addDays, startOfToday, subDays } from 'date-fns';
 import { PantryItem } from '../../types/schema';
-import { groupItemsByLocation } from '../inventory';
+import { groupItemsByExpiry, groupItemsByLocation } from '../inventory';
 
 describe('groupItemsByLocation', () => {
     const mockItems: PantryItem[] = [
@@ -37,3 +37,42 @@ describe('groupItemsByLocation', () => {
         expect(result[2].data).toHaveLength(0);
     });
 });
+
+describe('groupItemsByExpiry', () => {
+    const today = startOfToday();
+    const mockItems: PantryItem[] = [
+        { id: '1', name: 'Old Meat', expiry_date: subDays(today, 2).toISOString() } as any as PantryItem,
+        { id: '2', name: 'Milk Today', expiry_date: today.toISOString() } as any as PantryItem,
+        { id: '3', name: 'Cheese Soon', expiry_date: addDays(today, 4).toISOString() } as any as PantryItem,
+        { id: '4', name: 'Safe Rice', expiry_date: addDays(today, 10).toISOString() } as any as PantryItem,
+        { id: '5', name: 'Salt', expiry_date: null } as any as PantryItem,
+    ];
+
+    it('should group items into status-based sections', () => {
+        const result = groupItemsByExpiry(mockItems);
+
+        expect(result).toHaveLength(5);
+
+        const expired = result.find(s => s.title === 'Expired');
+        const critical = result.find(s => s.title === 'Critical');
+        const warning = result.find(s => s.title === 'Warning');
+        const good = result.find(s => s.title === 'Good');
+        const noDate = result.find(s => s.title === 'No Date');
+
+        expect(expired?.data).toHaveLength(1);
+        expect(expired?.data[0].name).toBe('Old Meat');
+
+        expect(critical?.data).toHaveLength(1);
+        expect(critical?.data[0].name).toBe('Milk Today');
+
+        expect(warning?.data).toHaveLength(1);
+        expect(warning?.data[0].name).toBe('Cheese Soon');
+
+        expect(good?.data).toHaveLength(1);
+        expect(good?.data[0].name).toBe('Safe Rice');
+
+        expect(noDate?.data).toHaveLength(1);
+        expect(noDate?.data[0].name).toBe('Salt');
+    });
+});
+

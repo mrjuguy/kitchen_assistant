@@ -25,7 +25,10 @@ A premium, inventory-first kitchen management application built with Expo and Su
 - **Unit Normalization**: Automatic conversion of Metric scans to US Customary units (e.g. 3.78L -> 1 Gallon) for consistent inventory management.
 - **Inventory Audits**: Gentle, non-intrusive prompts to verify stock for stale items (untouched > 7 days).
 - **Household Management**: Multi-user collaboration with invite codes. Shared pantry, recipes, and shopping lists across members with granular security.
-- **Premium UI**: Modern design with skeleton loaders, haptic feedback, and robust inline styling.
+- **Expiration Tracking**: "Traffic Light" freshness system (Green/Yellow/Red) with quick-add date chips (+3 Days, +7 Days).
+- **Redesigned "Add Item" Experience**: Immersive entry flow using the "Stitch" visual language. Includes a gesture-based fractional quantity slider, smart date chips, and strictly typed validation for multi-target saving (Pantry/Shopping).
+- **Modular Component Architecture**: Decoupled UI logic into reusable, stable components (Smart Input, Expiry Selector, Quantity Slider) built with `Pressable` for maximum reliability.
+- **Premium UI**: Modern design with skeleton loaders, haptic feedback, and NativeWind v4 styling.
 
 ## 🛠 Tech Stack
 

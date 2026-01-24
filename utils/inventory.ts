@@ -1,4 +1,5 @@
 import { PantryItem } from '../types/schema';
+import { getItemHealth } from './pantry';
 
 export const groupItemsByLocation = (items: PantryItem[]) => {
     const grouped = {
@@ -20,3 +21,31 @@ export const groupItemsByLocation = (items: PantryItem[]) => {
         { title: 'Pantry', data: grouped.Pantry },
     ];
 };
+
+export const groupItemsByExpiry = (items: PantryItem[]) => {
+    const sections: Record<string, PantryItem[]> = {
+        'Expired': [],
+        'Critical': [],
+        'Warning': [],
+        'Good': [],
+        'No Date': [],
+    };
+
+    items.forEach(item => {
+        const health = getItemHealth(item.expiry_date);
+        if (health.status === 'expired') sections['Expired'].push(item);
+        else if (health.status === 'critical') sections['Critical'].push(item);
+        else if (health.status === 'warning') sections['Warning'].push(item);
+        else if (health.status === 'good') sections['Good'].push(item);
+        else sections['No Date'].push(item);
+    });
+
+    return [
+        { title: 'Expired', data: sections['Expired'] },
+        { title: 'Critical', data: sections['Critical'] },
+        { title: 'Warning', data: sections['Warning'] },
+        { title: 'Good', data: sections['Good'] },
+        { title: 'No Date', data: sections['No Date'] },
+    ];
+};
+

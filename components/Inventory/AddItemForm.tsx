@@ -1,13 +1,20 @@
 import { CameraView, useCameraPermissions } from 'expo-camera';
 import * as Haptics from 'expo-haptics';
-import { Scan, X } from 'lucide-react-native';
+import { PackageOpen, ShoppingCart, X } from 'lucide-react-native'; // Added icons
 import React, { useState } from 'react';
-import { ActivityIndicator, Alert, Pressable, ScrollView, Text, TextInput, View } from 'react-native';
+import { ActivityIndicator, Alert, Pressable, ScrollView, Text, View } from 'react-native';
 import { useAddPantryItem } from '../../hooks/usePantry';
 import { useAddShoppingItem } from '../../hooks/useShoppingList';
 import { fetchProductByBarcode } from '../../services/openFoodFacts';
-import { NutritionalInfo } from '../../types/schema';
+import { CommonInventoryItemData, CreatePantryItem, CreateShoppingItem, NutritionalInfo } from '../../types/schema';
 import { normalizeToUS, UNITS_DB } from '../../utils/units';
+
+// New Components
+import { AddItemHeader } from './AddItems/AddItemHeader';
+import { ExpirySelector } from './AddItems/ExpirySelector';
+import { QuantitySlider } from './AddItems/QuantitySlider';
+import { SmartItemInput } from './AddItems/SmartItemInput';
+import { StorageCategorySelector } from './AddItems/StorageCategorySelector';
 
 const CATEGORIES = ['Produce', 'Dairy', 'Spices', 'Protein', 'Pantry', 'Frozen', 'Bakery'];
 const UNITS = ['items', ...Object.keys(UNITS_DB)];
@@ -24,6 +31,7 @@ export const AddItemForm: React.FC<AddItemFormProps> = ({ onClose, startWithScan
     const [quantity, setQuantity] = useState('1');
     const [unit, setUnit] = useState(UNITS[0]);
     const [storageLocation, setStorageLocation] = useState<'pantry' | 'fridge' | 'freezer'>('pantry');
+    const [expiryDate, setExpiryDate] = useState<string | undefined>(undefined);
     const [barcode, setBarcode] = useState<string | undefined>(undefined);
     const [imageUrl, setImageUrl] = useState<string | undefined>(undefined);
     const [brand, setBrand] = useState<string | undefined>(undefined);
@@ -59,16 +67,9 @@ export const AddItemForm: React.FC<AddItemFormProps> = ({ onClose, startWithScan
             setAllergens(product.allergens);
             setLabels(product.labels);
 
-            // Normalize Units if present
             if (product.quantity && product.unit) {
                 const { value: normQty, unit: normUnit } = normalizeToUS(product.quantity, product.unit as any);
                 setQuantity(normQty.toString());
-                // Only set unit if it's in our simple list, otherwise fallback to "items" or keep original if valid?
-                // Our UNITS list in this file is limited: ['items', 'grams', 'ml', 'kg', 'oz', 'lb', 'cups']
-                // But Pantry supports more.
-                // Let's verify if normUnit is in UNITS. If not, maybe we should expand UNITS or map it.
-                // Actually, the PRD says we support "Gallon", etc. The UNITS array here is hardcoded and limited!
-                // We should probably allow the normalized unit.
                 setUnit(normUnit);
             }
         } else {
@@ -90,7 +91,7 @@ export const AddItemForm: React.FC<AddItemFormProps> = ({ onClose, startWithScan
     const handleSubmit = () => {
         if (!name.trim()) return;
 
-        const itemData = {
+        const baseData: CommonInventoryItemData = {
             name: name.trim(),
             category,
             quantity: parseFloat(quantity) || 1,
@@ -102,16 +103,30 @@ export const AddItemForm: React.FC<AddItemFormProps> = ({ onClose, startWithScan
             ingredients_text: ingredientsText,
             allergens,
             labels,
-            storage_location: storageLocation,
         };
 
         if (target === 'pantry') {
-            addPantryMutation.mutate(itemData, {
-                onSuccess: () => onClose()
+            const pantryData: CreatePantryItem = {
+                ...baseData,
+                expiry_date: expiryDate,
+                storage_location: storageLocation,
+            };
+            addPantryMutation.mutate(pantryData, {
+                onSuccess: () => onClose(),
+                onError: (error) => {
+                    Alert.alert('Error', `Failed to add item: ${error.message}`);
+                }
             });
         } else {
-            addShoppingMutation.mutate(itemData, {
-                onSuccess: () => onClose()
+            const shoppingData: CreateShoppingItem = {
+                ...baseData,
+                bought: false,
+            };
+            addShoppingMutation.mutate(shoppingData, {
+                onSuccess: () => onClose(),
+                onError: (error) => {
+                    Alert.alert('Error', `Failed to add item: ${error.message}`);
+                }
             });
         }
     };
@@ -144,207 +159,84 @@ export const AddItemForm: React.FC<AddItemFormProps> = ({ onClose, startWithScan
     }
 
     return (
-        <ScrollView style={{ flex: 1, backgroundColor: 'white' }} contentContainerStyle={{ padding: 24 }}>
-            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 32 }}>
-                <Text style={{ fontSize: 24, fontWeight: 'bold', color: '#111827' }}>Add New Item</Text>
-                <Pressable onPress={() => onClose()} style={{ padding: 8 }}>
-                    <X color="#10b981" size={24} />
-                </Pressable>
-            </View>
+        <View className="flex-1 bg-white dark:bg-slate-900 w-full h-full">
+            <AddItemHeader onClose={onClose} title="Add Item" />
 
-            {/* Target Selector */}
-            <View style={{ flexDirection: 'row', backgroundColor: '#f3f4f6', padding: 6, borderRadius: 16, marginBottom: 32 }}>
-                <Pressable
-                    onPress={() => setTarget('pantry')}
-                    style={{
-                        flex: 1,
-                        paddingVertical: 12,
-                        borderRadius: 12,
-                        alignItems: 'center',
-                        backgroundColor: target === 'pantry' ? 'white' : 'transparent',
-                        shadowColor: '#000',
-                        shadowOffset: { width: 0, height: 1 },
-                        shadowOpacity: target === 'pantry' ? 0.1 : 0,
-                        shadowRadius: 2,
-                    }}
-                >
-                    <Text style={{ fontWeight: 'bold', color: target === 'pantry' ? '#10b981' : '#6b7280' }}>Pantry</Text>
-                </Pressable>
-                <Pressable
-                    onPress={() => setTarget('shopping')}
-                    style={{
-                        flex: 1,
-                        paddingVertical: 12,
-                        borderRadius: 12,
-                        alignItems: 'center',
-                        backgroundColor: target === 'shopping' ? 'white' : 'transparent',
-                        shadowColor: '#000',
-                        shadowOffset: { width: 0, height: 1 },
-                        shadowOpacity: target === 'shopping' ? 0.1 : 0,
-                        shadowRadius: 2,
-                    }}
-                >
-                    <Text style={{ fontWeight: 'bold', color: target === 'shopping' ? '#10b981' : '#6b7280' }}>Shopping List</Text>
-                </Pressable>
-            </View>
+            <ScrollView className="flex-1 px-5" contentContainerStyle={{ paddingBottom: 150 }}>
+                <SmartItemInput
+                    value={name}
+                    onChangeText={setName}
+                    onScanPress={startScanning}
+                />
 
-            {/* Scanner Button */}
-            <Pressable
-                onPress={startScanning}
-                style={{
-                    backgroundColor: '#f4f4f5',
-                    padding: 24,
-                    borderRadius: 16,
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    borderWidth: 2,
-                    borderStyle: 'dashed',
-                    borderColor: '#e4e4e7',
-                    marginBottom: 32
-                }}
-            >
-                <Scan size={32} color="#10b981" />
-                <Text style={{ color: '#10b981', fontWeight: 'bold', marginTop: 8 }}>Scan Barcode</Text>
-                <Text style={{ color: '#71717a', fontSize: 12, marginTop: 4 }}>Faster entry via scanner</Text>
-            </Pressable>
+                <StorageCategorySelector
+                    selectedLocation={storageLocation}
+                    selectedCategory={category}
+                    onLocationChange={(loc) => setStorageLocation(loc as any)}
+                    onCategoryChange={setCategory}
+                />
 
-            <View style={{ marginBottom: 24 }}>
-                <Text style={{ fontSize: 14, fontWeight: '600', color: '#9ca3af', marginBottom: 8, textTransform: 'uppercase', letterSpacing: 1.25 }}>Item Name</Text>
-                <View style={{ backgroundColor: '#f9fafb', borderRadius: 12, borderWidth: 1, borderColor: '#f3f4f6', flexDirection: 'row', alignItems: 'center', paddingHorizontal: 16 }}>
-                    <TextInput
-                        value={name}
-                        onChangeText={setName}
-                        placeholder="e.g. Organic Milk"
-                        placeholderTextColor="#999"
-                        style={{ flex: 1, paddingVertical: 16, color: 'black', fontSize: 18 }}
+                {target === 'pantry' && (
+                    <ExpirySelector
+                        onSelect={(date) => setExpiryDate(date.toISOString())}
                     />
-                    {isFetchingInfo && <ActivityIndicator color="#10b981" />}
-                </View>
-                {(nutritionalInfo || ingredientsText) && (
-                    <View style={{ marginTop: 8, flexDirection: 'row', alignItems: 'center' }}>
-                        <View style={{ width: 8, height: 8, borderRadius: 4, backgroundColor: '#10b981', marginRight: 6 }} />
-                        <Text style={{ fontSize: 12, color: '#059669', fontWeight: '600' }}>Nutrition data found</Text>
-                    </View>
                 )}
-            </View>
 
-            <View style={{ marginBottom: 24 }}>
-                <Text style={{ fontSize: 14, fontWeight: '600', color: '#9ca3af', marginBottom: 8, textTransform: 'uppercase', letterSpacing: 1.25 }}>Category</Text>
-                <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ flexDirection: 'row' }}>
-                    {CATEGORIES.map((cat) => (
-                        <Pressable
-                            key={cat}
-                            onPress={() => setCategory(cat)}
-                            style={{
-                                marginRight: 8,
-                                paddingHorizontal: 16,
-                                paddingVertical: 8,
-                                borderRadius: 99,
-                                borderWidth: 1,
-                                backgroundColor: category === cat ? '#10b981' : 'white',
-                                borderColor: category === cat ? '#10b981' : '#e5e7eb'
-                            }}
-                        >
-                            <Text style={{ color: category === cat ? 'white' : '#4b5563', fontWeight: category === cat ? 'bold' : 'normal' }}>
-                                {cat}
-                            </Text>
-                        </Pressable>
-                    ))}
-                </ScrollView>
-            </View>
+                <QuantitySlider
+                    value={parseFloat(quantity) || 0}
+                    onChange={(val) => setQuantity(val.toString())}
+                />
 
-            <View style={{ marginBottom: 24 }}>
-                <Text style={{ fontSize: 14, fontWeight: '600', color: '#9ca3af', marginBottom: 8, textTransform: 'uppercase', letterSpacing: 1.25 }}>Storage Location</Text>
-                <View style={{ flexDirection: 'row', backgroundColor: '#f9fafb', padding: 4, borderRadius: 12, borderWidth: 1, borderColor: '#f3f4f6' }}>
-                    {(['pantry', 'fridge', 'freezer'] as const).map((loc) => (
-                        <Pressable
-                            key={loc}
-                            onPress={() => setStorageLocation(loc)}
-                            style={{
-                                flex: 1,
-                                paddingVertical: 10,
-                                borderRadius: 10,
-                                alignItems: 'center',
-                                backgroundColor: storageLocation === loc ? 'white' : 'transparent',
-                                shadowColor: '#000',
-                                shadowOffset: { width: 0, height: 1 },
-                                shadowOpacity: storageLocation === loc ? 0.05 : 0,
-                                shadowRadius: 2,
-                                borderWidth: 1,
-                                borderColor: storageLocation === loc ? '#e5e7eb' : 'transparent'
-                            }}
-                        >
-                            <Text style={{
-                                color: storageLocation === loc ? '#111827' : '#6b7280',
-                                fontWeight: storageLocation === loc ? 'bold' : '500',
-                                textTransform: 'capitalize'
-                            }}>
-                                {loc}
-                            </Text>
-                        </Pressable>
-                    ))}
+                {/* Target Switcher - Preliminary styling until we integrate it into new designs if not there */}
+                {/* The PRD doesn't explicitly show target switcher in the visual references but Goal 3 says "Ensure critical fields (Storage Location, Category, Target) remain available" */}
+                {/* I will add a simple styled target switcher for now. */}
+                <View className="mb-8 flex-row bg-slate-100 dark:bg-slate-800 p-1 rounded-2xl">
+                    <Pressable
+                        onPress={() => setTarget('pantry')}
+                        className={`flex-1 flex-row items-center justify-center gap-2 py-3 rounded-xl ${target === 'pantry' ? 'bg-white dark:bg-slate-700' : ''
+                            }`}
+                    >
+                        <PackageOpen size={20} color={target === 'pantry' ? '#0d7ff2' : '#94a3b8'} />
+                        <Text className={target === 'pantry' ? 'font-bold text-slate-900 dark:text-white' : 'font-bold text-slate-400'}>
+                            Pantry
+                        </Text>
+                    </Pressable>
+                    <Pressable
+                        onPress={() => setTarget('shopping')}
+                        className={`flex-1 flex-row items-center justify-center gap-2 py-3 rounded-xl ${target === 'shopping' ? 'bg-white dark:bg-slate-700' : ''
+                            }`}
+                    >
+                        <ShoppingCart size={20} color={target === 'shopping' ? '#0d7ff2' : '#94a3b8'} />
+                        <Text className={target === 'shopping' ? 'font-bold text-slate-900 dark:text-white' : 'font-bold text-slate-400'}>
+                            Shopping
+                        </Text>
+                    </Pressable>
                 </View>
-            </View>
 
-            <View style={{ flexDirection: 'row', marginBottom: 32 }}>
-                <View style={{ flex: 1, marginRight: 16 }}>
-                    <Text style={{ fontSize: 14, fontWeight: '600', color: '#9ca3af', marginBottom: 8, textTransform: 'uppercase', letterSpacing: 1.25 }}>Quantity</Text>
-                    <TextInput
-                        value={quantity}
-                        onChangeText={setQuantity}
-                        keyboardType="numeric"
-                        style={{ backgroundColor: '#f9fafb', color: 'black', padding: 16, borderRadius: 12, fontSize: 18, borderWidth: 1, borderColor: '#f3f4f6' }}
-                    />
+                {/* Footer / Submit Button */}
+                <View className="mt-4 mb-8">
+                    <Pressable
+                        onPress={handleSubmit}
+                        disabled={addPantryMutation.isPending || addShoppingMutation.isPending || !name.trim()}
+                        className={`w-full py-4 rounded-2xl flex-row items-center justify-center gap-3 ${(addPantryMutation.isPending || addShoppingMutation.isPending || !name.trim())
+                            ? 'bg-slate-200 dark:bg-slate-700'
+                            : 'bg-blue-500'
+                            }`}
+                    >
+                        {addPantryMutation.isPending || addShoppingMutation.isPending ? (
+                            <ActivityIndicator color="white" />
+                        ) : (
+                            <>
+                                <PackageOpen color="white" size={24} />
+                                <Text className="text-white text-lg font-bold">
+                                    {target === 'pantry' ? 'Add to Pantry' : 'Add to Shopping List'}
+                                </Text>
+                            </>
+                        )}
+                    </Pressable>
+                    <Text className="text-center text-xs text-slate-400 mt-3 font-medium">Helping you reduce waste, one item at a time.</Text>
                 </View>
-                <View style={{ flex: 1 }}>
-                    <Text style={{ fontSize: 14, fontWeight: '600', color: '#9ca3af', marginBottom: 8, textTransform: 'uppercase', letterSpacing: 1.25 }}>Unit</Text>
-                    <View style={{ backgroundColor: '#f9fafb', borderRadius: 12, overflow: 'hidden', borderWidth: 1, borderColor: '#f3f4f6' }}>
-                        <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ padding: 8 }}>
-                            {UNITS.map((u) => (
-                                <Pressable
-                                    key={u}
-                                    onPress={() => setUnit(u)}
-                                    style={{
-                                        marginRight: 8,
-                                        paddingHorizontal: 12,
-                                        paddingVertical: 6,
-                                        borderRadius: 8,
-                                        backgroundColor: unit === u ? '#e4e4e7' : 'transparent'
-                                    }}
-                                >
-                                    <Text style={{ color: 'black', fontWeight: '500' }}>{u}</Text>
-                                </Pressable>
-                            ))}
-                        </ScrollView>
-                    </View>
-                </View>
-            </View>
-
-            <Pressable
-                onPress={handleSubmit}
-                disabled={addPantryMutation.isPending || addShoppingMutation.isPending || !name.trim()}
-                style={{
-                    padding: 16,
-                    borderRadius: 16,
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    flexDirection: 'row',
-                    backgroundColor: (addPantryMutation.isPending || addShoppingMutation.isPending || !name.trim()) ? '#e5e7eb' : '#10b981',
-                    elevation: 5,
-                    shadowColor: '#10b981',
-                    shadowOffset: { width: 0, height: 4 },
-                    shadowOpacity: 0.3,
-                    shadowRadius: 8
-                }}
-            >
-                {addPantryMutation.isPending || addShoppingMutation.isPending ? (
-                    <ActivityIndicator color="white" />
-                ) : (
-                    <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 18 }}>
-                        {target === 'pantry' ? 'Add to Pantry' : 'Add to Shopping List'}
-                    </Text>
-                )}
-            </Pressable>
-        </ScrollView >
+            </ScrollView>
+        </View>
     );
 };

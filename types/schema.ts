@@ -43,13 +43,33 @@ export interface PantryItem {
     updated_at: string;
 }
 
-export type CreatePantryItem = Omit<PantryItem, 'id' | 'created_at' | 'updated_at' | 'user_id' | 'household_id'> & { household_id?: string }; // Make optional for transition or require it? Better to make it optional in type but required in logic if possible, or just require it. Let's make it optional in type for now to avoid breaking everything immediately, but we will fill it.
+export interface CommonInventoryItemData {
+    name: string;
+    quantity: number;
+    unit: string;
+    category: string;
+    barcode?: string;
+    image_url?: string;
+    brand?: string;
+    nutritional_info?: NutritionalInfo;
+    ingredients_text?: string;
+    allergens?: string[];
+    labels?: string[];
+}
+
+export type CreatePantryItem = CommonInventoryItemData & {
+    storage_location?: 'pantry' | 'fridge' | 'freezer';
+    expiry_date?: string;
+    total_capacity?: number;
+    household_id?: string;
+};
+
 export type UpdatePantryItem = Partial<Omit<PantryItem, 'id' | 'created_at' | 'user_id' | 'household_id'>>;
 
 export interface ShoppingItem {
     id: string;
     user_id: string;
-    household_id: string; // Added
+    household_id: string;
     name: string;
     quantity: number;
     unit: string;
@@ -65,8 +85,12 @@ export interface ShoppingItem {
     created_at: string;
 }
 
-export type CreateShoppingItem = Omit<ShoppingItem, 'id' | 'created_at' | 'user_id' | 'household_id' | 'bought'> & { bought?: boolean; household_id?: string };
+export type CreateShoppingItem = CommonInventoryItemData & {
+    bought?: boolean;
+    household_id?: string;
+};
 export type UpdateShoppingItem = Partial<ShoppingItem>;
+
 
 export interface UserProfile {
     id: string; // matches auth.uid()
