@@ -31,7 +31,7 @@ A premium, inventory-first kitchen management application built with Expo and Su
 - **Redesigned "Add Item" Experience**: Immersive entry flow using the "Stitch" visual language. Includes a gesture-based fractional quantity slider, multi-select storage tagging, and strictly typed validation for multi-target saving (Pantry/Shopping).
 - **Smart Expiry Selection**: Optimized date input with one-tap chips (+1 Week, +1 Month, etc.), satisfying haptic feedback, and a native system calendar for custom dates. Intelligent synchronization ensures UI chips react to manual date selections.
 - **Accessibility & UX Foundations**: Comprehensive WCAG-compliant accessibility labels, localized date formatting, and high-contrast Emerald branding for secondary active states.
-- **Premium UI**: Modern design with skeleton loaders, haptic feedback, and NativeWind v4 styling.
+- **Premium UI Modernization (Issue #10)**: Complete migration from inline styles to NativeWind v4 (Tailwind CSS). All components now use utility-first styling for consistency, maintainability, and future dark mode support. Includes skeleton loaders, haptic feedback, and polished visual hierarchy across all screens.
 
 ## 🛠 Tech Stack
 
@@ -40,7 +40,7 @@ A premium, inventory-first kitchen management application built with Expo and Su
 - **Backend**: [Supabase](https://supabase.com/) (PostgreSQL & Auth)
 - **State Management**: [TanStack Query](https://tanstack.com/query/latest)
 - **Product Data**: [OpenFoodFacts API](https://world.openfoodfacts.org/)
-- **Styling**: [NativeWind](https://www.nativewind.dev/) & `expo-linear-gradient`
+- **Styling**: [NativeWind v4](https://www.nativewind.dev/) (Tailwind CSS for React Native) & `expo-linear-gradient`
 - **Native Modules**: `expo-haptics` & `@react-native-community/datetimepicker`
 - **Icons**: [Lucide React Native](https://lucide.dev/)
 - **Animations**: [React Native Reanimated](https://docs.expo.dev/versions/latest/sdk/reanimated/)
@@ -76,7 +76,7 @@ A premium, inventory-first kitchen management application built with Expo and Su
    ```bash
    npx expo start
    ```
-   *Tip: Use `npx expo start -c` if you need to clear the packager cache after modifying environment variables or global styles.*
+   *Tip: Use `npx expo start -c` if you need to clear the packager cache after modifying environment variables, Tailwind configuration, or global styles.*
 
 5. **Run on device/emulator**:
    - Scan the QR code with the Expo Go app.
@@ -90,11 +90,12 @@ For the best experience, use a physical device via **Expo Go** to access the Sma
 ## 📁 Project Structure
 
 - `app/`: Expo Router file-based pages.
-- `components/`: Reusable UI components.
+- `components/`: Reusable UI components (fully NativeWind-styled as of Issue #10).
 - `hooks/`: Custom React hooks for business logic.
 - `services/`: Supabase and external API clients.
 - `types/`: Global TypeScript types and schemas.
 - `specs/`: Project requirements and completed features.
+- `tailwind.config.js`: NativeWind v4 configuration with app and component content paths.
 
 ## 📜 License
 
