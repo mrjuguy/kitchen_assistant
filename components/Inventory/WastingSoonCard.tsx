@@ -23,62 +23,47 @@ export const WastingSoonCard: React.FC<WastingSoonCardProps> = ({ item, onPress 
     return (
         <Pressable
             onPress={onPress}
-            style={{
-                width: 160,
-                backgroundColor: 'white',
-                borderRadius: 20,
-                padding: 12,
-                marginVertical: 4,
-                marginRight: 12,
-                borderWidth: 1,
-                borderColor: '#f3f4f6',
-                shadowColor: '#000',
-                shadowOffset: { width: 0, height: 2 },
-                shadowOpacity: 0.05,
-                shadowRadius: 4,
-                elevation: 2,
-            }}
+            className="w-40 bg-white rounded-2xl p-3 my-1 mr-3 border border-gray-100 shadow-sm"
+            style={{ elevation: 2 }}
         >
-            <View style={{ width: '100%', aspectRatio: 1, borderRadius: 12, overflow: 'hidden', backgroundColor: '#f3f4f6', marginBottom: 12 }}>
+            <View className="w-full aspect-square rounded-xl overflow-hidden bg-gray-100 mb-3 relative">
                 {item.image_url ? (
                     <ImageBackground
                         source={{ uri: item.image_url }}
-                        style={{ width: '100%', height: '100%' }}
+                        className="w-full h-full"
                         resizeMode="cover"
                     />
                 ) : (
-                    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', opacity: 0.3 }}>
+                    <View className="flex-1 items-center justify-center opacity-30">
                         <AlertTriangle size={32} color="#9ca3af" />
                     </View>
                 )}
 
                 {icon && (
-                    <View style={{
-                        position: 'absolute',
-                        top: 8,
-                        right: 8,
-                        backgroundColor: health.status === 'expired' || health.status === 'critical' ? '#fee2e2' : '#fef3c7',
-                        padding: 4,
-                        borderRadius: 99
-                    }}>
+                    <View
+                        className="absolute top-2 right-2 p-1 rounded-full"
+                        style={{
+                            backgroundColor: health.status === 'expired' || health.status === 'critical' ? '#fee2e2' : '#fef3c7',
+                        }}
+                    >
                         {icon}
                     </View>
                 )}
             </View>
 
             <View>
-                <Text numberOfLines={1} style={{ fontSize: 14, fontWeight: 'bold', color: '#111827', marginBottom: 4 }}>
+                <Text numberOfLines={1} className="text-sm font-bold text-gray-900 mb-1">
                     {item.name}
                 </Text>
-                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                    <View style={{
-                        width: 8,
-                        height: 8,
-                        borderRadius: 4,
-                        backgroundColor: health.color,
-                        marginRight: 6
-                    }} />
-                    <Text style={{ fontSize: 12, fontWeight: '600', color: health.color }}>
+                <View className="flex-row items-center">
+                    <View
+                        className="w-2 h-2 rounded-full mr-1.5"
+                        style={{ backgroundColor: health.color }}
+                    />
+                    <Text
+                        className="text-xs font-semibold"
+                        style={{ color: health.color }}
+                    >
                         {health.label}
                     </Text>
                 </View>

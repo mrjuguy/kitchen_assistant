@@ -77,17 +77,17 @@ export default function PantryScreen() {
 
   if (isLoading) {
     return (
-      <SafeAreaView style={{ flex: 1, backgroundColor: '#f5f7f8' }} edges={['top']}>
-        <View style={{ paddingHorizontal: 16, paddingVertical: 24 }}>
-          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12, marginBottom: 32 }}>
-            <View style={{ height: 40, width: 40, borderRadius: 20, backgroundColor: '#e5e7eb' }} />
+      <SafeAreaView className="flex-1 bg-[#f5f7f8]" edges={['top']}>
+        <View className="px-4 py-6">
+          <View className="flex-row items-center gap-3 mb-8">
+            <View className="h-10 w-10 rounded-full bg-gray-200" />
             <View>
-              <View style={{ height: 12, width: 80, backgroundColor: '#e5e7eb', borderRadius: 4, marginBottom: 4 }} />
-              <View style={{ height: 18, width: 60, backgroundColor: '#e5e7eb', borderRadius: 4 }} />
+              <View className="h-3 w-20 bg-gray-200 rounded mb-1" />
+              <View className="h-4.5 w-15 bg-gray-200 rounded" />
             </View>
           </View>
-          <View style={{ height: 120, width: '100%', backgroundColor: '#e5e7eb', borderRadius: 20, marginBottom: 24 }} />
-          <View style={{ height: 32, width: 140, backgroundColor: '#e5e7eb', borderRadius: 8, marginBottom: 16 }} />
+          <View className="h-30 w-full bg-gray-200 rounded-3xl mb-6" />
+          <View className="h-8 w-35 bg-gray-200 rounded-lg mb-4" />
           {[1, 2, 3].map((i) => <PantryCardSkeleton key={i} />)}
         </View>
       </SafeAreaView>
@@ -106,32 +106,32 @@ export default function PantryScreen() {
   }
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: '#f5f7f8' }} edges={['top']}>
-      <View style={{ flex: 1 }}>
+    <SafeAreaView className="flex-1 bg-[#f5f7f8]" edges={['top']}>
+      <View className="flex-1">
         <SectionList
           sections={sections.filter(s => s.data.length > 0)}
           keyExtractor={(item) => item.id}
           ListHeaderComponent={
-            <View style={{ paddingTop: 24, paddingBottom: 16 }}>
+            <View className="pt-6 pb-4">
               {/* Header */}
-              <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 16, marginBottom: 32 }}>
-                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
+              <View className="flex-row items-center justify-between px-4 mb-8">
+                <View className="flex-row items-center gap-3">
                   <Pressable
                     onPress={() => supabase.auth.signOut()}
-                    style={{ width: 40, height: 40, borderRadius: 20, backgroundColor: '#e5e7eb', borderWidth: 2, borderColor: 'white', overflow: 'hidden' }}
+                    className="w-10 h-10 rounded-full bg-gray-200 border-2 border-white overflow-hidden"
                   >
-                    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: '#d1d5db' }}>
-                      <Text style={{ fontSize: 10, color: '#4b5563', fontWeight: 'bold' }}>USER</Text>
+                    <View className="flex-1 items-center justify-center bg-gray-300">
+                      <Text className="text-[10px] text-gray-600 font-bold">USER</Text>
                     </View>
                   </Pressable>
                   <View>
-                    <Text style={{ fontSize: 12, color: '#6b7280', fontWeight: '500' }}>Culinary OS</Text>
-                    <Text style={{ fontSize: 18, fontWeight: 'bold', color: '#111827' }}>Kitchen Assistant</Text>
+                    <Text className="text-xs text-gray-500 font-medium">Culinary OS</Text>
+                    <Text className="text-lg font-bold text-gray-900">Kitchen Assistant</Text>
                   </View>
                 </View>
                 <Pressable
                   onPress={() => router.push('/modal')}
-                  style={{ width: 40, height: 40, borderRadius: 20, backgroundColor: 'white', alignItems: 'center', justifyContent: 'center', shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.1, shadowRadius: 4, elevation: 3 }}
+                  className="w-10 h-10 rounded-full bg-white items-center justify-center shadow-sm elevation-3"
                 >
                   <Search size={20} color="#111827" />
                 </Pressable>
@@ -139,15 +139,15 @@ export default function PantryScreen() {
 
               {/* Wasting Soon */}
               {wastingSoon.length > 0 && !searchQuery && (
-                <View style={{ marginBottom: 32 }}>
-                  <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 16, marginBottom: 16 }}>
-                    <Text style={{ fontSize: 20, fontWeight: '800', color: '#111827' }}>Wasting Soon</Text>
-                    <Pressable><Text style={{ color: '#0d7ff2', fontWeight: '600', fontSize: 14 }}>View All</Text></Pressable>
+                <View className="mb-8">
+                  <View className="flex-row items-center justify-between px-4 mb-4">
+                    <Text className="text-xl font-extrabold text-gray-900">Wasting Soon</Text>
+                    <Pressable><Text className="text-blue-600 font-semibold text-sm">View All</Text></Pressable>
                   </View>
                   <ScrollView
                     horizontal
                     showsHorizontalScrollIndicator={false}
-                    contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 4 }}
+                    contentContainerClassName="px-4 pb-1"
                   >
                     {wastingSoon.map((item) => (
                       <WastingSoonCard
@@ -162,9 +162,9 @@ export default function PantryScreen() {
 
               {/* Kitchen Health */}
               {!searchQuery && (
-                <View style={{ paddingHorizontal: 16, marginBottom: 32 }}>
-                  <Text style={{ fontSize: 20, fontWeight: '800', color: '#111827', marginBottom: 16 }}>Kitchen Health</Text>
-                  <View style={{ flexDirection: 'row', gap: 12 }}>
+                <View className="px-4 mb-8">
+                  <Text className="text-xl font-extrabold text-gray-900 mb-4">Kitchen Health</Text>
+                  <View className="flex-row gap-3">
                     <KitchenHealthStat
                       label="Total Items"
                       value={stats.total}
@@ -186,52 +186,32 @@ export default function PantryScreen() {
               )}
 
               {/* Search Bar */}
-              <View style={{ paddingHorizontal: 16, marginBottom: 16 }}>
-                <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
-                  <Text style={{ fontSize: 20, fontWeight: '800', color: '#111827' }}>Live Inventory</Text>
+              <View className="px-4 mb-4">
+                <View className="flex-row items-center justify-between mb-4">
+                  <Text className="text-xl font-extrabold text-gray-900">Live Inventory</Text>
 
-                  <View style={{ flexDirection: 'row', backgroundColor: '#f3f4f6', padding: 3, borderRadius: 10 }}>
+                  <View className="flex-row bg-[#f3f4f6] p-1 rounded-xl">
                     <Pressable
                       onPress={() => setSortBy('location')}
-                      style={{
-                        paddingHorizontal: 12,
-                        paddingVertical: 6,
-                        borderRadius: 8,
-                        backgroundColor: sortBy === 'location' ? 'white' : 'transparent',
-                        shadowColor: '#000',
-                        shadowOffset: { width: 0, height: 1 },
-                        shadowOpacity: sortBy === 'location' ? 0.1 : 0,
-                        shadowRadius: 2,
-                        elevation: sortBy === 'location' ? 1 : 0,
-                      }}
+                      className={`px-3 py-1.5 rounded-lg ${sortBy === 'location' ? 'bg-white shadow-sm elevation-1' : 'bg-transparent'}`}
                     >
-                      <Text style={{ fontSize: 12, fontWeight: 'bold', color: sortBy === 'location' ? '#10b981' : '#6b7280' }}>Location</Text>
+                      <Text className={`text-xs font-bold ${sortBy === 'location' ? 'text-emerald-500' : 'text-gray-500'}`}>Location</Text>
                     </Pressable>
                     <Pressable
                       onPress={() => setSortBy('expiry')}
-                      style={{
-                        paddingHorizontal: 12,
-                        paddingVertical: 6,
-                        borderRadius: 8,
-                        backgroundColor: sortBy === 'expiry' ? 'white' : 'transparent',
-                        shadowColor: '#000',
-                        shadowOffset: { width: 0, height: 1 },
-                        shadowOpacity: sortBy === 'expiry' ? 0.1 : 0,
-                        shadowRadius: 2,
-                        elevation: sortBy === 'expiry' ? 1 : 0,
-                      }}
+                      className={`px-3 py-1.5 rounded-lg ${sortBy === 'expiry' ? 'bg-white shadow-sm elevation-1' : 'bg-transparent'}`}
                     >
-                      <Text style={{ fontSize: 12, fontWeight: 'bold', color: sortBy === 'expiry' ? '#10b981' : '#6b7280' }}>Expiry</Text>
+                      <Text className={`text-xs font-bold ${sortBy === 'expiry' ? 'text-emerald-500' : 'text-gray-500'}`}>Expiry</Text>
                     </Pressable>
                   </View>
                 </View>
 
-                <View style={{ flexDirection: 'row', alignItems: 'center', backgroundColor: 'white', paddingHorizontal: 16, paddingVertical: 12, borderRadius: 16, borderWidth: 1, borderColor: '#f3f4f6' }}>
+                <View className="flex-row items-center bg-white px-4 py-3 rounded-2xl border border-gray-100">
                   <Search size={18} color="#9ca3af" />
                   <TextInput
                     placeholder="Search your pantry..."
                     placeholderTextColor="#9ca3af"
-                    style={{ flex: 1, marginLeft: 12, color: '#111827', fontSize: 16 }}
+                    className="flex-1 ml-3 text-gray-900 text-base"
                     value={searchQuery}
                     onChangeText={setSearchQuery}
                   />
@@ -243,37 +223,26 @@ export default function PantryScreen() {
           renderSectionHeader={({ section: { title } }) => (
             <Pressable
               onPress={() => toggleSection(title)}
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                backgroundColor: 'white',
-                paddingHorizontal: 16,
-                paddingVertical: 16,
-                marginHorizontal: 16,
-                marginTop: 8,
-                borderRadius: 16,
-                borderBottomLeftRadius: collapsedSections[title] ? 16 : 0,
-                borderBottomRightRadius: collapsedSections[title] ? 16 : 0,
-                shadowColor: '#000',
-                shadowOffset: { width: 0, height: 1 },
-                shadowOpacity: 0.05,
-                shadowRadius: 2,
-                elevation: 1,
-              }}
+              className={`flex-row items-center justify-between bg-white px-4 py-4 mx-4 mt-2 rounded-2xl shadow-sm elevation-1 ${collapsedSections[title] ? 'rounded-b-2xl' : 'rounded-b-none'}`}
             >
-              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <View style={{
-                  padding: 8,
-                  backgroundColor: title === 'Fridge' ? '#dbeafe' : title === 'Freezer' ? '#e0f2fe' : title === 'Expired' || title === 'Critical' ? '#fee2e2' : title === 'Warning' ? '#fef3c7' : title === 'Good' ? '#dcfce7' : '#f3f4f6',
-                  borderRadius: 10,
-                  marginRight: 12
-                }}>
-                  <Refrigerator size={18} color={title === 'Fridge' ? '#2563eb' : title === 'Freezer' ? '#0284c7' : title === 'Expired' || title === 'Critical' ? '#ef4444' : title === 'Warning' ? '#f59e0b' : title === 'Good' ? '#22c55e' : '#6b7280'} />
+              <View className="flex-row items-center">
+                <View className={`p-2 rounded-xl mr-3 ${title === 'Fridge' ? 'bg-blue-100' :
+                    title === 'Freezer' ? 'bg-sky-100' :
+                      title === 'Expired' || title === 'Critical' ? 'bg-red-100' :
+                        title === 'Warning' ? 'bg-amber-100' :
+                          title === 'Good' ? 'bg-green-100' : 'bg-gray-100'
+                  }`}>
+                  <Refrigerator size={18} color={
+                    title === 'Fridge' ? '#2563eb' :
+                      title === 'Freezer' ? '#0284c7' :
+                        title === 'Expired' || title === 'Critical' ? '#ef4444' :
+                          title === 'Warning' ? '#f59e0b' :
+                            title === 'Good' ? '#22c55e' : '#6b7280'
+                  } />
                 </View>
-                <Text style={{ fontSize: 16, fontWeight: 'bold', color: '#111827' }}>{title}</Text>
-                <View style={{ marginLeft: 8, backgroundColor: '#f3f4f6', paddingHorizontal: 8, paddingVertical: 2, borderRadius: 99 }}>
-                  <Text style={{ fontSize: 12, color: '#6b7280', fontWeight: 'bold' }}>
+                <Text className="text-base font-bold text-gray-900">{title}</Text>
+                <View className="ml-2 bg-[#f3f4f6] px-2 py-0.5 rounded-full">
+                  <Text className="text-xs text-gray-500 font-bold">
                     {sections.find(s => s.title === title)?.data.length || 0}
                   </Text>
                 </View>
@@ -284,7 +253,7 @@ export default function PantryScreen() {
           renderItem={({ item, section }) => {
             if (collapsedSections[section.title]) return null;
             return (
-              <View style={{ backgroundColor: 'white', marginHorizontal: 16, paddingHorizontal: 8 }}>
+              <View className="bg-white mx-4 px-2">
                 <PantryCard
                   item={item}
                   onPress={() => setSelectedItem(item)}
@@ -292,18 +261,18 @@ export default function PantryScreen() {
               </View>
             );
           }}
-          SectionSeparatorComponent={() => <View style={{ height: 1 }} />}
+          SectionSeparatorComponent={() => <View className="h-px" />}
           renderSectionFooter={({ section }) => (
-            !collapsedSections[section.title] ? <View style={{ borderBottomLeftRadius: 16, borderBottomRightRadius: 16, backgroundColor: 'white', height: 8, marginHorizontal: 16, marginBottom: 8 }} /> : null
+            !collapsedSections[section.title] ? <View className="bg-white h-2 mx-4 mb-2 rounded-b-2xl" /> : null
           )}
-          contentContainerStyle={{ paddingBottom: 120, backgroundColor: '#f5f7f8' }}
+          contentContainerClassName="pb-32 bg-[#f5f7f8]"
           showsVerticalScrollIndicator={false}
           ListEmptyComponent={
-            <View style={{ alignItems: 'center', justifyContent: 'center', marginTop: 80, padding: 32 }}>
-              <View style={{ backgroundColor: '#f3f4f6', padding: 24, borderRadius: 99, marginBottom: 16 }}>
+            <View className="items-center justify-center mt-20 p-8">
+              <View className="bg-[#f3f4f6] p-6 rounded-full mb-4">
                 <Refrigerator size={48} color="#9ca3af" strokeWidth={1} />
               </View>
-              <Text style={{ color: '#6b7280', textAlign: 'center', fontSize: 18, fontWeight: '500' }}>
+              <Text className="text-gray-500 text-center text-lg font-medium">
                 {searchQuery ? 'No items match your search.' : 'Your pantry is empty.'}
               </Text>
             </View>
@@ -314,21 +283,15 @@ export default function PantryScreen() {
         />
       </View>
 
-      <View style={{ position: 'absolute', bottom: 32, left: 0, right: 0, alignItems: 'center' }}>
+      <View className="absolute bottom-8 left-0 right-0 items-center">
         <Pressable
           onPress={() => router.push('/modal')}
+          className="w-16 h-16 bg-[#0d7ff2] rounded-full items-center justify-center shadow-lg elevation-8"
           style={{
-            width: 64,
-            height: 64,
-            backgroundColor: '#0d7ff2',
-            borderRadius: 32,
-            alignItems: 'center',
-            justifyContent: 'center',
             shadowColor: '#0d7ff2',
             shadowOffset: { width: 0, height: 8 },
             shadowOpacity: 0.3,
-            shadowRadius: 12,
-            elevation: 8
+            shadowRadius: 12
           }}
         >
           <Plus size={32} color="white" />

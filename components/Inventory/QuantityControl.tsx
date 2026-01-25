@@ -29,24 +29,24 @@ export const QuantityControl: React.FC<QuantityControlProps> = ({
     };
 
     return (
-        <View style={{ flexDirection: 'row', alignItems: 'center', backgroundColor: '#f3f4f6', borderRadius: 99, paddingHorizontal: 8, paddingVertical: 4 }}>
+        <View className="flex-row items-center bg-gray-100 rounded-full px-2 py-1">
             <Pressable
                 onPress={handleDecrease}
-                style={{ padding: 4, borderRadius: 99 }}
+                className="p-1 rounded-full"
             >
                 <Minus size={18} color="#10b981" />
             </Pressable>
 
-            <View style={{ flexDirection: 'row', alignItems: 'baseline', paddingHorizontal: 8, minWidth: 40, justifyContent: 'center' }}>
-                <Text style={{ fontSize: 16, fontWeight: '600', color: '#000' }}>{quantity}</Text>
+            <View className="flex-row items-baseline px-2 min-w-[40px] justify-center">
+                <Text className="text-base font-semibold text-black">{quantity}</Text>
                 {unit && (
-                    <Text style={{ fontSize: 12, color: '#6b7280', marginLeft: 4 }}>{unit}</Text>
+                    <Text className="text-xs text-gray-500 ml-1">{unit}</Text>
                 )}
             </View>
 
             <Pressable
                 onPress={handleIncrease}
-                style={{ padding: 4, borderRadius: 99 }}
+                className="p-1 rounded-full"
             >
                 <Plus size={18} color="#10b981" />
             </Pressable>
