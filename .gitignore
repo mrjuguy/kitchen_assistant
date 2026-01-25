@@ -46,3 +46,4 @@ yarn-error.*
 PROJECT_RULES.md
 specs/issue_*.md
 specs/draft_PRD.md
+.claude/
