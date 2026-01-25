@@ -1,6 +1,6 @@
 import { AlertCircle, Package, ShieldCheck, X } from 'lucide-react-native';
 import React from 'react';
-import { Image, Modal, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Image, Modal, Pressable, ScrollView, Text, View } from 'react-native';
 import { NutritionalInfo } from '../../types/schema';
 import { NutritionLabel } from './NutritionLabel';
 
@@ -33,33 +33,35 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({ item, vi
             transparent={true}
             onRequestClose={onClose}
         >
-            <View style={styles.overlay}>
-                <View style={styles.modalContent}>
-                    <View style={styles.header}>
-                        <Text style={styles.headerTitle} numberOfLines={1}>{item.name}</Text>
-                        <Pressable onPress={onClose} style={styles.closeButton}>
+            <View className="flex-1 bg-black/50 justify-end">
+                <View className="bg-white rounded-t-[32px] h-[90%] pt-2">
+                    <View className="flex-row items-center justify-between px-6 py-4 border-b border-gray-100">
+                        <Text className="text-xl font-bold text-gray-900 flex-1 mr-4" numberOfLines={1}>
+                            {item.name}
+                        </Text>
+                        <Pressable onPress={onClose} className="p-2 bg-gray-100 rounded-full">
                             <X color="#6b7280" size={24} />
                         </Pressable>
                     </View>
 
-                    <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
+                    <ScrollView showsVerticalScrollIndicator={false} contentContainerClassName="p-6 pb-12">
                         {/* Top Section: Image & Brand */}
-                        <View style={styles.topSection}>
-                            <View style={styles.imageContainer}>
+                        <View className="flex-row mb-8">
+                            <View className="w-[120px] h-[120px] bg-gray-50 rounded-3xl items-center justify-center overflow-hidden border border-gray-100">
                                 {item.image_url ? (
-                                    <Image source={{ uri: item.image_url }} style={styles.image} resizeMode="contain" />
+                                    <Image source={{ uri: item.image_url }} className="w-full h-full" resizeMode="contain" />
                                 ) : (
                                     <Package size={64} color="#e5e7eb" />
                                 )}
                             </View>
-                            <View style={styles.brandInfo}>
-                                <Text style={styles.brandLabel}>BRAND</Text>
-                                <Text style={styles.brandName}>{item.brand || 'Unknown Brand'}</Text>
-                                <View style={styles.categoryBadge}>
-                                    <Text style={styles.categoryText}>{item.category}</Text>
+                            <View className="flex-1 ml-5 justify-center">
+                                <Text className="text-[10px] font-black text-gray-400 tracking-[1.5px] mb-1">BRAND</Text>
+                                <Text className="text-[22px] font-extrabold text-gray-900 mb-2 leading-7">{item.brand || 'Unknown Brand'}</Text>
+                                <View className="self-start bg-gray-100 px-3 py-1.5 rounded-full mb-2">
+                                    <Text className="text-xs font-bold text-gray-600">{item.category}</Text>
                                 </View>
                                 {item.quantity !== undefined && (
-                                    <Text style={styles.quantityInfo}>
+                                    <Text className="text-sm text-gray-500 font-medium">
                                         Quantity: {item.quantity} {item.unit}
                                     </Text>
                                 )}
@@ -68,15 +70,15 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({ item, vi
 
                         {/* Labels/Tags */}
                         {item.labels && item.labels.length > 0 && (
-                            <View style={styles.section}>
-                                <View style={styles.sectionHeader}>
+                            <View className="mb-8">
+                                <View className="flex-row items-center mb-3">
                                     <ShieldCheck size={20} color="#10b981" />
-                                    <Text style={styles.sectionTitle}>Dietary Labels</Text>
+                                    <Text className="text-lg font-bold text-gray-900 ml-2">Dietary Labels</Text>
                                 </View>
-                                <View style={styles.tagContainer}>
+                                <View className="flex-row flex-wrap gap-2">
                                     {item.labels.slice(0, 10).map((label, idx) => (
-                                        <View key={idx} style={styles.tag}>
-                                            <Text style={styles.tagText}>
+                                        <View key={idx} className="bg-green-50 px-3 py-1.5 rounded-full">
+                                            <Text className="text-xs font-semibold text-green-700 capitalize">
                                                 {label.replace('en:', '').replace(/-/g, ' ')}
                                             </Text>
                                         </View>
@@ -87,15 +89,15 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({ item, vi
 
                         {/* Allergens */}
                         {item.allergens && item.allergens.length > 0 && (
-                            <View style={styles.section}>
-                                <View style={styles.sectionHeader}>
+                            <View className="mb-8">
+                                <View className="flex-row items-center mb-3">
                                     <AlertCircle size={20} color="#ef4444" />
-                                    <Text style={[styles.sectionTitle, { color: '#ef4444' }]}>Allergens Found</Text>
+                                    <Text className="text-lg font-bold text-red-500 ml-2">Allergens Found</Text>
                                 </View>
-                                <View style={styles.tagContainer}>
+                                <View className="flex-row flex-wrap gap-2">
                                     {item.allergens.map((allergen, idx) => (
-                                        <View key={idx} style={[styles.tag, { backgroundColor: '#fee2e2' }]}>
-                                            <Text style={[styles.tagText, { color: '#991b1b' }]}>
+                                        <View key={idx} className="bg-red-100 px-3 py-1.5 rounded-full">
+                                            <Text className="text-xs font-semibold text-red-800 capitalize">
                                                 {allergen.replace('en:', '').replace(/-/g, ' ')}
                                             </Text>
                                         </View>
@@ -106,16 +108,16 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({ item, vi
 
                         {/* Nutrition Facts */}
                         {item.nutritional_info && (
-                            <View style={styles.section}>
+                            <View className="mb-8">
                                 <NutritionLabel data={item.nutritional_info} />
                             </View>
                         )}
 
                         {/* Ingredients */}
                         {item.ingredients_text && (
-                            <View style={styles.section}>
-                                <Text style={[styles.sectionTitle, { marginLeft: 0, marginBottom: 12 }]}>Ingredients</Text>
-                                <Text style={styles.ingredientsText}>{item.ingredients_text}</Text>
+                            <View className="mb-8">
+                                <Text className="text-lg font-bold text-gray-900 mb-3">Ingredients</Text>
+                                <Text className="text-sm text-gray-600 leading-[22px]">{item.ingredients_text}</Text>
                             </View>
                         )}
                     </ScrollView>
@@ -124,134 +126,3 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({ item, vi
         </Modal>
     );
 };
-
-const styles = StyleSheet.create({
-    overlay: {
-        flex: 1,
-        backgroundColor: 'rgba(0,0,0,0.5)',
-        justifyContent: 'flex-end',
-    },
-    modalContent: {
-        backgroundColor: 'white',
-        borderTopLeftRadius: 32,
-        borderTopRightRadius: 32,
-        height: '90%',
-        paddingTop: 8,
-    },
-    header: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        paddingHorizontal: 24,
-        paddingVertical: 16,
-        borderBottomWidth: 1,
-        borderBottomColor: '#f3f4f6',
-    },
-    headerTitle: {
-        fontSize: 20,
-        fontWeight: 'bold',
-        color: '#111827',
-        flex: 1,
-        marginRight: 16,
-    },
-    closeButton: {
-        padding: 8,
-        backgroundColor: '#f3f4f6',
-        borderRadius: 99,
-    },
-    scrollContent: {
-        padding: 24,
-        paddingBottom: 48,
-    },
-    topSection: {
-        flexDirection: 'row',
-        marginBottom: 32,
-    },
-    imageContainer: {
-        width: 120,
-        height: 120,
-        backgroundColor: '#f9fafb',
-        borderRadius: 24,
-        alignItems: 'center',
-        justifyContent: 'center',
-        overflow: 'hidden',
-        borderWidth: 1,
-        borderColor: '#f3f4f6',
-    },
-    image: {
-        width: '100%',
-        height: '100%',
-    },
-    brandInfo: {
-        flex: 1,
-        marginLeft: 20,
-        justifyContent: 'center',
-    },
-    brandLabel: {
-        fontSize: 10,
-        fontWeight: '900',
-        color: '#9ca3af',
-        letterSpacing: 1.5,
-        marginBottom: 4,
-    },
-    brandName: {
-        fontSize: 22,
-        fontWeight: '800',
-        color: '#111827',
-        marginBottom: 8,
-    },
-    categoryBadge: {
-        alignSelf: 'flex-start',
-        backgroundColor: '#f3f4f6',
-        paddingHorizontal: 12,
-        paddingVertical: 6,
-        borderRadius: 99,
-        marginBottom: 8,
-    },
-    categoryText: {
-        fontSize: 12,
-        fontWeight: 'bold',
-        color: '#4b5563',
-    },
-    quantityInfo: {
-        fontSize: 14,
-        color: '#6b7280',
-        fontWeight: '500',
-    },
-    section: {
-        marginBottom: 32,
-    },
-    sectionHeader: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        marginBottom: 12,
-    },
-    sectionTitle: {
-        fontSize: 18,
-        fontWeight: 'bold',
-        color: '#111827',
-        marginLeft: 8,
-    },
-    tagContainer: {
-        flexDirection: 'row',
-        flexWrap: 'wrap',
-        gap: 8,
-    },
-    tag: {
-        backgroundColor: '#f0fdf4',
-        paddingHorizontal: 12,
-        paddingVertical: 6,
-        borderRadius: 99,
-    },
-    tagText: {
-        fontSize: 12,
-        fontWeight: '600',
-        color: '#166534',
-        textTransform: 'capitalize',
-    },
-    ingredientsText: {
-        fontSize: 14,
-        color: '#4b5563',
-        lineHeight: 22,
-    },
-});
