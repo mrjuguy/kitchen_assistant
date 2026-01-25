@@ -48,5 +48,9 @@ description: Analyzes changes, commits, closes GitHub issues, pushes code, and a
      - **Action**: Use `spawn-child-agent` with the `scribe` agent.
      - **Instruction**: "Update README.md and internal specs to match the code changes in the last commit."
 
-7. **Completion**
-   - Output: "Work saved, landed in main, and docs updating in background."
+7. **Remote Sync (Final)**
+   - The Scribe may have added a commit. Ensure `main` is synced.
+   - Run `git push origin main`.
+
+8. **Completion**
+   - Output: "Work saved, landed in main, docs updated, and everything synced to remote."

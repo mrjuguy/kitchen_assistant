@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { View } from 'react-native';
+import { DimensionValue, View } from 'react-native';
 import Animated, {
     useAnimatedStyle,
     useSharedValue,
@@ -7,7 +7,15 @@ import Animated, {
     withTiming
 } from 'react-native-reanimated';
 
-export const Skeleton = ({ width, height, borderRadius = 8 }: { width: any, height: any, borderRadius?: number }) => {
+export const Skeleton = ({
+    width,
+    height,
+    borderRadius = 8
+}: {
+    width: DimensionValue,
+    height: DimensionValue,
+    borderRadius?: number
+}) => {
     const opacity = useSharedValue(0.3);
 
     useEffect(() => {

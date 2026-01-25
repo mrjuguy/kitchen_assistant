@@ -61,12 +61,11 @@ export default function PlannerScreen() {
             }
         } catch (error) {
             Alert.alert("Error", "Failed to generate shopping list.");
-            console.error(error);
         }
     };
 
     return (
-        <SafeAreaView className="flex-1 bg-white" edges={['top']}>
+        <SafeAreaView className="flex-1 bg-[#f5f7f8]" edges={['top']}>
             <View className="flex-1 pt-6">
                 <View className="px-5 flex-row items-center justify-between mb-8">
                     <View>
