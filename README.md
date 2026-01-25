@@ -31,7 +31,7 @@ A premium, inventory-first kitchen management application built with Expo and Su
 - **Redesigned "Add Item" Experience**: Immersive entry flow using the "Stitch" visual language. Includes a gesture-based fractional quantity slider, multi-select storage tagging, and strictly typed validation for multi-target saving (Pantry/Shopping).
 - **Smart Expiry Selection**: Optimized date input with one-tap chips (+1 Week, +1 Month, etc.), satisfying haptic feedback, and a native system calendar for custom dates. Intelligent synchronization ensures UI chips react to manual date selections.
 - **Accessibility & UX Foundations**: Comprehensive WCAG-compliant accessibility labels, localized date formatting, and high-contrast Emerald branding for secondary active states.
-- **Premium UI Modernization (Issue #10)**: Complete migration from inline styles to NativeWind v4 (Tailwind CSS). All components now use utility-first styling for consistency, maintainability, and future dark mode support. Includes skeleton loaders, haptic feedback, and polished visual hierarchy across all screens.
+- **Premium UI Modernization (Issue #10)**: Complete migration from inline styles to NativeWind v4 (Tailwind CSS). All 30+ components across 6 main tabs refactored to utility-first styling, reducing style code by 700+ lines. Standardized design system on premium off-white palette (#f5f7f8) with improved type safety (Skeleton system) and refined error handling (Planner alerts). Foundation established for future dark mode implementation.
 
 ## 🛠 Tech Stack
 
@@ -40,8 +40,12 @@ A premium, inventory-first kitchen management application built with Expo and Su
 - **Backend**: [Supabase](https://supabase.com/) (PostgreSQL & Auth)
 - **State Management**: [TanStack Query](https://tanstack.com/query/latest)
 - **Product Data**: [OpenFoodFacts API](https://world.openfoodfacts.org/)
-- **Styling**: [NativeWind v4](https://www.nativewind.dev/) (Tailwind CSS for React Native) & `expo-linear-gradient`
-- **Native Modules**: `expo-haptics` & `@react-native-community/datetimepicker`
+- **Styling**: [NativeWind v4](https://www.nativewind.dev/) (Tailwind CSS for React Native)
+  - **Design Philosophy**: Utility-first styling with premium off-white palette (#f5f7f8 backgrounds, #ffffff surfaces)
+  - **Type Safety**: Comprehensive TypeScript support across all styled components
+  - **Architecture**: Zero inline styles, 100% utility-class based for consistency and dark mode readiness
+- **Visual Enhancements**: `expo-linear-gradient` for hero headers & `expo-haptics` for tactile feedback
+- **Native Modules**: `@react-native-community/datetimepicker` for smart expiry selection
 - **Icons**: [Lucide React Native](https://lucide.dev/)
 - **Animations**: [React Native Reanimated](https://docs.expo.dev/versions/latest/sdk/reanimated/)
 
@@ -89,13 +93,21 @@ For the best experience, use a physical device via **Expo Go** to access the Sma
 
 ## 📁 Project Structure
 
-- `app/`: Expo Router file-based pages.
-- `components/`: Reusable UI components (fully NativeWind-styled as of Issue #10).
-- `hooks/`: Custom React hooks for business logic.
-- `services/`: Supabase and external API clients.
-- `types/`: Global TypeScript types and schemas.
-- `specs/`: Project requirements and completed features.
-- `tailwind.config.js`: NativeWind v4 configuration with app and component content paths.
+- `app/`: Expo Router file-based pages (Login, Tabs: Inventory, Recipes, Shopping, Planner, Profile).
+- `components/`: 30+ reusable UI components, 100% NativeWind-styled with type-safe props (Issue #10).
+- `hooks/`: Custom React hooks for business logic and data fetching.
+- `services/`: Supabase client, OpenFoodFacts integration, and external API clients.
+- `types/`: Global TypeScript types, database schemas, and component prop interfaces.
+- `specs/`: Project requirements, completed features, design system documentation, and test plans.
+- `tailwind.config.js`: NativeWind v4 configuration with premium color palette and component content paths.
+
+## 🎨 Design Philosophy
+
+**"Premium Utilitarian"** — A clean, airy aesthetic balanced with high-density informational zones. The app prioritizes:
+- **Consistency**: Unified visual language across all screens via NativeWind utilities
+- **Accessibility**: WCAG-compliant contrast ratios and semantic color coding
+- **Feedback**: Haptic responses and skeleton loaders for all async operations
+- **Hierarchy**: Clear visual priority system using the "Traffic Light" freshness model (Green/Yellow/Orange/Red)
 
 ## 📜 License
 
