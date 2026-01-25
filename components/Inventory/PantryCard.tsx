@@ -15,11 +15,11 @@ interface PantryCardProps {
 }
 
 const categoryStyles: Record<string, { bg: string, text: string }> = {
-    Produce: { bg: '#dcfce7', text: '#166534' },
-    Dairy: { bg: '#dbeafe', text: '#1e40af' },
-    Spices: { bg: '#fef3c7', text: '#92400e' },
-    Protein: { bg: '#fee2e2', text: '#991b1b' },
-    Pantry: { bg: '#f3f4f6', text: '#374151' },
+    Produce: { bg: 'bg-green-50', text: 'text-green-800' },
+    Dairy: { bg: 'bg-blue-50', text: 'text-blue-800' },
+    Spices: { bg: 'bg-amber-50', text: 'text-amber-800' },
+    Protein: { bg: 'bg-red-50', text: 'text-red-800' },
+    Pantry: { bg: 'bg-gray-100', text: 'text-gray-700' },
 };
 
 export const PantryCard: React.FC<PantryCardProps> = ({ item, onPress }) => {
@@ -67,7 +67,10 @@ export const PantryCard: React.FC<PantryCardProps> = ({ item, onPress }) => {
 
     return (
         <Pressable onPress={onPress}>
-            <View className="bg-white rounded-2xl p-4 mb-3 border border-gray-100 flex-row items-center shadow-sm" style={{ elevation: 2 }}>
+            <View
+                className="bg-white rounded-2xl p-4 mb-3 border border-gray-100 flex-row items-center shadow-sm"
+                style={{ elevation: 2 }}
+            >
                 {/* Product Image/Icon */}
                 <View className="w-16 h-16 bg-gray-50 rounded-xl items-center justify-center overflow-hidden mr-4">
                     {item.image_url ? (
@@ -80,14 +83,8 @@ export const PantryCard: React.FC<PantryCardProps> = ({ item, onPress }) => {
                 {/* Product Info */}
                 <View className="flex-1">
                     <View className="flex-row items-center justify-between mb-1">
-                        <View
-                            className="px-2 py-0.5 rounded-full"
-                            style={{ backgroundColor: colors.bg }}
-                        >
-                            <Text
-                                className="text-[10px] font-bold uppercase tracking-wider"
-                                style={{ color: colors.text }}
-                            >
+                        <View className={`${colors.bg} px-2 py-0.5 rounded-full`}>
+                            <Text className={`text-[10px] font-bold uppercase tracking-wider ${colors.text}`}>
                                 {item.category}
                             </Text>
                         </View>

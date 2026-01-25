@@ -13,51 +13,36 @@ export const MealCard: React.FC<MealCardProps> = ({ meal, mealType, onPress }) =
     return (
         <Pressable
             onPress={onPress}
+            className={`bg-white rounded-2xl p-3 mb-3 border flex-row items-center ${meal ? 'border-gray-200 border-solid' : 'border-gray-100 border-dashed'
+                }`}
             style={({ pressed }) => ({
-                backgroundColor: 'white',
-                borderRadius: 16,
-                padding: 12,
-                marginBottom: 12,
-                borderWidth: 1,
-                borderColor: meal ? '#e5e7eb' : '#f3f4f6',
-                flexDirection: 'row',
-                alignItems: 'center',
                 opacity: pressed ? 0.7 : 1,
-                borderStyle: meal ? 'solid' : 'dashed'
             })}
         >
-            <View style={{
-                width: 48,
-                height: 48,
-                borderRadius: 12,
-                backgroundColor: meal ? '#f0fdf4' : '#f9fafb',
-                alignItems: 'center',
-                justifyContent: 'center',
-                marginRight: 12,
-                overflow: 'hidden'
-            }}>
+            <View className={`w-12 h-12 rounded-xl items-center justify-center mr-3 overflow-hidden ${meal ? 'bg-emerald-50' : 'bg-gray-50'
+                }`}>
                 {meal?.recipe?.image_url ? (
-                    <Image source={{ uri: meal.recipe.image_url }} style={{ width: '100%', height: '100%' }} />
+                    <Image source={{ uri: meal.recipe.image_url }} className="w-full h-full" />
                 ) : (
                     <ChefHat size={24} color={meal ? '#10b981' : '#d1d5db'} />
                 )}
             </View>
 
-            <View style={{ flex: 1 }}>
-                <Text style={{ fontSize: 12, color: '#6b7280', textTransform: 'uppercase', fontWeight: 'bold' }}>
+            <View className="flex-1">
+                <Text className="text-[10px] text-gray-400 uppercase font-black tracking-widest mb-0.5">
                     {mealType}
                 </Text>
                 {meal ? (
-                    <Text style={{ fontSize: 16, fontWeight: 'bold', color: '#111827' }} numberOfLines={1}>
+                    <Text className="text-base font-bold text-gray-900" numberOfLines={1}>
                         {meal.recipe?.name}
                     </Text>
                 ) : (
-                    <Text style={{ fontSize: 16, color: '#9ca3af' }}>Add Meal</Text>
+                    <Text className="text-base text-gray-400">Add Meal</Text>
                 )}
             </View>
 
             {!meal && (
-                <View style={{ backgroundColor: '#f3f4f6', padding: 8, borderRadius: 99 }}>
+                <View className="bg-gray-100 p-2 rounded-full">
                     <Plus size={16} color="#9ca3af" />
                 </View>
             )}

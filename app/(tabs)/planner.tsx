@@ -66,14 +66,14 @@ export default function PlannerScreen() {
     };
 
     return (
-        <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }} edges={['top']}>
-            <View style={{ flex: 1, paddingTop: 24 }}>
-                <View style={{ paddingHorizontal: 16, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 24 }}>
+        <SafeAreaView className="flex-1 bg-white" edges={['top']}>
+            <View className="flex-1 pt-6">
+                <View className="px-5 flex-row items-center justify-between mb-8">
                     <View>
-                        <Text style={{ fontSize: 30, fontWeight: 'bold', color: '#111827' }}>Meal Planner</Text>
-                        <Text style={{ fontSize: 14, color: '#6b7280' }}>The "Chef's Weekly"</Text>
+                        <Text className="text-3xl font-bold text-gray-900">Meal Planner</Text>
+                        <Text className="text-sm text-gray-500">The "Chef's Weekly"</Text>
                     </View>
-                    <View style={{ backgroundColor: '#f0fdf4', padding: 12, borderRadius: 99 }}>
+                    <View className="bg-emerald-50 p-3 rounded-full">
                         <CalendarDays size={24} color="#10b981" />
                     </View>
                 </View>
@@ -85,15 +85,15 @@ export default function PlannerScreen() {
                 />
 
                 <ScrollView
-                    style={{ flex: 1 }}
-                    contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 100 }}
+                    className="flex-1"
+                    contentContainerClassName="px-5 pb-24"
                     refreshControl={
                         <RefreshControl refreshing={isRefetching} onRefresh={refetch} tintColor="#10b981" />
                     }
                 >
-                    <View style={{ marginBottom: 32 }}>
-                        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
-                            <Text style={{ fontSize: 18, fontWeight: 'bold', color: '#111827' }}>
+                    <View className="mb-8">
+                        <View className="flex-row items-center justify-between mb-4">
+                            <Text className="text-lg font-bold text-gray-900">
                                 Meals for {selectedDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric' })}
                             </Text>
                         </View>
@@ -117,24 +117,17 @@ export default function PlannerScreen() {
 
                     {/* Quick Shopping Button */}
                     <Pressable
-                        style={{
-                            backgroundColor: '#111827',
-                            padding: 20,
-                            borderRadius: 20,
-                            flexDirection: 'row',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            opacity: isShoppingPending ? 0.7 : 1
-                        }}
+                        className={`bg-gray-900 p-5 rounded-2xl flex-row items-center justify-center shadow-lg shadow-black/20 ${isShoppingPending ? 'opacity-70' : 'opacity-100'}`}
                         onPress={handleShopForWeek}
                         disabled={isShoppingPending}
+                        style={{ elevation: 4 }}
                     >
                         {isShoppingPending ? (
                             <ActivityIndicator color="white" />
                         ) : (
                             <>
-                                <ShoppingBasket size={20} color="white" style={{ marginRight: 12 }} />
-                                <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 16 }}>Shop for Week</Text>
+                                <ShoppingBasket size={20} color="white" className="mr-3" />
+                                <Text className="text-white font-bold text-base">Shop for Week</Text>
                             </>
                         )}
                     </Pressable>
