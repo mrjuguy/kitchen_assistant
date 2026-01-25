@@ -2,7 +2,7 @@ import { AlertCircle, AlertTriangle } from 'lucide-react-native';
 import React from 'react';
 import { ImageBackground, Pressable, Text, View } from 'react-native';
 import { PantryItem } from '../../types/schema';
-import { getItemHealth } from '../../utils/pantry';
+import { getItemHealth } from '../../utils/itemHealth';
 
 interface WastingSoonCardProps {
     item: PantryItem;

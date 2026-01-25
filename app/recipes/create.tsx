@@ -1,16 +1,18 @@
-import { useRouter } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import { ChevronLeft, Download, Link as LinkIcon, Plus, Trash2 } from 'lucide-react-native';
 import React, { useState } from 'react';
 import { ActivityIndicator, Alert, Pressable, ScrollView, Text, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAddRecipe } from '../../hooks/useRecipes';
+import { RecipeStackParamList } from '../../types/navigation';
 import { extractRecipeFromUrl } from '../../utils/recipeScraper';
 
 export default function CreateRecipeScreen() {
     const router = useRouter();
+    const { source_url } = useLocalSearchParams<RecipeStackParamList['recipes/create']>();
     const addRecipeMutation = useAddRecipe();
 
-    const [importUrl, setImportUrl] = useState('');
+    const [importUrl, setImportUrl] = useState(source_url || '');
     const [isImporting, setIsImporting] = useState(false);
 
     const [name, setName] = useState('');
@@ -36,7 +38,7 @@ export default function CreateRecipeScreen() {
 
     const removeIngredientRow = (id: string) => {
         if (ingredients.length === 1) return;
-        setIngredients(ingredients.filter(i => i.id !== id));
+        setIngredients(ingredients.filter((i) => i.id !== id));
     };
 
     const updateIngredient = (id: string, field: 'name' | 'quantity' | 'unit', value: string) => {
@@ -49,7 +51,7 @@ export default function CreateRecipeScreen() {
 
     const removeInstructionStep = (id: string) => {
         if (instructions.length === 1) return;
-        setInstructions(instructions.filter(i => i.id !== id));
+        setInstructions(instructions.filter((i) => i.id !== id));
     };
 
     const updateInstruction = (id: string, text: string) => {
@@ -105,13 +107,13 @@ export default function CreateRecipeScreen() {
             return;
         }
 
-        const validIngredients = ingredients.filter(i => i.name.trim() !== '');
+        const validIngredients = ingredients.filter((i) => i.name.trim() !== '');
         if (validIngredients.length === 0) {
             Alert.alert("Missing Ingredients", "Please add at least one ingredient.");
             return;
         }
 
-        const validInstructions = instructions.filter(i => i.text.trim() !== '');
+        const validInstructions = instructions.filter((i) => i.text.trim() !== '');
         if (validInstructions.length === 0) {
             Alert.alert("Missing Instructions", "Please add at least one instruction step.");
             return;
@@ -129,7 +131,7 @@ export default function CreateRecipeScreen() {
                 unit: i.unit.trim() || 'items'
             })),
             instructions: validInstructions.map(i => i.text.trim()),
-            tags: tags.split(',').map(t => t.trim()).filter(t => t !== ''),
+            tags: tags.split(',').map((t: string) => t.trim()).filter((t: string) => t !== ''),
             author: author.trim(),
             source_url: sourceUrlData || undefined
         };
@@ -140,7 +142,7 @@ export default function CreateRecipeScreen() {
                     { text: "OK", onPress: () => router.back() }
                 ]);
             },
-            onError: (error) => {
+            onError: (error: Error) => {
                 Alert.alert("Error", error.message);
             }
         });

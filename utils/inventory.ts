@@ -1,5 +1,5 @@
 import { PantryItem } from '../types/schema';
-import { getItemHealth } from './pantry';
+import { getItemHealth } from './itemHealth';
 
 export const groupItemsByLocation = (items: PantryItem[]) => {
     const grouped = {

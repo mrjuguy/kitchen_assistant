@@ -55,10 +55,9 @@ export const useGapAnalysis = (recipeId?: string, servings?: number) => {
 
             const isSafe = !allergenWarning;
 
-            // 2. Check Ingredients
             recipe.ingredients.forEach((reqIng: RecipeIngredient) => {
                 // Find ALL items that match
-                const matchingItems = pantry.filter((p: any) => isMatch(p.name, reqIng.name));
+                const matchingItems = pantry.filter((p) => isMatch(p.name, reqIng.name));
 
                 // Sum available quantity
                 const available = matchingItems.reduce((sum, item) => sum + item.quantity, 0);

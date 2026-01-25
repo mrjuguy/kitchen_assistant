@@ -1,3 +1,4 @@
+import { GapAnalysis } from '../hooks/useGapAnalysis';
 import { RecipeWithIngredients } from '../types/schema';
 
 export type RecipeFilterType = 'all' | 'ready' | 'missing';
@@ -6,7 +7,7 @@ export interface FilterOptions {
     searchQuery?: string;
     statusFilter?: RecipeFilterType;
     tags?: string[];
-    analysisMap?: Record<string, any>;
+    analysisMap?: Record<string, GapAnalysis>;
 }
 
 export const filterRecipes = (
@@ -21,7 +22,7 @@ export const filterRecipes = (
             const query = searchQuery.toLowerCase();
             const matchesName = (recipe.name?.toLowerCase() || '').includes(query);
             const matchesDesc = (recipe.description?.toLowerCase() || '').includes(query);
-            const matchesTags = (recipe.tags || []).some(t => t.toLowerCase().includes(query));
+            const matchesTags = (recipe.tags || []).some((t: string) => t.toLowerCase().includes(query));
 
             if (!matchesName && !matchesDesc && !matchesTags) {
                 return false;
@@ -53,7 +54,7 @@ export const filterRecipes = (
 export const getAvailableTags = (recipes: RecipeWithIngredients[]): string[] => {
     const tagsSet = new Set<string>();
     recipes.forEach(recipe => {
-        (recipe.tags || []).forEach(tag => tagsSet.add(tag));
+        (recipe.tags || []).forEach((tag: string) => tagsSet.add(tag));
     });
     return Array.from(tagsSet).sort();
 };

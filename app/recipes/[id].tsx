@@ -9,8 +9,10 @@ import { useConsumeIngredients } from '../../hooks/usePantry';
 import { useDeleteRecipe, useRecipes } from '../../hooks/useRecipes';
 import { useAddShoppingItems } from '../../hooks/useShoppingList';
 
+import { RecipeStackParamList } from '../../types/navigation';
+
 export default function RecipeDetailScreen() {
-    const { id } = useLocalSearchParams<{ id: string }>();
+    const { id } = useLocalSearchParams<RecipeStackParamList['recipes/[id]']>();
     const router = useRouter();
     const insets = useSafeAreaInsets();
     const { data: recipes, isLoading } = useRecipes();

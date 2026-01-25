@@ -37,10 +37,12 @@ const mockRecipes: RecipeWithIngredients[] = [
     } as any
 ];
 
-const mockAnalysis = {
-    '1': { status: 'Green' }, // Ready
-    '2': { status: 'Yellow' }, // Missing
-    '3': { status: 'Red' } // Missing
+import { GapAnalysis } from '../../hooks/useGapAnalysis';
+
+const mockAnalysis: Record<string, GapAnalysis> = {
+    '1': { status: 'Green' } as any, // Ready
+    '2': { status: 'Yellow' } as any, // Missing
+    '3': { status: 'Red' } as any // Missing
 };
 
 describe('recipeFilters', () => {

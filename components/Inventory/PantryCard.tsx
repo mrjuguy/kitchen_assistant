@@ -4,9 +4,9 @@ import React from 'react';
 import { Alert, Image, Pressable, Text, View } from 'react-native';
 import { useDeletePantryItem, useUpdatePantryItem } from '../../hooks/usePantry';
 import { PantryItem, UpdatePantryItem } from '../../types/schema';
-import { getItemHealth } from '../../utils/pantry';
 import { UNITS_DB } from '../../utils/units';
 import { ConsumptionSlider } from './ConsumptionSlider';
+import { ExpiryBadge } from './ExpiryBadge';
 import { QuantityControl } from './QuantityControl';
 
 interface PantryCardProps {
@@ -126,27 +126,14 @@ export const PantryCard: React.FC<PantryCardProps> = ({ item, onPress }) => {
                             <Trash2 size={16} color="#ef4444" />
                         </Pressable>
                     </View>
-                    <Text style={{ fontSize: 18, fontWeight: 'bold', color: '#111827', marginBottom: 4 }} numberOfLines={1}>
+                    <Text style={{ fontSize: 18, fontWeight: 'bold', color: '#111827', marginBottom: 6 }} numberOfLines={1}>
                         {item.name}
                     </Text>
-                    {item.expiry_date && (
-                        <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 8 }}>
-                            <View style={{
-                                width: 6,
-                                height: 6,
-                                borderRadius: 3,
-                                backgroundColor: getItemHealth(item.expiry_date).color,
-                                marginRight: 6
-                            }} />
-                            <Text style={{
-                                fontSize: 12,
-                                fontWeight: '600',
-                                color: getItemHealth(item.expiry_date).color
-                            }}>
-                                {getItemHealth(item.expiry_date).label}
-                            </Text>
-                        </View>
-                    )}
+
+                    <View style={{ marginBottom: 10 }}>
+                        <ExpiryBadge expiryDate={item.expiry_date} />
+                    </View>
+
                     <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
                         <QuantityControl
                             quantity={item.quantity}

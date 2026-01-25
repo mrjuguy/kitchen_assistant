@@ -38,17 +38,30 @@ export async function extractRecipeFromUrl(url: string): Promise<ScrapedRecipe |
     }
 }
 
+interface JsonLdRecipe {
+    '@type'?: string | string[];
+    name?: string;
+    description?: string;
+    image?: string | string[] | { url?: string;[key: string]: any };
+    recipeInstructions?: string | any[];
+    recipeIngredient?: string | string[];
+    prepTime?: string;
+    cookTime?: string;
+    recipeYield?: string | number;
+    author?: string | any[] | { name?: string;[key: string]: any };
+    keywords?: string | string[];
+    [key: string]: any;
+}
+
 /**
  * Regex-based JSON-LD extractor.
  * Finds <script type="application/ld+json">...</script> blocks.
  */
-function extractJsonLd(html: string): any | null {
+function extractJsonLd(html: string): JsonLdRecipe | null {
     // Regex to capture content inside JSON-LD script tags
-    // Updated to allow any attributes before or after 'type'
     const regex = /<script\s+[^>]*?type=["']application\/ld\+json["'][^>]*?>([\s\S]*?)<\/script>/gi;
     let match;
 
-    // Try to find a match that looks like a Recipe
     while ((match = regex.exec(html)) !== null) {
         const content = match[1];
         try {
@@ -56,7 +69,6 @@ function extractJsonLd(html: string): any | null {
             const recipe = findRecipeInJson(json);
             if (recipe) return recipe;
         } catch (e) {
-            // Continue if parse fails
             console.log('JSON Parse failed for block', e);
         }
     }
@@ -66,7 +78,7 @@ function extractJsonLd(html: string): any | null {
 /**
  * Traverses JSON (could be object, array, or graph) to find @type "Recipe"
  */
-function findRecipeInJson(data: any): any | null {
+function findRecipeInJson(data: any): JsonLdRecipe | null {
     if (!data) return null;
 
     if (Array.isArray(data)) {
@@ -81,9 +93,9 @@ function findRecipeInJson(data: any): any | null {
         const type = data['@type'];
         if (type) {
             if (Array.isArray(type)) {
-                if (type.includes('Recipe')) return data;
+                if (type.includes('Recipe')) return data as JsonLdRecipe;
             } else if (type === 'Recipe') {
-                return data;
+                return data as JsonLdRecipe;
             }
         }
 
@@ -96,15 +108,20 @@ function findRecipeInJson(data: any): any | null {
     return null;
 }
 
-function mapJsonLdToRecipe(data: any, sourceUrl: string): ScrapedRecipe {
+function mapJsonLdToRecipe(data: JsonLdRecipe, sourceUrl: string): ScrapedRecipe {
     const name = decodeHtmlEntities(data.name || 'Untitled Recipe');
     const description = decodeHtmlEntities(data.description || '');
 
     // Image can be object, array, or string
     let image_url: string | undefined;
-    if (typeof data.image === 'string') image_url = data.image;
-    else if (Array.isArray(data.image) && data.image.length > 0) image_url = data.image[0]; // URL or Object
-    else if (typeof data.image === 'object' && data.image.url) image_url = data.image.url;
+    if (typeof data.image === 'string') {
+        image_url = data.image;
+    } else if (Array.isArray(data.image) && data.image.length > 0) {
+        const first = data.image[0];
+        image_url = typeof first === 'string' ? first : (first as any).url;
+    } else if (data.image && typeof data.image === 'object' && !Array.isArray(data.image)) {
+        image_url = (data.image as any).url;
+    }
 
     // Instructions
     let instructions: string[] = [];
@@ -139,8 +156,8 @@ function mapJsonLdToRecipe(data: any, sourceUrl: string): ScrapedRecipe {
     }));
 
     // Durations (ISO 8601 PT..)
-    const prep_time = parseIsoDuration(data.prepTime);
-    const cook_time = parseIsoDuration(data.cookTime);
+    const prep_time = parseIsoDuration(data.prepTime || '');
+    const cook_time = parseIsoDuration(data.cookTime || '');
     const servings = parseServings(data.recipeYield);
 
     // Author
@@ -149,9 +166,10 @@ function mapJsonLdToRecipe(data: any, sourceUrl: string): ScrapedRecipe {
         if (typeof data.author === 'string') {
             author = data.author;
         } else if (Array.isArray(data.author) && data.author.length > 0) {
-            author = data.author[0].name;
+            const firstAuthor = data.author[0];
+            author = typeof firstAuthor === 'string' ? firstAuthor : firstAuthor.name;
         } else if (typeof data.author === 'object') {
-            author = data.author.name;
+            author = (data.author as any).name;
         }
     }
     if (author) author = decodeHtmlEntities(author);

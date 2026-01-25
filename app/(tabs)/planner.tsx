@@ -8,6 +8,8 @@ import { WeekStrip } from '../../components/Planner/WeekStrip';
 import { useMealPlan, useWeeklyShoppingList } from '../../hooks/useMealPlan';
 import { formatDate, getWeekDays } from '../../utils/date';
 
+import { RecipeStackParamList } from '../../types/navigation';
+
 export default function PlannerScreen() {
     const router = useRouter();
     const [selectedDate, setSelectedDate] = useState(new Date());
@@ -31,7 +33,7 @@ export default function PlannerScreen() {
         };
     }, [mealPlans, selectedDateStr]);
 
-    const handleAddMeal = (type: 'breakfast' | 'lunch' | 'dinner') => {
+    const handleAddMeal = (type: RecipeStackParamList['(tabs)/recipes']['meal_type']) => {
         router.push({
             pathname: '/(tabs)/recipes',
             params: {
@@ -39,7 +41,7 @@ export default function PlannerScreen() {
                 date: selectedDateStr,
                 meal_type: type
             }
-        } as any);
+        });
     };
 
     const handleShopForWeek = async () => {

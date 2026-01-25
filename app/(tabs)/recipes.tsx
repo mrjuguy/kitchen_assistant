@@ -9,13 +9,16 @@ import { useAddToPlan } from '../../hooks/useMealPlan';
 import { useRecipes } from '../../hooks/useRecipes';
 import { filterRecipes, getAvailableTags } from '../../utils/recipeFilters';
 
+import { GapAnalysis } from '../../hooks/useGapAnalysis';
+import { RecipeStackParamList } from '../../types/navigation';
+
 export default function RecipesScreen() {
     const { data: recipes, isLoading, isError, refetch, isRefetching } = useRecipes();
     const router = useRouter();
-    const { mode, date, meal_type } = useLocalSearchParams<{ mode?: string, date?: string, meal_type?: string }>();
+    const { mode, date, meal_type } = useLocalSearchParams<RecipeStackParamList['(tabs)/recipes']>();
     const addToPlanMutation = useAddToPlan();
 
-    const analysisMap = useGapAnalysis() as Record<string, any> | null;
+    const analysisMap = useGapAnalysis() as Record<string, GapAnalysis> | null;
     const [searchQuery, setSearchQuery] = useState('');
     const [filter, setFilter] = useState<'all' | 'ready' | 'missing'>('all');
     const [selectedTags, setSelectedTags] = useState<string[]>([]);
@@ -28,7 +31,7 @@ export default function RecipesScreen() {
                 `Schedule ${recipeName} for ${meal_type} on ${date}?`,
                 [
                     { text: "Cancel", style: "cancel" },
-                    { text: "View Details", onPress: () => router.push(`/recipes/${recipeId}` as any) },
+                    { text: "View Details", onPress: () => router.push(`/recipes/${recipeId}`) },
                     {
                         text: "Schedule",
                         onPress: () => {
@@ -46,7 +49,7 @@ export default function RecipesScreen() {
                 ]
             );
         } else {
-            router.push(`/recipes/${recipeId}` as any);
+            router.push(`/recipes/${recipeId}`);
         }
     };
 
@@ -274,7 +277,7 @@ export default function RecipesScreen() {
 
             {/* FAB to Add Recipe - Moved outside the padded view */}
             <Pressable
-                onPress={() => router.push('/recipes/create' as any)}
+                onPress={() => router.push('/recipes/create')}
                 style={{
                     position: 'absolute',
                     bottom: 40,

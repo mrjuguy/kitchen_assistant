@@ -1,7 +1,7 @@
 import { addDays, startOfToday } from 'date-fns';
 import * as Notifications from 'expo-notifications';
+import { PantryItem } from '../../types/schema';
 import { scheduleExpiryNotification } from '../notifications';
-import { PantryItem } from '../types/schema';
 
 // Mock expo-notifications
 jest.mock('expo-notifications', () => ({

@@ -1,63 +1,78 @@
-# Active PRD: Kitchen Assistant Phase 3 - Recipe Experience Refactor
-**Focus**: Elevating the Recipe UI to a "Premium" standard using Stitch design principles.
-**Current Status**: ✅ **Completed** (Ref: recipe_experience_review.md)
+# Active PRD: Phase 4 - Stability & Type Safety (VC-11)
+
+**Focus**: Technical Debt reduction, typed routing, and strict recipe schema.
+**Current Status**: In Progress
 
 ## 1. Feature Status Summary
 
 | Feature | Priority | Status |
 | :--- | :--- | :--- |
-| **Recipe Detail UI Refactor** | High | ✅ **Completed** |
-| **Gap Analysis "Visuals"** | High | ✅ **Completed** |
-| **Search & Filter Polish** | Medium | ✅ **Completed** |
+| **Typed Routing** | Urgent | ✅ **Completed** |
+| **Recipe Schema Cleanup** | Urgent | ✅ **Completed** |
+| **Pantry Expiry Logic** | High | ✅ **Completed** |
+| **Expiry Badges** | High | ✅ **Completed** |
 
 ---
 
-## 2. Feature: Recipe Detail UI Refactor (Stitch Design)
-**Goal**: Transform the Recipe Detail screen from a basic data view into an immersive, "Chef's Interface" that provides instant clarity on "Can I cook this?" via visual gap analysis.
+## 2. Feature: Typed Routing & Recipe Schema Cleanup (VC-11)
+**Goal**: Eliminate `any` types in the Recipe module to improve reliability, DX, and prevent runtime crashes during navigation.
 
 ### User Stories
-- **The Visual Cook**: As a user, I want to see a beautiful "Hero" image of the dish immediately, so I feel inspired to cook.
-- **The Inventory Manager**: As a user, I want to see a clear visual progress bar (Green/Red) indicating how many ingredients I have vs. need, so I don't have to read every line item.
-- **The Shopper**: As a user, I want missing ingredients to be grouped and clearly marked with an "Add to Cart" action, so I can seamlessly bridge the gap.
-- **The Planner**: As a user, I want to easily adjust the serving size and have all ingredient quantities update automatically.
+- **Developer Experience**: As a developer, I want to have full autocomplete and type safety when navigating between recipe screens so that I catch errors at build time.
+- **Application Stability**: As a user, I want a stable app where recipe data always loads correctly without unexpected "undefined" errors.
 
-### UX & Design Guidelines (Stitch)
-- **Hero Header**: Full-bleed image with gradient overlay. Absolute positioned back/action buttons.
-- **Gap Analysis Widget**:
-  -   **Progress Bar**: A segmented bar showing % match.
-  -   **Status Text**: "You have X of Y ingredients".
-  -   **Color Coding**: Green (In Stock), Red (Missing).
-- **Ingredient Cards**:
-  -   Rich cards with icons (Checkmark vs Alert).
-  -   "In Pantry" vs "Missing" badges.
-  -   Missing items have a direct "+" action.
-- **Sticky Footer**:
-  -   Floating action bar at the bottom.
-  -   Primary action changes based on status:
-    -   100% Match: "Cook This Now"
-    -   <100% Match: "Shop Missing" + "Cook (Partial)"
+### Technical Approach & Schema
+1.  **Strict Interfaces**:
+    - Ensure `RecipeWithIngredients` is correctly used everywhere.
+    - Define `RecipeStackParamList` to type all routes under `/recipes/`.
+2.  **Navigation Cleanup**:
+    - Update `router.push` and `router.replace` calls to use typed routes instead of `as any`.
+    - Properly type `useLocalSearchParams` in `[id].tsx` and `recipes.tsx`.
+3.  **Codebase Refactor**:
+    - Replace `any` in `filterRecipes`, `getAvailableTags`, and `RecipeCard`.
+    - Ensure `useRecipes` and `useAddRecipe` hooks return strictly typed data.
 
-### Technical Approach
-1.  **Dependencies**:
-    -   Install `expo-linear-gradient` for hero overlay.
-2.  **Hooks Update (`useGapAnalysis`)**:
-    -   Enhance hook to return `percentage`, `totalIngredients`, and `missingIngredients` lists directly (avoiding recalculation in UI).
-3.  **UI Components (`app/recipes/[id].tsx`)**:
-    -   Refactor to use `ScrollView` with `LinearGradient` hero.
-    -   Implement `PortionController` (local state for `servings`).
-    -   Rebuild ingredient list using new "Card" styling from Stitch HTML.
+### UX & Design Guidelines
+- No visual changes requested, but performance might slightly improve due to cleaner data handling.
+- Ensure that "Ready to Cook" and "Missing Ingredients" logic remains performant (related to VC-17).
+
+### Edge Cases & Constraints
+- **Deep Linking**: Ensure that passing an `id` to `/recipes/[id]` remains compatible with deep links if they exist.
+- **Dynamic Search Params**: The `recipes.tsx` tab handles `mode`, `date`, and `meal_type` from the Planner. These must be optional and correctly typed.
 
 ### Checklist (To Do)
-- [x] **Dependencies**: Install `expo-linear-gradient`.
-- [x] **Backend**: Update `useGapAnalysis` to export rich stats (percentage, missing lists).
-- [x] **Frontend**:
-    - [x] Implement Hero Header & Gradient.
-    - [x] Build Gap Analysis Progress Widget.
-    - [x] Build Ingredient Cards with Portion Scaling.
-    - [x] Build Sticky Footer with dynamic actions.
+- [x] **Type Definitions**:
+    - [x] Create/Update `types/navigation.ts` for route params.
+    - [x] Audit `types/schema.ts` for completeness.
+- [x] **Hooks**:
+    - [x] Clean up `hooks/useRecipes.ts` return types.
+    - [x] Update `hooks/useGapAnalysis.ts` to be strictly typed.
+- [x] **Screens**:
+    - [x] Refactor `app/(tabs)/recipes.tsx` (Remove `any`, type `mode/date`).
+    - [x] Refactor `app/recipes/[id].tsx` (Type params and recipe state).
+    - [x] Refactor `app/recipes/create.tsx` (Type form state and scraper logic).
+- [x] **Utils**:
+    - [x] Type `utils/recipeFilters.ts`.
+    - [x] Type `utils/recipeScraper.ts` (Address VC-16 if possible).
 - [x] **Verification**:
-    - [x] Test "Cook Now" flow (deducts inventory).
-    - [x] Test "Shop Missing" flow (adds to list).
-    - [x] Verify portion scaling math.
+    - [x] Verify navigation from Recipes tab to Detail.
+    - [x] Verify navigation from Planner to Recipes (select mode).
+    - [x] Run `tsc` to verify zero type errors in the Recipe module.
 
 ---
+
+## 3. Feature: Pantry Health & Expiry (VC-6 & VC-7)
+**Goal**: Provide visual feedback for expiring items using a "Traffic Light" system.
+
+### Checklist (To Do)
+- [x] **Core Logic**:
+    - [x] Create `utils/itemHealth.ts` utility for status categorization.
+    - [x] Define HealthStatus type: 'good' | 'warning' | 'critical' | 'expired'.
+    - [x] Add unit tests for categorization thresholds.
+- [x] **UI Components**:
+    - [x] Create `components/Inventory/ExpiryBadge.tsx` with dynamic colors.
+    - [x] Integrate `ExpiryBadge` into `PantryCard.tsx`.
+    - [x] Update `WastingSoonCard.tsx` to use central logic.
+- [x] **Cleanup**:
+    - [x] Deprecate and remove `utils/pantry.ts`.
+    - [x] Update `PantryScreen` (index.tsx) to use the new utility for stats and filtering.

@@ -12,7 +12,7 @@ import { usePantry } from '../../hooks/usePantry';
 import { supabase } from '../../services/supabase';
 import { PantryItem } from '../../types/schema';
 import { groupItemsByExpiry, groupItemsByLocation } from '../../utils/inventory';
-import { getItemHealth } from '../../utils/pantry';
+import { getItemHealth } from '../../utils/itemHealth';
 
 if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
   UIManager.setLayoutAnimationEnabledExperimental(true);
@@ -60,7 +60,7 @@ export default function PantryScreen() {
       .sort((a, b) => {
         const healthA = getItemHealth(a.expiry_date);
         const healthB = getItemHealth(b.expiry_date);
-        return (healthA.daysRemaining || 999) - (healthB.daysRemaining || 999);
+        return (healthA.daysRemaining ?? 999) - (healthB.daysRemaining ?? 999);
       })
       .slice(0, 5);
   }, [items]);
@@ -69,7 +69,7 @@ export default function PantryScreen() {
     if (!items || items.length === 0) return { total: 0, score: 100 };
     const healthyCount = items.filter(i => {
       const health = getItemHealth(i.expiry_date);
-      return health.status === 'good' || health.status === 'unknown';
+      return health.status === 'good';
     }).length;
     const scoreValue = Math.round((healthyCount / items.length) * 100);
     return { total: items.length, score: scoreValue };
