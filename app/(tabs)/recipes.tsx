@@ -75,7 +75,7 @@ export default function RecipesScreen() {
 
     if (isLoading) {
         return (
-            <SafeAreaView className="flex-1 bg-white" edges={['top']}>
+            <SafeAreaView className="flex-1 bg-[#f5f7f8]" edges={['top']}>
                 <View className="px-5 py-6">
                     <Text className="text-3xl font-bold text-gray-900">Recipes</Text>
                     <View className="h-4 w-32 bg-gray-100 rounded-lg mt-2 mb-8" />
@@ -88,7 +88,7 @@ export default function RecipesScreen() {
     }
 
     return (
-        <SafeAreaView className="flex-1 bg-white" edges={['top']}>
+        <SafeAreaView className="flex-1 bg-[#f5f7f8]" edges={['top']}>
             <View className="flex-1 px-5 pt-6">
                 {mode === 'select' && date && meal_type ? (
                     <View className="flex-row items-center justify-between mb-6 bg-blue-50 p-4 rounded-2xl border border-blue-100">

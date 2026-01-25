@@ -65,14 +65,14 @@ export default function ProfileScreen() {
 
     if (isLoading) {
         return (
-            <View className="flex-1 justify-center items-center bg-white">
+            <View className="flex-1 justify-center items-center bg-[#f5f7f8]">
                 <ActivityIndicator size="large" color="#10b981" />
             </View>
         );
     }
 
     return (
-        <SafeAreaView className="flex-1 bg-white" edges={['top']}>
+        <SafeAreaView className="flex-1 bg-[#f5f7f8]" edges={['top']}>
             <ScrollView contentContainerClassName="px-5 pt-6" showsVerticalScrollIndicator={false}>
                 <View className="flex-row justify-between items-center mb-8">
                     <View>
@@ -128,8 +128,8 @@ export default function ProfileScreen() {
                                 key={item}
                                 onPress={() => toggleAllergen(item)}
                                 className={`px-4 py-2.5 rounded-xl m-1 ${selectedAllergens.includes(item)
-                                        ? 'bg-red-100 border border-red-200'
-                                        : 'bg-gray-100 border border-transparent'
+                                    ? 'bg-red-100 border border-red-200'
+                                    : 'bg-gray-100 border border-transparent'
                                     }`}
                             >
                                 <Text
@@ -158,8 +158,8 @@ export default function ProfileScreen() {
                                 key={item}
                                 onPress={() => togglePref(item)}
                                 className={`px-4 py-2.5 rounded-xl m-1 ${selectedPrefs.includes(item)
-                                        ? 'bg-emerald-100 border border-emerald-200'
-                                        : 'bg-gray-100 border border-transparent'
+                                    ? 'bg-emerald-100 border border-emerald-200'
+                                    : 'bg-gray-100 border border-transparent'
                                     }`}
                             >
                                 <Text
