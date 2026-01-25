@@ -28,8 +28,9 @@ A premium, inventory-first kitchen management application built with Expo and Su
 - **Inventory Audits**: Gentle, non-intrusive prompts to verify stock for stale items (untouched > 7 days).
 - **Household Management**: Multi-user collaboration with invite codes. Shared pantry, recipes, and shopping lists across members with granular security.
 - **Pantry Health System**: Centralized "Traffic Light" freshness logic (Green/Yellow/Orange/Red) with visual `ExpiryBadge` indicators. Provides precise "Wasting Soon" warnings (Today, Tomorrow, 2 Days) and strict time-based categorization.
-- **Redesigned "Add Item" Experience**: Immersive entry flow using the "Stitch" visual language. Includes a gesture-based fractional quantity slider, smart date chips, and strictly typed validation for multi-target saving (Pantry/Shopping).
-- **Modular Component Architecture**: Decoupled UI logic into reusable, stable components (Smart Input, Expiry Selector, Quantity Slider) built with `Pressable` for maximum reliability.
+- **Redesigned "Add Item" Experience**: Immersive entry flow using the "Stitch" visual language. Includes a gesture-based fractional quantity slider, multi-select storage tagging, and strictly typed validation for multi-target saving (Pantry/Shopping).
+- **Smart Expiry Selection**: Optimized date input with one-tap chips (+1 Week, +1 Month, etc.), satisfying haptic feedback, and a native system calendar for custom dates. Intelligent synchronization ensures UI chips react to manual date selections.
+- **Accessibility & UX Foundations**: Comprehensive WCAG-compliant accessibility labels, localized date formatting, and high-contrast Emerald branding for secondary active states.
 - **Premium UI**: Modern design with skeleton loaders, haptic feedback, and NativeWind v4 styling.
 
 ## 🛠 Tech Stack
@@ -40,6 +41,7 @@ A premium, inventory-first kitchen management application built with Expo and Su
 - **State Management**: [TanStack Query](https://tanstack.com/query/latest)
 - **Product Data**: [OpenFoodFacts API](https://world.openfoodfacts.org/)
 - **Styling**: [NativeWind](https://www.nativewind.dev/) & `expo-linear-gradient`
+- **Native Modules**: `expo-haptics` & `@react-native-community/datetimepicker`
 - **Icons**: [Lucide React Native](https://lucide.dev/)
 - **Animations**: [React Native Reanimated](https://docs.expo.dev/versions/latest/sdk/reanimated/)
 

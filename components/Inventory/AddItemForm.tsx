@@ -178,6 +178,7 @@ export const AddItemForm: React.FC<AddItemFormProps> = ({ onClose, startWithScan
 
                 {target === 'pantry' && (
                     <ExpirySelector
+                        currentDate={expiryDate ? new Date(expiryDate) : null}
                         onSelect={(date) => setExpiryDate(date.toISOString())}
                     />
                 )}

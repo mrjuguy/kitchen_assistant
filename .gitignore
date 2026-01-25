@@ -44,3 +44,5 @@ yarn-error.*
 # agentic tools
 .agent/
 PROJECT_RULES.md
+specs/issue_*.md
+specs/draft_PRD.md

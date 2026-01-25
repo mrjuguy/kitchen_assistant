@@ -1,78 +1,51 @@
-# Active PRD: Phase 4 - Stability & Type Safety (VC-11)
+# PRD: Smart Expiration Date Input Chips (VC-8)
 
-**Focus**: Technical Debt reduction, typed routing, and strict recipe schema.
-**Current Status**: In Progress
+## 1. Introduction
+**Feature**: Smart Expiration Date Input Chips
+**Cycle**: Cycle 1: Freshness Foundation
+**Goal**: Reduce the friction of manually selecting expiration dates by providing one-tap "Quick Chips" for common durations (e.g., +1 week, +1 month).
 
-## 1. Feature Status Summary
+## 2. User Stories
+- **As a Shopper**, I want to quickly tap "+1 Week" for my milk so I don't have to scroll through a calendar picker.
+- **As a Home Cook**, I want to tap "+1 Year" for canned goods to roughly estimate shelf life without precision fatigue.
+- **As a User**, I want visual feedback when a chip is selected so I know the date has been updated.
 
-| Feature | Priority | Status |
-| :--- | :--- | :--- |
-| **Typed Routing** | Urgent | ✅ **Completed** |
-| **Recipe Schema Cleanup** | Urgent | ✅ **Completed** |
-| **Pantry Expiry Logic** | High | ✅ **Completed** |
-| **Expiry Badges** | High | ✅ **Completed** |
+## 3. UX & Design Guidelines
+- **Visuals**:
+  - Horizontal scrollable list (or flex wrap) of "Chips".
+  - **Inactive Chip**: Gray background, standard text.
+  - **Active Chip**: Brand color background (Emerald-500), white text.
+  - **Animation**: Gentle scale/fade on press.
+- **Micro-interactions**:
+  - Tapping a chip updates the form's `expiryDate` field immediately.
+  - If the user manually picks a date that matches a chip, that chip should visually activate (optional nice-to-have).
+- **Placement**: Directly below the "Expiration Date" label or Date Picker trigger in the Add Item form.
 
----
+## 4. Implementation Plan
 
-## 2. Feature: Typed Routing & Recipe Schema Cleanup (VC-11)
-**Goal**: Eliminate `any` types in the Recipe module to improve reliability, DX, and prevent runtime crashes during navigation.
+### 4.1 New Component
+- **File**: `components/Inventory/AddItems/SmartDateChips.tsx` (New)
+- **Props**:
+  - `onSelectDate: (date: Date) => void`
+  - `currentDate: Date | null`
+- **Logic**:
+  - Define offsets: `[{ label: '+3 Days', days: 3 }, { label: '+1 Week', days: 7 }, { label: '+1 Month', months: 1 }, { label: '+1 Year', years: 1 }]`.
+  - Use `date-fns` for robust date math (`addDays`, `addMonths`).
 
-### User Stories
-- **Developer Experience**: As a developer, I want to have full autocomplete and type safety when navigating between recipe screens so that I catch errors at build time.
-- **Application Stability**: As a user, I want a stable app where recipe data always loads correctly without unexpected "undefined" errors.
+### 4.2 Integration
+- **Target File**: `components/Inventory/AddItemForm.tsx`
+- **Action**: 
+  - Import `SmartDateChips`.
+  - Place it near the Expiry Date input.
+  - Wire up `onSelectDate` to the form's state setter/`setValue`.
 
-### Technical Approach & Schema
-1.  **Strict Interfaces**:
-    - Ensure `RecipeWithIngredients` is correctly used everywhere.
-    - Define `RecipeStackParamList` to type all routes under `/recipes/`.
-2.  **Navigation Cleanup**:
-    - Update `router.push` and `router.replace` calls to use typed routes instead of `as any`.
-    - Properly type `useLocalSearchParams` in `[id].tsx` and `recipes.tsx`.
-3.  **Codebase Refactor**:
-    - Replace `any` in `filterRecipes`, `getAvailableTags`, and `RecipeCard`.
-    - Ensure `useRecipes` and `useAddRecipe` hooks return strictly typed data.
+## 5. Edge Cases & Constraints
+- **Leap Years**: Handled by `date-fns`.
+- **Timezones**: Set time to noon or end-of-day in UTC to avoid "previous day" glitches when saving to Supabase (which uses Timestamptz).
+- **Edit Mode**: Ensure chips work when editing an existing item (relative to *Today*, not the *Old* expiry date).
 
-### UX & Design Guidelines
-- No visual changes requested, but performance might slightly improve due to cleaner data handling.
-- Ensure that "Ready to Cook" and "Missing Ingredients" logic remains performant (related to VC-17).
-
-### Edge Cases & Constraints
-- **Deep Linking**: Ensure that passing an `id` to `/recipes/[id]` remains compatible with deep links if they exist.
-- **Dynamic Search Params**: The `recipes.tsx` tab handles `mode`, `date`, and `meal_type` from the Planner. These must be optional and correctly typed.
-
-### Checklist (To Do)
-- [x] **Type Definitions**:
-    - [x] Create/Update `types/navigation.ts` for route params.
-    - [x] Audit `types/schema.ts` for completeness.
-- [x] **Hooks**:
-    - [x] Clean up `hooks/useRecipes.ts` return types.
-    - [x] Update `hooks/useGapAnalysis.ts` to be strictly typed.
-- [x] **Screens**:
-    - [x] Refactor `app/(tabs)/recipes.tsx` (Remove `any`, type `mode/date`).
-    - [x] Refactor `app/recipes/[id].tsx` (Type params and recipe state).
-    - [x] Refactor `app/recipes/create.tsx` (Type form state and scraper logic).
-- [x] **Utils**:
-    - [x] Type `utils/recipeFilters.ts`.
-    - [x] Type `utils/recipeScraper.ts` (Address VC-16 if possible).
-- [x] **Verification**:
-    - [x] Verify navigation from Recipes tab to Detail.
-    - [x] Verify navigation from Planner to Recipes (select mode).
-    - [x] Run `tsc` to verify zero type errors in the Recipe module.
-
----
-
-## 3. Feature: Pantry Health & Expiry (VC-6 & VC-7)
-**Goal**: Provide visual feedback for expiring items using a "Traffic Light" system.
-
-### Checklist (To Do)
-- [x] **Core Logic**:
-    - [x] Create `utils/itemHealth.ts` utility for status categorization.
-    - [x] Define HealthStatus type: 'good' | 'warning' | 'critical' | 'expired'.
-    - [x] Add unit tests for categorization thresholds.
-- [x] **UI Components**:
-    - [x] Create `components/Inventory/ExpiryBadge.tsx` with dynamic colors.
-    - [x] Integrate `ExpiryBadge` into `PantryCard.tsx`.
-    - [x] Update `WastingSoonCard.tsx` to use central logic.
-- [x] **Cleanup**:
-    - [x] Deprecate and remove `utils/pantry.ts`.
-    - [x] Update `PantryScreen` (index.tsx) to use the new utility for stats and filtering.
+## 6. Verification Plan
+- [x] User can tap "+1 Week" and see the date picker update to exactly 7 days from now.
+- [x] User can tap "+1 Month" and see the correct date.
+- [x] Submitting the form saves the computed date to Supabase.
+- [x] Component is styled using NativeWind class names.

@@ -32,12 +32,15 @@ export const groupItemsByExpiry = (items: PantryItem[]) => {
     };
 
     items.forEach(item => {
+        if (!item.expiry_date) {
+            sections['No Date'].push(item);
+            return;
+        }
         const health = getItemHealth(item.expiry_date);
         if (health.status === 'expired') sections['Expired'].push(item);
         else if (health.status === 'critical') sections['Critical'].push(item);
         else if (health.status === 'warning') sections['Warning'].push(item);
-        else if (health.status === 'good') sections['Good'].push(item);
-        else sections['No Date'].push(item);
+        else sections['Good'].push(item);
     });
 
     return [
