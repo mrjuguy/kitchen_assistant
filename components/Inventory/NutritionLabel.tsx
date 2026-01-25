@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
 
 interface NutritionLabelProps {
     data: {
@@ -23,79 +23,25 @@ export const NutritionLabel: React.FC<NutritionLabelProps> = ({ data }) => {
     ];
 
     return (
-        <View style={styles.container}>
-            <Text style={styles.title}>Nutrition Facts</Text>
-            <View style={styles.divider} />
-            <Text style={styles.subtitle}>Values per 100g</Text>
-            <View style={styles.dividerThick} />
+        <View className="bg-white p-4 rounded-xl border border-gray-200">
+            <Text className="text-2xl font-black mb-1 text-gray-900">Nutrition Facts</Text>
+            <View className="h-px bg-gray-200 mb-1" />
+            <Text className="text-sm text-gray-500 mb-2">Values per 100g</Text>
+            <View className="h-1.5 bg-gray-900 mb-2" />
 
             {rows.map((row, index) => (
                 <React.Fragment key={row.label}>
-                    <View style={styles.row}>
-                        <Text style={[styles.label, row.label.startsWith(' ') && styles.indented]}>
+                    <View className="flex-row justify-between py-2">
+                        <Text className={`text-base text-gray-700 ${row.label.startsWith(' ') ? 'font-normal pl-4' : 'font-bold'}`}>
                             {row.label.trim()}
                         </Text>
-                        <Text style={styles.value}>
+                        <Text className="text-base font-bold text-gray-900">
                             {row.value !== undefined ? `${Math.round(row.value * 10) / 10}${row.unit}` : '—'}
                         </Text>
                     </View>
-                    {index < rows.length - 1 && <View style={styles.dividerThin} />}
+                    {index < rows.length - 1 && <View className="h-px bg-gray-100" />}
                 </React.Fragment>
             ))}
         </View>
     );
 };
-
-const styles = StyleSheet.create({
-    container: {
-        backgroundColor: 'white',
-        padding: 16,
-        borderRadius: 12,
-        borderWidth: 1,
-        borderColor: '#e5e7eb',
-    },
-    title: {
-        fontSize: 24,
-        fontWeight: '900',
-        marginBottom: 4,
-        color: '#111827',
-    },
-    subtitle: {
-        fontSize: 14,
-        color: '#6b7280',
-        marginBottom: 8,
-    },
-    dividerThick: {
-        height: 6,
-        backgroundColor: '#111827',
-        marginBottom: 8,
-    },
-    divider: {
-        height: 1,
-        backgroundColor: '#e5e7eb',
-        marginBottom: 4,
-    },
-    dividerThin: {
-        height: 1,
-        backgroundColor: '#f3f4f6',
-    },
-    row: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        paddingVertical: 8,
-    },
-    label: {
-        fontSize: 16,
-        fontWeight: '700',
-        color: '#374151',
-    },
-    indented: {
-        fontWeight: '400',
-        paddingLeft: 16,
-    },
-    value: {
-        fontSize: 16,
-        fontWeight: '700',
-        color: '#111827',
-    },
-});
