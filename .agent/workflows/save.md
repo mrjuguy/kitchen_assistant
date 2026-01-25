@@ -31,23 +31,22 @@ description: Analyzes changes, commits, closes GitHub issues, pushes code, and a
    - Run `git commit -m "[message]"`
    - Run `git push origin [current-branch]`
 
-5. **Issue Management (GitHub)**
-   - Ask: "Is the feature complete? Should I close Issue #[Active_ID]?"
+5. **Landing & Issue Management (GitHub)**
+   - Ask: "Is the feature complete? Should I land this into `main` and close Issue #[Active_ID]?"
    - If yes and `[Active_ID]` is valid:
-     - Run `gh issue close [Active_ID] --comment "Completed in commit [hash]"`
+     - **Create PR**: Run `gh pr create --title "[message]" --body "Closes #[Active_ID]"`.
+     - **Merge PR**: Run `gh pr merge --merge --delete-branch`.
      - **Cleanup**: 
        - `rm specs/issue_[Active_ID].md` (Active spec closed).
        - *Optional*: Move to `specs/archive/`.
-   - If no:
-     - Run `gh issue comment [Active_ID] --body "Progress update..."`
    - If no (partial work):
-     - Run `gh issue comment [Issue ID] --body "Progress update: [details]"`
+     - Run `gh issue comment [Active_ID] --body "Progress update: [details]"`
 
-5. **Documentation (The Scribe)**
+6. **Documentation (The Scribe)**
    - Ask: "Should I unleash The Scribe to update the docs?"
    - If yes:
      - **Action**: Use `spawn-child-agent` with the `scribe` agent.
      - **Instruction**: "Update README.md and internal specs to match the code changes in the last commit."
 
-6. **Completion**
-   - Output: "Work saved, synced to GitHub, and docs updating in background."
+7. **Completion**
+   - Output: "Work saved, landed in main, and docs updating in background."
