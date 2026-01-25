@@ -12,63 +12,34 @@ interface RecipeCardProps {
 export const RecipeCard: React.FC<RecipeCardProps> = ({ recipe, analysis }) => {
     const totalTime = (recipe.prep_time || 0) + (recipe.cook_time || 0);
 
-    const getStatusColor = (status?: string) => {
+    const getStatusStyles = (status?: string) => {
         switch (status) {
-            case 'Green': return '#10b981'; // Emerald 500
-            case 'Yellow': return '#f59e0b'; // Amber 500
-            case 'Red': return '#ef4444'; // Red 500
-            default: return '#9ca3af'; // Gray 400
+            case 'Green': return { bg: 'bg-emerald-500', text: 'text-white', lightBg: 'bg-emerald-50', lightText: 'text-emerald-800', border: 'border-emerald-100' };
+            case 'Yellow': return { bg: 'bg-amber-500', text: 'text-white', lightBg: 'bg-amber-50', lightText: 'text-amber-800', border: 'border-amber-100' };
+            case 'Red': return { bg: 'bg-red-500', text: 'text-white', lightBg: 'bg-red-50', lightText: 'text-red-800', border: 'border-red-100' };
+            default: return { bg: 'bg-gray-400', text: 'text-white', lightBg: 'bg-gray-50', lightText: 'text-gray-800', border: 'border-gray-100' };
         }
     };
 
-    const getStatusBg = (status?: string) => {
-        switch (status) {
-            case 'Green': return '#ecfdf5';
-            case 'Yellow': return '#fff9eb';
-            case 'Red': return '#fef2f2';
-            default: return '#f9fafb';
-        }
-    };
+    const statusStyles = getStatusStyles(analysis?.status);
 
     return (
-        <View style={{
-            backgroundColor: 'white',
-            borderRadius: 16,
-            overflow: 'hidden',
-            marginBottom: 16,
-            borderWidth: 1,
-            borderColor: '#f3f4f6',
-            shadowColor: '#000',
-            shadowOffset: { width: 0, height: 2 },
-            shadowOpacity: 0.05,
-            shadowRadius: 4,
-            elevation: 2
-        }}>
+        <View
+            className="bg-white rounded-3xl overflow-hidden mb-4 border border-gray-100 shadow-sm"
+            style={{ elevation: 2 }}
+        >
             {/* Header Image */}
-            <View style={{ height: 160, backgroundColor: '#f9fafb', alignItems: 'center', justifyContent: 'center' }}>
+            <View className="h-44 bg-gray-50 items-center justify-center relative">
                 {recipe.image_url ? (
-                    <Image source={{ uri: recipe.image_url }} style={{ width: '100%', height: '100%' }} />
+                    <Image source={{ uri: recipe.image_url }} className="w-full h-full" />
                 ) : (
                     <ChefHat size={48} color="#10b981" strokeWidth={1} />
                 )}
 
                 {/* Availability Badge */}
                 {analysis && (
-                    <View style={{
-                        position: 'absolute',
-                        top: 12,
-                        right: 12,
-                        paddingHorizontal: 12,
-                        paddingVertical: 4,
-                        borderRadius: 99,
-                        backgroundColor: getStatusColor(analysis.status)
-                    }}>
-                        <Text style={{
-                            color: 'white',
-                            fontSize: 10,
-                            fontWeight: 'bold',
-                            textTransform: 'uppercase'
-                        }}>
+                    <View className={`absolute top-4 right-4 px-3 py-1.5 rounded-full ${statusStyles.bg}`}>
+                        <Text className="text-white text-[10px] font-black uppercase tracking-wider">
                             {analysis.status === 'Green' ? 'Ready to Cook' :
                                 analysis.status === 'Yellow' ? (
                                     analysis.missingCount > 3 ? 'Need Supplies' : `${analysis.missingCount} Missing`
@@ -79,23 +50,27 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({ recipe, analysis }) => {
                 )}
             </View>
 
-            <View style={{ padding: 16 }}>
-                <Text style={{ fontSize: 20, fontWeight: 'bold', color: '#111827', marginBottom: 4 }} numberOfLines={1}>
+            <View className="p-4">
+                <Text className="text-xl font-bold text-gray-900 mb-1" numberOfLines={1}>
                     {recipe.name}
                 </Text>
 
-                <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 12 }}>
-                    <Timer size={14} color="#10b981" />
-                    <Text style={{ color: '#6b7280', fontSize: 13, marginLeft: 4, marginRight: 16 }}>{totalTime} mins</Text>
-                    <Info size={14} color="#10b981" />
-                    <Text style={{ color: '#6b7280', fontSize: 13, marginLeft: 4 }}>{recipe.ingredients.length} ingredients</Text>
+                <View className="flex-row items-center mb-4">
+                    <View className="flex-row items-center mr-4">
+                        <Timer size={14} color="#10b981" />
+                        <Text className="text-gray-500 text-xs ml-1">{totalTime} mins</Text>
+                    </View>
+                    <View className="flex-row items-center">
+                        <Info size={14} color="#10b981" />
+                        <Text className="text-gray-500 text-xs ml-1">{recipe.ingredients.length} ingredients</Text>
+                    </View>
                 </View>
 
                 {/* Allergen Warning */}
                 {analysis?.allergenWarning && (
-                    <View style={{ backgroundColor: '#fef2f2', padding: 12, borderRadius: 12, borderWidth: 1, borderColor: '#fee2e2', marginBottom: 8, flexDirection: 'row', alignItems: 'center' }}>
-                        <AlertTriangle size={16} color="#ef4444" style={{ marginRight: 8 }} />
-                        <Text style={{ color: '#991b1b', fontSize: 12, fontWeight: 'bold' }}>
+                    <View className="bg-red-50 p-3 rounded-2xl border border-red-100 mb-3 flex-row items-center">
+                        <AlertTriangle size={16} color="#ef4444" className="mr-2" />
+                        <Text className="text-red-800 text-xs font-bold">
                             Contains {analysis.allergenWarning}
                         </Text>
                     </View>
@@ -103,20 +78,20 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({ recipe, analysis }) => {
 
                 {/* Gap Analysis Summary */}
                 {analysis && analysis.status !== 'Green' && !analysis.allergenWarning && (
-                    <View style={{ backgroundColor: getStatusBg(analysis.status), padding: 12, borderRadius: 12, borderWidth: 1, borderColor: analysis.status === 'Yellow' ? '#fef3c7' : '#fee2e2' }}>
-                        <Text style={{ color: analysis.status === 'Yellow' ? '#92400e' : '#991b1b', fontSize: 11, fontWeight: 'bold', textTransform: 'uppercase', marginBottom: 4 }}>
+                    <View className={`${statusStyles.lightBg} p-3 rounded-2xl border ${statusStyles.border}`}>
+                        <Text className={`${statusStyles.lightText} text-[10px] font-black uppercase tracking-widest mb-1`}>
                             {analysis.status === 'Yellow' ? 'Missing:' : 'Missing ingredients:'}
                         </Text>
-                        <Text style={{ color: analysis.status === 'Yellow' ? '#b45309' : '#b91c1c', fontSize: 12 }} numberOfLines={2}>
+                        <Text className={`${statusStyles.lightText} text-xs font-medium`} numberOfLines={1}>
                             {analysis.ingredientMatches.filter(i => !i.isInStock).map(i => i.name).join(', ')}
                         </Text>
                     </View>
                 )}
 
                 {analysis?.status === 'Green' && (
-                    <View style={{ backgroundColor: '#ecfdf5', padding: 12, borderRadius: 12, borderWidth: 1, borderColor: '#d1fae5' }}>
-                        <Text style={{ color: '#047857', fontSize: 12, fontWeight: '500' }}>
-                            You have everything you need in your pantry!
+                    <View className="bg-emerald-50 p-3 rounded-2xl border border-emerald-100">
+                        <Text className="text-emerald-700 text-xs font-semibold">
+                            You have everything you need!
                         </Text>
                     </View>
                 )}

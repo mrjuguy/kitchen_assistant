@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
 import { getItemHealth } from '../../utils/itemHealth';
 
 interface ExpiryBadgeProps {
@@ -18,41 +18,23 @@ export const ExpiryBadge: React.FC<ExpiryBadgeProps> = ({ expiryDate, showFresh 
     if (!expiryDate && !showFresh) return null;
 
     return (
-        <View style={[
-            styles.container,
-            {
+        <View
+            className="flex-row items-center px-2 py-1 rounded-lg border self-start"
+            style={{
                 backgroundColor: health.color + '15', // 8% opacity for BG
-                borderColor: health.color + '40',       // 25% opacity for border
-            }
-        ]}>
-            <View style={[styles.dot, { backgroundColor: health.color }]} />
-            <Text style={[styles.text, { color: health.color }]}>
+                borderColor: health.color + '40',     // 25% opacity for border
+            }}
+        >
+            <View
+                className="w-1.5 h-1.5 rounded-full mr-1.5"
+                style={{ backgroundColor: health.color }}
+            />
+            <Text
+                className="text-[10px] font-bold uppercase tracking-wider"
+                style={{ color: health.color }}
+            >
                 {health.label}
             </Text>
         </View>
     );
 };
-
-const styles = StyleSheet.create({
-    container: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        paddingHorizontal: 8,
-        paddingVertical: 4,
-        borderRadius: 8,
-        borderWidth: 1,
-        alignSelf: 'flex-start',
-    },
-    dot: {
-        width: 6,
-        height: 6,
-        borderRadius: 3,
-        marginRight: 6,
-    },
-    text: {
-        fontSize: 10,
-        fontWeight: '700',
-        textTransform: 'uppercase',
-        letterSpacing: 0.5,
-    },
-});

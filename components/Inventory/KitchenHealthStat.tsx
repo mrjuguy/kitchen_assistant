@@ -20,31 +20,24 @@ export const KitchenHealthStat: React.FC<KitchenHealthStatProps> = ({
     bgColor
 }) => {
     return (
-        <View style={{
-            flex: 1,
-            minWidth: 150,
-            backgroundColor: 'white',
-            borderRadius: 20,
-            padding: 20,
-            borderWidth: 1,
-            borderColor: '#f3f4f6',
-            shadowColor: '#000',
-            shadowOffset: { width: 0, height: 1 },
-            shadowOpacity: 0.05,
-            shadowRadius: 2,
-            elevation: 1,
-        }}>
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 12 }}>
-                <View style={{ padding: 8, backgroundColor: bgColor, borderRadius: 10 }}>
+        <View
+            className="flex-1 min-w-[150px] bg-white rounded-2xl p-5 border border-gray-100 shadow-sm"
+            style={{ elevation: 1 }}
+        >
+            <View className="flex-row justify-between items-start mb-3">
+                <View
+                    className="p-2 rounded-xl"
+                    style={{ backgroundColor: bgColor }}
+                >
                     <Icon size={20} color={color} />
                 </View>
-                <View style={{ paddingHorizontal: 8, paddingVertical: 4, backgroundColor: '#f0fdf4', borderRadius: 99 }}>
-                    <Text style={{ fontSize: 10, fontWeight: 'bold', color: '#16a34a' }}>{trend}</Text>
+                <View className="px-2 py-1 bg-green-50 rounded-full">
+                    <Text className="text-[10px] font-bold text-green-600">{trend}</Text>
                 </View>
             </View>
 
-            <Text style={{ fontSize: 24, fontWeight: 'bold', color: '#111827' }}>{value}</Text>
-            <Text style={{ fontSize: 12, color: '#6b7280', fontWeight: '500' }}>{label}</Text>
+            <Text className="text-2xl font-bold text-gray-900">{value}</Text>
+            <Text className="text-xs text-gray-500 font-medium">{label}</Text>
         </View>
     );
 };

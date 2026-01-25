@@ -26,7 +26,10 @@ export const ConsumptionSlider: React.FC<ConsumptionSliderProps> = ({ value, max
     const isBulkAction = max === value && value > 1.25;
 
     return (
-        <View style={{ flexDirection: 'row', height: 12, borderRadius: 6, overflow: 'hidden', marginTop: 12, backgroundColor: '#e5e7eb', opacity: enabled ? 1 : 0.5 }}>
+        <View
+            className="flex-row h-3 rounded-full overflow-hidden mt-3 bg-gray-200"
+            style={{ opacity: enabled ? 1 : 0.5 }}
+        >
             {segments.map((seg) => {
                 // Calculation Logic
                 const threshold = seg * max;
@@ -51,10 +54,8 @@ export const ConsumptionSlider: React.FC<ConsumptionSliderProps> = ({ value, max
                 return (
                     <Pressable
                         key={seg}
+                        className="flex-1 mx-[2px] rounded-sm"
                         style={{
-                            flex: 1,
-                            marginHorizontal: 2,
-                            borderRadius: 2,
                             backgroundColor: isActive ? color : '#d1d5db'
                         }}
                         onPress={() => {

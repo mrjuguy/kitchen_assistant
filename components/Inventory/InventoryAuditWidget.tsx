@@ -40,9 +40,9 @@ export const InventoryAuditWidget: React.FC = () => {
     };
 
     return (
-        <View style={{ backgroundColor: '#eff6ff', borderRadius: 16, padding: 16, marginBottom: 16, borderWidth: 1, borderColor: '#bfdbfe', shadowColor: '#3b82f6', shadowOpacity: 0.1, shadowRadius: 4, elevation: 2 }}>
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 8 }}>
-                <Text style={{ flex: 1, fontSize: 16, color: '#1e40af', fontWeight: 'bold' }}>
+        <View className="bg-blue-50 rounded-2xl p-4 mb-4 border border-blue-200 shadow-sm" style={{ shadowColor: '#3b82f6', elevation: 2 }}>
+            <View className="flex-row justify-between items-start mb-2">
+                <Text className="flex-1 text-base text-blue-800 font-bold">
                     Quick Pantry Audit
                 </Text>
                 <Pressable onPress={dismiss} hitSlop={10}>
@@ -50,30 +50,33 @@ export const InventoryAuditWidget: React.FC = () => {
                 </Pressable>
             </View>
 
-            <Text style={{ color: '#1e3a8a', marginBottom: 16, lineHeight: 20 }}>
-                You haven't updated <Text style={{ fontWeight: 'bold' }}>{currentItem.name}</Text> in a while. Do you still have roughly {Math.round(currentItem.quantity * 10) / 10} {currentItem.unit}?
+            <Text className="text-blue-900 mb-4 leading-5">
+                You haven't updated <Text className="font-bold">{currentItem.name}</Text> in a while. Do you still have roughly {Math.round(currentItem.quantity * 10) / 10} {currentItem.unit}?
             </Text>
 
-            <View style={{ flexDirection: 'row', gap: 12 }}>
+            <View className="flex-row gap-3">
                 <Pressable
                     onPress={() => confirmStock(1)}
-                    style={{ flex: 1, backgroundColor: 'white', paddingVertical: 10, borderRadius: 10, alignItems: 'center', borderColor: '#dbeafe', borderWidth: 1, shadowColor: '#000', shadowOpacity: 0.05, shadowRadius: 2, elevation: 1 }}
+                    className="flex-1 bg-white py-2.5 rounded-xl items-center border border-blue-100 shadow-sm"
+                    style={{ elevation: 1 }}
                 >
-                    <Text style={{ color: '#2563eb', fontWeight: '600', fontSize: 14 }}>Yes, Full</Text>
+                    <Text className="text-blue-600 font-semibold text-sm">Yes, Full</Text>
                 </Pressable>
 
                 <Pressable
                     onPress={() => confirmStock(0.5)}
-                    style={{ flex: 1, backgroundColor: 'white', paddingVertical: 10, borderRadius: 10, alignItems: 'center', borderColor: '#dbeafe', borderWidth: 1, shadowColor: '#000', shadowOpacity: 0.05, shadowRadius: 2, elevation: 1 }}
+                    className="flex-1 bg-white py-2.5 rounded-xl items-center border border-blue-100 shadow-sm"
+                    style={{ elevation: 1 }}
                 >
-                    <Text style={{ color: '#2563eb', fontWeight: '600', fontSize: 14 }}>~Half</Text>
+                    <Text className="text-blue-600 font-semibold text-sm">~Half</Text>
                 </Pressable>
 
                 <Pressable
                     onPress={() => confirmStock(0)}
-                    style={{ flex: 1, backgroundColor: '#fee2e2', paddingVertical: 10, borderRadius: 10, alignItems: 'center', borderColor: '#fecaca', borderWidth: 1, shadowColor: '#000', shadowOpacity: 0.05, shadowRadius: 2, elevation: 1 }}
+                    className="flex-1 bg-red-100 py-2.5 rounded-xl items-center border border-red-200 shadow-sm"
+                    style={{ elevation: 1 }}
                 >
-                    <Text style={{ color: '#dc2626', fontWeight: '600', fontSize: 14 }}>Gone</Text>
+                    <Text className="text-red-600 font-semibold text-sm">Gone</Text>
                 </Pressable>
             </View>
         </View>

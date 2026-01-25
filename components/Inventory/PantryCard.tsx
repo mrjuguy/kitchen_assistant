@@ -15,11 +15,11 @@ interface PantryCardProps {
 }
 
 const categoryStyles: Record<string, { bg: string, text: string }> = {
-    Produce: { bg: '#dcfce7', text: '#166534' },
-    Dairy: { bg: '#dbeafe', text: '#1e40af' },
-    Spices: { bg: '#fef3c7', text: '#92400e' },
-    Protein: { bg: '#fee2e2', text: '#991b1b' },
-    Pantry: { bg: '#f3f4f6', text: '#374151' },
+    Produce: { bg: 'bg-green-50', text: 'text-green-800' },
+    Dairy: { bg: 'bg-blue-50', text: 'text-blue-800' },
+    Spices: { bg: 'bg-amber-50', text: 'text-amber-800' },
+    Protein: { bg: 'bg-red-50', text: 'text-red-800' },
+    Pantry: { bg: 'bg-gray-100', text: 'text-gray-700' },
 };
 
 export const PantryCard: React.FC<PantryCardProps> = ({ item, onPress }) => {
@@ -67,74 +67,43 @@ export const PantryCard: React.FC<PantryCardProps> = ({ item, onPress }) => {
 
     return (
         <Pressable onPress={onPress}>
-            <View style={{
-                backgroundColor: 'white',
-                borderRadius: 16,
-                padding: 16,
-                marginBottom: 12,
-                borderWidth: 1,
-                borderColor: '#f3f4f6',
-                flexDirection: 'row',
-                alignItems: 'center',
-                shadowColor: '#000',
-                shadowOffset: { width: 0, height: 2 },
-                shadowOpacity: 0.05,
-                shadowRadius: 4,
-                elevation: 2
-            }}>
+            <View
+                className="bg-white rounded-2xl p-4 mb-3 border border-gray-100 flex-row items-center shadow-sm"
+                style={{ elevation: 2 }}
+            >
                 {/* Product Image/Icon */}
-                <View style={{
-                    width: 64,
-                    height: 64,
-                    backgroundColor: '#f9fafb',
-                    borderRadius: 12,
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    overflow: 'hidden',
-                    marginRight: 16
-                }}>
+                <View className="w-16 h-16 bg-gray-50 rounded-xl items-center justify-center overflow-hidden mr-4">
                     {item.image_url ? (
-                        <Image source={{ uri: item.image_url }} style={{ width: '100%', height: '100%' }} />
+                        <Image source={{ uri: item.image_url }} className="w-full h-full" />
                     ) : (
                         <Package size={32} color="#10b981" />
                     )}
                 </View>
 
                 {/* Product Info */}
-                <View style={{ flex: 1 }}>
-                    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 4 }}>
-                        <View style={{
-                            backgroundColor: colors.bg,
-                            paddingHorizontal: 8,
-                            paddingVertical: 2,
-                            borderRadius: 99
-                        }}>
-                            <Text style={{
-                                fontSize: 10,
-                                fontWeight: 'bold',
-                                color: colors.text,
-                                textTransform: 'uppercase',
-                                letterSpacing: 0.5
-                            }}>
+                <View className="flex-1">
+                    <View className="flex-row items-center justify-between mb-1">
+                        <View className={`${colors.bg} px-2 py-0.5 rounded-full`}>
+                            <Text className={`text-[10px] font-bold uppercase tracking-wider ${colors.text}`}>
                                 {item.category}
                             </Text>
                         </View>
                         <Pressable
                             onPress={handleDelete}
-                            style={{ padding: 4, borderRadius: 99 }}
+                            className="p-1 rounded-full"
                         >
                             <Trash2 size={16} color="#ef4444" />
                         </Pressable>
                     </View>
-                    <Text style={{ fontSize: 18, fontWeight: 'bold', color: '#111827', marginBottom: 6 }} numberOfLines={1}>
+                    <Text className="text-lg font-bold text-gray-900 mb-1.5" numberOfLines={1}>
                         {item.name}
                     </Text>
 
-                    <View style={{ marginBottom: 10 }}>
+                    <View className="mb-2.5">
                         <ExpiryBadge expiryDate={item.expiry_date} />
                     </View>
 
-                    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                    <View className="flex-row items-center justify-between">
                         <QuantityControl
                             quantity={item.quantity}
                             unit={item.unit}

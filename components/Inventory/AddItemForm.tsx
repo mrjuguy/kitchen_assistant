@@ -133,23 +133,23 @@ export const AddItemForm: React.FC<AddItemFormProps> = ({ onClose, startWithScan
 
     if (isScanning) {
         return (
-            <View style={{ flex: 1, backgroundColor: 'black' }}>
+            <View className="flex-1 bg-black">
                 <CameraView
-                    style={{ flex: 1 }}
+                    className="flex-1"
                     onBarcodeScanned={handleBarcodeScanned}
                     barcodeScannerSettings={{
                         barcodeTypes: ['ean13', 'ean8', 'upc_a', 'upc_e'],
                     }}
                 >
-                    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-                        <View style={{ width: 250, height: 250, borderWidth: 2, borderColor: '#10b981', borderRadius: 24 }} />
-                        <Text style={{ color: 'white', fontWeight: 'bold', marginTop: 32, backgroundColor: 'rgba(0,0,0,0.5)', paddingHorizontal: 16, paddingVertical: 8, borderRadius: 20 }}>
+                    <View className="flex-1 items-center justify-center">
+                        <View className="w-[250px] h-[250px] border-2 border-emerald-500 rounded-3xl" />
+                        <Text className="text-white font-bold mt-8 bg-black/50 px-4 py-2 rounded-full">
                             Scan a product barcode
                         </Text>
                     </View>
                     <Pressable
                         onPress={() => setIsScanning(false)}
-                        style={{ position: 'absolute', top: 48, right: 24, padding: 16, backgroundColor: 'rgba(0,0,0,0.5)', borderRadius: 99 }}
+                        className="absolute top-12 right-6 p-4 bg-black/50 rounded-full"
                     >
                         <X color="white" size={24} />
                     </Pressable>

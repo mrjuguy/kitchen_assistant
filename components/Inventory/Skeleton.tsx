@@ -28,9 +28,8 @@ export const Skeleton = ({ width, height, borderRadius = 8 }: { width: any, heig
                 width,
                 height,
                 borderRadius,
-                backgroundColor: '#e5e7eb',
             }, animatedStyle]}
-            className="dark:bg-zinc-800"
+            className="bg-gray-200 dark:bg-zinc-800"
         />
     );
 };

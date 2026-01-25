@@ -42,7 +42,10 @@ yarn-error.*
 /android
 
 # agentic tools
-.agent/
-PROJECT_RULES.md
+.agent/mcp.json
+# .agent/ # Do not ignore agent config, we want to share it.
+# PROJECT_RULES.md
 specs/issue_*.md
 specs/draft_PRD.md
+.claude/
+!.claude/agents/ # Allow sharing of project-specific agents
