@@ -5,7 +5,6 @@ import {
     ActivityIndicator,
     Alert,
     ScrollView,
-    StyleSheet,
     Text,
     TextInput,
     TouchableOpacity,
@@ -66,48 +65,48 @@ export default function ProfileScreen() {
 
     if (isLoading) {
         return (
-            <View style={styles.loadingContainer}>
+            <View className="flex-1 justify-center items-center bg-white">
                 <ActivityIndicator size="large" color="#10b981" />
             </View>
         );
     }
 
     return (
-        <SafeAreaView style={styles.container} edges={['top']}>
-            <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
-                <View style={styles.header}>
+        <SafeAreaView className="flex-1 bg-white" edges={['top']}>
+            <ScrollView contentContainerClassName="px-5 pt-6" showsVerticalScrollIndicator={false}>
+                <View className="flex-row justify-between items-center mb-8">
                     <View>
-                        <Text style={styles.headerTitle}>Profile</Text>
-                        <Text style={styles.headerSubtitle}>Health & Dietary Settings</Text>
+                        <Text className="text-3xl font-bold text-gray-900">Profile</Text>
+                        <Text className="text-sm text-gray-500 mt-1">Health & Dietary Settings</Text>
                     </View>
-                    <TouchableOpacity onPress={handleSignOut} style={styles.logoutButton}>
+                    <TouchableOpacity onPress={handleSignOut} className="p-2.5 bg-red-50 rounded-xl">
                         <LogOut size={20} color="#ef4444" />
                     </TouchableOpacity>
                 </View>
 
                 {/* Household */}
-                <View style={styles.section}>
-                    <View style={styles.sectionHeader}>
-                        <Users size={20} color="#10b981" style={styles.sectionIcon} />
-                        <Text style={styles.sectionTitle}>Household</Text>
+                <View className="mb-8">
+                    <View className="flex-row items-center mb-3">
+                        <Users size={20} color="#10b981" className="mr-2" />
+                        <Text className="text-lg font-semibold text-gray-900">Household</Text>
                     </View>
                     <TouchableOpacity
-                        style={styles.actionButton}
+                        className="bg-gray-50 border border-gray-100 rounded-2xl p-4 flex-row items-center justify-between"
                         onPress={() => router.push('/settings/household')}
                     >
-                        <Text style={styles.actionButtonText}>Manage Household</Text>
+                        <Text className="text-base text-gray-900 font-medium">Manage Household</Text>
                         <ArrowRight size={20} color="#9ca3af" />
                     </TouchableOpacity>
                 </View>
 
                 {/* Display Name */}
-                <View style={styles.section}>
-                    <View style={styles.sectionHeader}>
-                        <User size={20} color="#10b981" style={styles.sectionIcon} />
-                        <Text style={styles.sectionTitle}>Display Name</Text>
+                <View className="mb-8">
+                    <View className="flex-row items-center mb-3">
+                        <User size={20} color="#10b981" className="mr-2" />
+                        <Text className="text-lg font-semibold text-gray-900">Display Name</Text>
                     </View>
                     <TextInput
-                        style={styles.input}
+                        className="bg-gray-50 border border-gray-100 rounded-2xl px-4 py-3.5 text-base text-gray-900"
                         placeholder="Your Name"
                         value={displayName}
                         onChangeText={setDisplayName}
@@ -115,29 +114,27 @@ export default function ProfileScreen() {
                 </View>
 
                 {/* Allergens */}
-                <View style={styles.section}>
-                    <View style={styles.sectionHeader}>
-                        <ShieldCheck size={20} color="#ef4444" style={styles.sectionIcon} />
-                        <Text style={styles.sectionTitle}>Allergens</Text>
+                <View className="mb-8">
+                    <View className="flex-row items-center mb-3">
+                        <ShieldCheck size={20} color="#ef4444" className="mr-2" />
+                        <Text className="text-lg font-semibold text-gray-900">Allergens</Text>
                     </View>
-                    <Text style={styles.sectionDescription}>
+                    <Text className="text-sm text-gray-500 mb-4">
                         Recipes containing these will be flagged as unsafe.
                     </Text>
-                    <View style={styles.tagContainer}>
+                    <View className="flex-row flex-wrap -m-1">
                         {ALLERGENS.map((item) => (
                             <TouchableOpacity
                                 key={item}
                                 onPress={() => toggleAllergen(item)}
-                                style={[
-                                    styles.tag,
-                                    selectedAllergens.includes(item) && styles.tagSelectedAllergen,
-                                ]}
+                                className={`px-4 py-2.5 rounded-xl m-1 ${selectedAllergens.includes(item)
+                                        ? 'bg-red-100 border border-red-200'
+                                        : 'bg-gray-100 border border-transparent'
+                                    }`}
                             >
                                 <Text
-                                    style={[
-                                        styles.tagText,
-                                        selectedAllergens.includes(item) && styles.tagTextSelected,
-                                    ]}
+                                    className={`text-sm font-medium ${selectedAllergens.includes(item) ? 'text-gray-900 font-semibold' : 'text-gray-600'
+                                        }`}
                                 >
                                     {item}
                                 </Text>
@@ -147,29 +144,27 @@ export default function ProfileScreen() {
                 </View>
 
                 {/* Dietary Prefs */}
-                <View style={styles.section}>
-                    <View style={styles.sectionHeader}>
-                        <Heart size={20} color="#10b981" style={styles.sectionIcon} />
-                        <Text style={styles.sectionTitle}>Dietary Preferences</Text>
+                <View className="mb-8">
+                    <View className="flex-row items-center mb-3">
+                        <Heart size={20} color="#10b981" className="mr-2" />
+                        <Text className="text-lg font-semibold text-gray-900">Dietary Preferences</Text>
                     </View>
-                    <Text style={styles.sectionDescription}>
+                    <Text className="text-sm text-gray-500 mb-4">
                         Used to personalize recipe recommendations.
                     </Text>
-                    <View style={styles.tagContainer}>
+                    <View className="flex-row flex-wrap -m-1">
                         {DIETARY_PREFERENCES.map((item) => (
                             <TouchableOpacity
                                 key={item}
                                 onPress={() => togglePref(item)}
-                                style={[
-                                    styles.tag,
-                                    selectedPrefs.includes(item) && styles.tagSelectedPref,
-                                ]}
+                                className={`px-4 py-2.5 rounded-xl m-1 ${selectedPrefs.includes(item)
+                                        ? 'bg-emerald-100 border border-emerald-200'
+                                        : 'bg-gray-100 border border-transparent'
+                                    }`}
                             >
                                 <Text
-                                    style={[
-                                        styles.tagText,
-                                        selectedPrefs.includes(item) && styles.tagTextSelected,
-                                    ]}
+                                    className={`text-sm font-medium ${selectedPrefs.includes(item) ? 'text-gray-900 font-semibold' : 'text-gray-600'
+                                        }`}
                                 >
                                     {item}
                                 </Text>
@@ -180,155 +175,22 @@ export default function ProfileScreen() {
 
                 <TouchableOpacity
                     onPress={handleSave}
-                    style={styles.saveButton}
+                    className="bg-emerald-500 flex-row items-center justify-center py-4 rounded-2xl shadow-lg shadow-emerald-500/20 mt-2"
+                    style={{ elevation: 4 }}
                     disabled={updateProfile.isPending}
                 >
                     {updateProfile.isPending ? (
                         <ActivityIndicator color="white" />
                     ) : (
                         <>
-                            <Save size={20} color="white" style={{ marginRight: 8 }} />
-                            <Text style={styles.saveButtonText}>Save Changes</Text>
+                            <Save size={20} color="white" className="mr-2" />
+                            <Text className="text-white text-base font-bold">Save Changes</Text>
                         </>
                     )}
                 </TouchableOpacity>
 
-                <View style={{ height: 40 }} />
+                <View className="h-10" />
             </ScrollView>
         </SafeAreaView>
     );
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: 'white',
-    },
-    loadingContainer: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: 'white',
-    },
-    scrollContent: {
-        paddingHorizontal: 20,
-        paddingTop: 24,
-    },
-    header: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        marginBottom: 32,
-    },
-    headerTitle: {
-        fontSize: 30,
-        fontWeight: 'bold',
-        color: '#111827',
-    },
-    headerSubtitle: {
-        fontSize: 14,
-        color: '#6b7280',
-        marginTop: 4,
-    },
-    logoutButton: {
-        padding: 10,
-        backgroundColor: '#fef2f2',
-        borderRadius: 12,
-    },
-    section: {
-        marginBottom: 32,
-    },
-    sectionHeader: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        marginBottom: 12,
-    },
-    sectionIcon: {
-        marginRight: 8,
-    },
-    sectionTitle: {
-        fontSize: 18,
-        fontWeight: '600',
-        color: '#111827',
-    },
-    sectionDescription: {
-        fontSize: 14,
-        color: '#6b7280',
-        marginBottom: 16,
-    },
-    input: {
-        backgroundColor: '#f9fafb',
-        borderWidth: 1,
-        borderColor: '#f3f4f6',
-        borderRadius: 16,
-        paddingHorizontal: 16,
-        paddingVertical: 14,
-        fontSize: 16,
-        color: '#111827',
-    },
-    tagContainer: {
-        flexDirection: 'row',
-        flexWrap: 'wrap',
-        marginHorizontal: -4,
-    },
-    tag: {
-        backgroundColor: '#f3f4f6',
-        paddingHorizontal: 16,
-        paddingVertical: 10,
-        borderRadius: 12,
-        margin: 4,
-    },
-    tagSelectedAllergen: {
-        backgroundColor: '#fee2e2',
-        borderColor: '#fecaca',
-        borderWidth: 1,
-    },
-    tagSelectedPref: {
-        backgroundColor: '#d1fae5',
-        borderColor: '#a7f3d0',
-        borderWidth: 1,
-    },
-    tagText: {
-        fontSize: 14,
-        color: '#4b5563',
-        fontWeight: '500',
-    },
-    tagTextSelected: {
-        color: '#111827',
-        fontWeight: '600',
-    },
-    saveButton: {
-        backgroundColor: '#10b981',
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'center',
-        paddingVertical: 16,
-        borderRadius: 16,
-        shadowColor: '#10b981',
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.2,
-        shadowRadius: 8,
-        elevation: 4,
-        marginTop: 8,
-    },
-    saveButtonText: {
-        color: 'white',
-        fontSize: 16,
-        fontWeight: 'bold',
-    },
-    actionButton: {
-        backgroundColor: '#f9fafb',
-        borderWidth: 1,
-        borderColor: '#f3f4f6',
-        borderRadius: 16,
-        padding: 16,
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-    },
-    actionButtonText: {
-        fontSize: 16,
-        color: '#111827',
-        fontWeight: '500',
-    },
-});

@@ -147,12 +147,12 @@ export default function ShoppingScreen() {
 
     if (isLoading) {
         return (
-            <SafeAreaView className="flex-1 bg-gray-50 dark:bg-black" edges={['top']}>
-                <View className="px-4 py-6">
-                    <Text className="text-3xl font-bold text-gray-900 dark:text-white">Shopping</Text>
-                    <View className="h-4 w-32 bg-gray-200 dark:bg-zinc-800 rounded-lg mt-2 mb-8" />
+            <SafeAreaView className="flex-1 bg-white" edges={['top']}>
+                <View className="px-5 py-6">
+                    <Text className="text-3xl font-bold text-gray-900">Shopping</Text>
+                    <View className="h-4 w-32 bg-gray-100 rounded-lg mt-2 mb-8" />
                     {[1, 2, 3, 4].map((i) => (
-                        <View key={i} className="h-24 bg-gray-200 dark:bg-zinc-800 rounded-2xl mb-3 animate-pulse" />
+                        <View key={i} className="h-24 bg-gray-50 rounded-2xl mb-3 animate-pulse" />
                     ))}
                 </View>
             </SafeAreaView>
@@ -161,50 +161,47 @@ export default function ShoppingScreen() {
 
     if (isError) {
         return (
-            <View className="flex-1 items-center justify-center bg-gray-50 dark:bg-black p-6">
+            <View className="flex-1 items-center justify-center bg-white p-6">
                 <ShoppingBag size={48} color="#ef4444" className="mb-4" />
                 <Text className="text-red-500 text-center text-lg mb-4">Failed to load shopping list.</Text>
-                <Pressable onPress={() => refetch()} className="bg-emerald-500 px-6 py-2 rounded-xl">
+                <Pressable onPress={() => refetch()} className="bg-emerald-500 px-6 py-3 rounded-2xl">
                     <Text className="text-white font-bold">Retry</Text>
                 </Pressable>
             </View>
         );
     }
 
+    const showSearchResults = searchQuery.length >= 3 && (searchResults.length > 0 || isSearching);
+
     return (
-        <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }} edges={['top']}>
-            <View style={{ flex: 1, paddingHorizontal: 16, paddingTop: 24 }}>
-                <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 32 }}>
+        <SafeAreaView className="flex-1 bg-white" edges={['top']}>
+            <View className="flex-1 px-5 pt-6">
+                <View className="flex-row items-center justify-between mb-8">
                     <View>
-                        <Text style={{ fontSize: 30, fontWeight: 'bold', color: '#111827' }}>Shopping</Text>
-                        <Text style={{ fontSize: 14, color: '#6b7280' }}>Replenish & Restock</Text>
+                        <Text className="text-3xl font-bold text-gray-900">Shopping</Text>
+                        <Text className="text-sm text-gray-500">Replenish & Restock</Text>
                     </View>
-                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <View className="flex-row items-center">
                         <Pressable
                             onPress={handleMorePress}
-                            style={({ pressed }) => ({
-                                padding: 8,
-                                borderRadius: 99,
-                                backgroundColor: pressed ? '#f3f4f6' : 'transparent',
-                                marginRight: 8
-                            })}
+                            className="p-2.5 rounded-full"
                         >
                             <MoreVertical size={24} color="#111827" />
                         </Pressable>
-                        <View style={{ backgroundColor: '#f0fdf4', padding: 12, borderRadius: 99 }}>
+                        <View className="bg-emerald-50 p-2.5 rounded-full ml-1">
                             <ShoppingBasket size={24} color="#10b981" />
                         </View>
                     </View>
                 </View>
 
                 {/* Quick Add Search Bar */}
-                <View style={{ zIndex: 10 }}>
-                    <View style={{ flexDirection: 'row', alignItems: 'center', backgroundColor: '#f9fafb', paddingHorizontal: 16, paddingVertical: 12, borderRadius: 16, marginBottom: searchQuery.length >= 3 && (searchResults.length > 0 || isSearching) ? 0 : 24, borderWidth: 1, borderColor: '#f3f4f6', borderBottomLeftRadius: searchQuery.length >= 3 && (searchResults.length > 0 || isSearching) ? 0 : 16, borderBottomRightRadius: searchQuery.length >= 3 && (searchResults.length > 0 || isSearching) ? 0 : 16 }}>
-                        <Search size={20} color="#999" />
+                <View className="z-10 relative">
+                    <View className={`flex-row items-center bg-gray-50 px-4 py-3 border border-gray-100 ${showSearchResults ? 'rounded-t-2xl mb-0' : 'rounded-2xl mb-6'}`}>
+                        <Search size={20} color="#9ca3af" />
                         <TextInput
                             placeholder="Add item or search products..."
-                            placeholderTextColor="#999"
-                            style={{ flex: 1, marginLeft: 12, color: '#111827', fontSize: 16 }}
+                            placeholderTextColor="#9ca3af"
+                            className="flex-1 ml-3 text-gray-900 text-base"
                             value={searchQuery}
                             onChangeText={setSearchQuery}
                             onSubmitEditing={handleGenericAdd}
@@ -213,47 +210,28 @@ export default function ShoppingScreen() {
                         {isSearching && <ActivityIndicator size="small" color="#10b981" />}
                     </View>
 
-                    {searchQuery.length >= 3 && (searchResults.length > 0 || isSearching) && (
-                        <View style={{
-                            backgroundColor: 'white',
-                            borderWidth: 1,
-                            borderColor: '#f3f4f6',
-                            borderTopWidth: 0,
-                            borderBottomLeftRadius: 16,
-                            borderBottomRightRadius: 16,
-                            shadowColor: '#000',
-                            shadowOffset: { width: 0, height: 4 },
-                            shadowOpacity: 0.1,
-                            shadowRadius: 12,
-                            elevation: 5,
-                            maxHeight: 300,
-                            marginBottom: 24,
-                            overflow: 'hidden'
-                        }}>
+                    {showSearchResults && (
+                        <View
+                            className="bg-white border-x border-b border-gray-100 rounded-b-2xl shadow-xl absolute top-[50px] left-0 right-0 overflow-hidden"
+                            style={{ elevation: 5, maxHeight: 300 }}
+                        >
                             <ScrollView keyboardShouldPersistTaps="handled">
                                 {searchResults.map((product, index) => (
                                     <Pressable
                                         key={`${product.barcode}-${index}`}
                                         onPress={() => handleProductSelect(product)}
-                                        style={({ pressed }) => ({
-                                            flexDirection: 'row',
-                                            alignItems: 'center',
-                                            padding: 12,
-                                            backgroundColor: pressed ? '#f9fafb' : 'transparent',
-                                            borderBottomWidth: index === searchResults.length - 1 ? 0 : 1,
-                                            borderBottomColor: '#f3f4f6'
-                                        })}
+                                        className={`flex-row items-center p-3 border-b border-gray-50 bg-white ${index === searchResults.length - 1 ? 'border-b-0' : ''}`}
                                     >
-                                        <View style={{ width: 40, height: 40, backgroundColor: '#f3f4f6', borderRadius: 8, marginRight: 12, overflow: 'hidden', alignItems: 'center', justifyContent: 'center' }}>
+                                        <View className="w-10 h-10 bg-gray-100 rounded-lg mr-3 overflow-hidden items-center justify-center">
                                             {product.image_url ? (
-                                                <Image source={{ uri: product.image_url }} style={{ width: '100%', height: '100%' }} />
+                                                <Image source={{ uri: product.image_url }} className="w-full h-full" />
                                             ) : (
-                                                <Search size={20} color="#999" />
+                                                <Search size={20} color="#9ca3af" />
                                             )}
                                         </View>
-                                        <View style={{ flex: 1 }}>
-                                            <Text style={{ fontWeight: '600', color: '#111827' }} numberOfLines={1}>{product.name}</Text>
-                                            <Text style={{ fontSize: 12, color: '#6b7280' }}>{product.brand || product.category}</Text>
+                                        <View className="flex-1">
+                                            <Text className="font-semibold text-gray-900" numberOfLines={1}>{product.name}</Text>
+                                            <Text className="text-xs text-gray-500">{product.brand || product.category}</Text>
                                         </View>
                                         <Plus size={18} color="#10b981" />
                                     </Pressable>
@@ -273,21 +251,21 @@ export default function ShoppingScreen() {
                         />
                     )}
                     renderSectionHeader={({ section: { title } }) => (
-                        <View style={{ backgroundColor: 'white', paddingVertical: 12, marginTop: 8 }}>
-                            <Text style={{ fontSize: 14, fontWeight: '800', color: '#9ca3af', textTransform: 'uppercase', letterSpacing: 1.5 }}>
+                        <View className="bg-white py-3 mt-2">
+                            <Text className="text-[10px] font-black text-gray-400 uppercase tracking-[1.5px]">
                                 {title}
                             </Text>
                         </View>
                     )}
-                    contentContainerStyle={{ paddingBottom: 120 }}
+                    contentContainerClassName="pb-[120px]"
                     showsVerticalScrollIndicator={false}
                     stickySectionHeadersEnabled={false}
                     ListEmptyComponent={
                         <View className="items-center justify-center mt-20 p-8">
-                            <View className="bg-gray-100 dark:bg-zinc-900 p-6 rounded-full mb-4">
-                                <ShoppingBag size={48} color="#999" strokeWidth={1} />
+                            <View className="bg-gray-50 p-6 rounded-full mb-4">
+                                <ShoppingBag size={48} color="#9ca3af" strokeWidth={1} />
                             </View>
-                            <Text className="text-gray-500 dark:text-gray-400 text-center text-lg font-medium">
+                            <Text className="text-gray-500 text-center text-lg font-medium leading-6">
                                 {searchQuery ? 'No items match your search.' : 'Your shopping list is empty.'}
                             </Text>
                         </View>
@@ -299,28 +277,15 @@ export default function ShoppingScreen() {
             </View>
 
             {/* Bottom Actions */}
-            <View style={{ position: 'absolute', bottom: 24, left: 16, right: 16, flexDirection: 'row', alignItems: 'center' }}>
+            <View className="absolute bottom-6 left-5 right-5 flex-row items-center">
                 {boughtCount > 0 && (
                     <Pressable
                         onPress={handleCheckout}
                         disabled={checkoutMutation.isPending}
-                        style={{
-                            flex: 1,
-                            height: 56,
-                            backgroundColor: '#111827',
-                            borderRadius: 16,
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            marginRight: 16,
-                            opacity: checkoutMutation.isPending ? 0.5 : 1,
-                            shadowColor: '#000',
-                            shadowOffset: { width: 0, height: 4 },
-                            shadowOpacity: 0.2,
-                            shadowRadius: 8,
-                            elevation: 5
-                        }}
+                        className={`flex-1 h-14 bg-gray-900 rounded-2xl items-center justify-center mr-4 shadow-xl shadow-black/20 ${checkoutMutation.isPending ? 'opacity-50' : 'opacity-100'}`}
+                        style={{ elevation: 5 }}
                     >
-                        <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 18 }}>
+                        <Text className="text-white font-bold text-lg">
                             {checkoutMutation.isPending ? 'Moving to Pantry...' : `Add ${boughtCount} Items to Pantry`}
                         </Text>
                     </Pressable>
@@ -331,20 +296,8 @@ export default function ShoppingScreen() {
                         pathname: '/modal',
                         params: { scanner: 'true', target: 'shopping' }
                     })}
-                    style={{
-                        width: 56,
-                        height: 56,
-                        backgroundColor: '#10b981',
-                        borderRadius: 16,
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        shadowColor: '#10b981',
-                        shadowOffset: { width: 0, height: 4 },
-                        shadowOpacity: 0.4,
-                        shadowRadius: 8,
-                        elevation: 5,
-                        marginLeft: boughtCount === 0 ? 'auto' : 0
-                    }}
+                    className={`w-14 h-14 bg-emerald-500 rounded-2xl items-center justify-center shadow-xl shadow-emerald-500/40 ${boughtCount === 0 ? 'ml-auto' : ''}`}
+                    style={{ elevation: 5 }}
                 >
                     <ScanBarcode size={28} color="white" />
                 </Pressable>
