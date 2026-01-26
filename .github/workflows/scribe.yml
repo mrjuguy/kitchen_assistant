@@ -1,0 +1,43 @@
+name: Async Scribe Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  scribe:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run Scribe Script
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: npm run doc-gen
+
+      - name: Commit and Push changes
+        run: |
+          git config --global user.name "Scribe Bot"
+          git config --global user.email "scribe@kitchen-assistant.local"
+          git add README.md specs/
+          # Only commit if there are changes
+          if ! git diff-index --quiet HEAD; then
+            git commit -m "docs: auto-update"
+            git push
+          else
+            echo "No documentation changes to commit."
+          fi
