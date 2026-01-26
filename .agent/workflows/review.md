@@ -31,7 +31,7 @@ description: Spawns a sub-agent to audit recent changes and generate a permanent
      > [Insert Git Diff Content]
      >
      > **TASK:**
-     > 1. Read `specs/active_PRD.md` to verify requirements.
+     > 1. Read `specs/issue_*.md` (or `specs/active_PRD.md`) to verify requirements.
      > 2. Analyze the provided changes against the Audit Rules.
      > 3. Generate a report in Markdown format.
      > 4. SAVE this report to `specs/reviews/YYYY-MM-DD-[feature_name].md`.

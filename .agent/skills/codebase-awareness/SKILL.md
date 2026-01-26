@@ -32,5 +32,5 @@ Whenever the `/plan` workflow or a similar "what should we do next" request is t
 ## Phase Discipline: Read-Only Planning
 - **CRITICAL**: During the `/plan` workflow or any "Discovery/Planning" phase, you are in **READ-ONLY MODE**.
 - **Forbidden Actions**: Do NOT use `write_to_file`, `replace_file_content`, or `run_command` (except for `ls`, `cat`, or read-only tools) on project code.
-- **Exception**: You may ONLY write to `specs/active_PRD.md` or `.agent` files.
+- **Exception**: You may ONLY write to `specs/issue_*.md`, `specs/active_PRD.md`, or `.agent` files.
 - **Why**: Writing code before the plan is approved causes "rogue" behavior, wasted effort, and violates the "Measure Twice, Cut Once" principle.
