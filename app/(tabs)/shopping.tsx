@@ -23,6 +23,7 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
+import { FrequentlyExpiredList } from "../../components/Inventory/FrequentlyExpiredList";
 import { ProductDetailModal } from "../../components/Inventory/ProductDetailModal";
 import { ShoppingItemCard } from "../../components/Shopping/ShoppingItemCard";
 import {
@@ -301,6 +302,11 @@ export default function ShoppingScreen() {
 
         <SectionList
           sections={groupedItems}
+          ListHeaderComponent={
+            <View className="mt-4">
+              <FrequentlyExpiredList />
+            </View>
+          }
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
             <ShoppingItemCard

@@ -3,7 +3,7 @@ import {
   ChevronDown,
   ChevronRight,
   Plus,
-  Refrigerator
+  Refrigerator,
 } from "lucide-react-native";
 import React, { useCallback, useMemo, useState } from "react";
 import {
@@ -14,7 +14,7 @@ import {
   SectionList,
   Text,
   UIManager,
-  View
+  View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -158,19 +158,19 @@ export default function PantryScreen() {
       >
         <View className="flex-row items-center">
           <View
-            className={`p-2 rounded-xl mr-3 ${section.title === "Fridge"
-              ? "bg-blue-100"
-              : section.title === "Freezer"
-                ? "bg-sky-100"
-                : section.title === "Expired" ||
-                  section.title === "Critical"
-                  ? "bg-red-100"
-                  : section.title === "Warning"
-                    ? "bg-amber-100"
-                    : section.title === "Good"
-                      ? "bg-green-100"
-                      : "bg-gray-100"
-              }`}
+            className={`p-2 rounded-xl mr-3 ${
+              section.title === "Fridge"
+                ? "bg-blue-100"
+                : section.title === "Freezer"
+                  ? "bg-sky-100"
+                  : section.title === "Expired" || section.title === "Critical"
+                    ? "bg-red-100"
+                    : section.title === "Warning"
+                      ? "bg-amber-100"
+                      : section.title === "Good"
+                        ? "bg-green-100"
+                        : "bg-gray-100"
+            }`}
           >
             <Refrigerator
               size={18}
@@ -180,7 +180,7 @@ export default function PantryScreen() {
                   : section.title === "Freezer"
                     ? "#0284c7"
                     : section.title === "Expired" ||
-                      section.title === "Critical"
+                        section.title === "Critical"
                       ? "#ef4444"
                       : section.title === "Warning"
                         ? "#f59e0b"

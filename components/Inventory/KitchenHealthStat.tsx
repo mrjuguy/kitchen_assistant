@@ -23,7 +23,9 @@ export const KitchenHealthStat = React.memo(
             <Icon size={20} color={color} />
           </View>
           <View className="px-2 py-1 bg-green-50 rounded-full">
-            <Text className="text-[10px] font-bold text-green-600">{trend}</Text>
+            <Text className="text-[10px] font-bold text-green-600">
+              {trend}
+            </Text>
           </View>
         </View>
 

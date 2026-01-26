@@ -3,15 +3,16 @@ import { Package, Trash2 } from "lucide-react-native";
 import React from "react";
 import { Alert, Image, Pressable, Text, View } from "react-native";
 
+import { ConsumptionSlider } from "./ConsumptionSlider";
+import { ExpiryBadge } from "./ExpiryBadge";
+import { QuantityControl } from "./QuantityControl";
 import {
   useDeletePantryItem,
   useUpdatePantryItem,
 } from "../../hooks/usePantry";
+import { useLogUsage } from "../../hooks/useUsageLogs";
 import { PantryItem, UpdatePantryItem } from "../../types/schema";
 import { UNITS_DB } from "../../utils/units";
-import { ConsumptionSlider } from "./ConsumptionSlider";
-import { ExpiryBadge } from "./ExpiryBadge";
-import { QuantityControl } from "./QuantityControl";
 
 interface PantryCardProps {
   item: PantryItem;
@@ -46,26 +47,43 @@ export const PantryCard = React.memo(({ item, onPress }: PantryCardProps) => {
     }
   };
 
+  const logMutation = useLogUsage();
+
   const handleDelete = () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-    Alert.alert(
-      "Delete Item",
-      `Are you sure you want to remove ${item.name} from your pantry?`,
-      [
-        { text: "Cancel", style: "cancel" },
-        {
-          text: "Delete",
-          style: "destructive",
-          onPress: () => deleteMutation.mutate(item.id),
+    Alert.alert("Remove Item", `What happened to ${item.name}?`, [
+      { text: "Cancel", style: "cancel" },
+      {
+        text: "Expired / Threw Away",
+        onPress: () => {
+          logMutation.mutate({
+            item_name: item.name,
+            quantity: item.quantity,
+            unit: item.unit,
+            action: "expired",
+          });
+          deleteMutation.mutate(item.id);
         },
-      ],
-    );
+      },
+      {
+        text: "Consumed",
+        onPress: () => {
+          logMutation.mutate({
+            item_name: item.name,
+            quantity: item.quantity,
+            unit: item.unit,
+            action: "consumed",
+          });
+          deleteMutation.mutate(item.id);
+        },
+      },
+    ]);
   };
 
   const colors = categoryStyles[item.category] || categoryStyles.Pantry;
 
   const isConsumable = React.useMemo(() => {
-    const def = UNITS_DB[item.unit as any];
+    const def = UNITS_DB[item.unit as UnitKey];
     return def && (def.category === "volume" || def.category === "weight"); // Only show for physical volumes
   }, [item.unit]);
 
