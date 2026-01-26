@@ -9,6 +9,7 @@
 
 ## 2. Technical Standards
 - **Strict TypeScript**: No `any` types. Interfaces for `PantryItem`, `Recipe`, `UserProfile`, and `Household` must be strictly defined in a central `types/` directory.
+- **Code Quality**: Ensure all code passes `npm run lint`. No linting errors or warnings should be committed.
 - **Component Architecture**: 
   - Use Functional Components with Hooks.
   - Keep UI components "dumb" (presentational) where possible.
