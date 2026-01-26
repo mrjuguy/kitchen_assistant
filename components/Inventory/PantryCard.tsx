@@ -3,16 +3,16 @@ import { Package, Trash2 } from "lucide-react-native";
 import React from "react";
 import { Alert, Image, Pressable, Text, View } from "react-native";
 
-import { ConsumptionSlider } from "./ConsumptionSlider";
-import { ExpiryBadge } from "./ExpiryBadge";
-import { QuantityControl } from "./QuantityControl";
 import {
   useDeletePantryItem,
   useUpdatePantryItem,
 } from "../../hooks/usePantry";
 import { useLogUsage } from "../../hooks/useUsageLogs";
 import { PantryItem, UpdatePantryItem } from "../../types/schema";
-import { UNITS_DB } from "../../utils/units";
+import { UNITS_DB, UnitKey } from "../../utils/units";
+import { ConsumptionSlider } from "./ConsumptionSlider";
+import { ExpiryBadge } from "./ExpiryBadge";
+import { QuantityControl } from "./QuantityControl";
 
 interface PantryCardProps {
   item: PantryItem;
