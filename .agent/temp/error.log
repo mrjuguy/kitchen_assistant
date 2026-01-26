@@ -1,28 +1,117 @@
-scribe	Run Scribe Script	﻿2026-01-26T06:36:36.3433437Z ##[group]Run npm run doc-gen
-scribe	Run Scribe Script	2026-01-26T06:36:36.3433724Z [36;1mnpm run doc-gen[0m
-scribe	Run Scribe Script	2026-01-26T06:36:36.3454865Z shell: /usr/bin/bash -e {0}
-scribe	Run Scribe Script	2026-01-26T06:36:36.3455102Z env:
-scribe	Run Scribe Script	2026-01-26T06:36:36.3456074Z   ANTHROPIC_API_KEY: ***
-scribe	Run Scribe Script	2026-01-26T06:36:36.3456284Z ##[endgroup]
-scribe	Run Scribe Script	2026-01-26T06:36:36.4589322Z 
-scribe	Run Scribe Script	2026-01-26T06:36:36.4590101Z > kitchen_app@1.0.0 doc-gen
-scribe	Run Scribe Script	2026-01-26T06:36:36.4590580Z > ts-node scripts/update-docs.ts
-scribe	Run Scribe Script	2026-01-26T06:36:36.4590788Z 
-scribe	Run Scribe Script	2026-01-26T06:36:38.4497223Z (node:2274) Warning: To load an ES module, set "type": "module" in the package.json or use the .mjs extension.
-scribe	Run Scribe Script	2026-01-26T06:36:38.4498832Z (Use `node --trace-warnings ...` to show where the warning was created)
-scribe	Run Scribe Script	2026-01-26T06:36:38.4511385Z /home/runner/work/kitchen_assistant/kitchen_assistant/scripts/update-docs.ts:1
-scribe	Run Scribe Script	2026-01-26T06:36:38.4512948Z import Anthropic from '@anthropic-ai/sdk';
-scribe	Run Scribe Script	2026-01-26T06:36:38.4513498Z ^^^^^^
-scribe	Run Scribe Script	2026-01-26T06:36:38.4513712Z 
-scribe	Run Scribe Script	2026-01-26T06:36:38.4514177Z SyntaxError: Cannot use import statement outside a module
-scribe	Run Scribe Script	2026-01-26T06:36:38.4515046Z     at internalCompileFunction (node:internal/vm:76:18)
-scribe	Run Scribe Script	2026-01-26T06:36:38.4516101Z     at wrapSafe (node:internal/modules/cjs/loader:1283:20)
-scribe	Run Scribe Script	2026-01-26T06:36:38.4516949Z     at Module._compile (node:internal/modules/cjs/loader:1328:27)
-scribe	Run Scribe Script	2026-01-26T06:36:38.4518328Z     at Module.m._compile (/home/runner/work/kitchen_assistant/kitchen_assistant/node_modules/ts-node/src/index.ts:1618:23)
-scribe	Run Scribe Script	2026-01-26T06:36:38.4519717Z     at Module._extensions..js (node:internal/modules/cjs/loader:1422:10)
-scribe	Run Scribe Script	2026-01-26T06:36:38.4521115Z     at Object.require.extensions.<computed> [as .ts] (/home/runner/work/kitchen_assistant/kitchen_assistant/node_modules/ts-node/src/index.ts:1621:12)
-scribe	Run Scribe Script	2026-01-26T06:36:38.4522369Z     at Module.load (node:internal/modules/cjs/loader:1203:32)
-scribe	Run Scribe Script	2026-01-26T06:36:38.4523139Z     at Function.Module._load (node:internal/modules/cjs/loader:1019:12)
-scribe	Run Scribe Script	2026-01-26T06:36:38.4524091Z     at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:128:12)
-scribe	Run Scribe Script	2026-01-26T06:36:38.4525312Z     at phase4 (/home/runner/work/kitchen_assistant/kitchen_assistant/node_modules/ts-node/src/bin.ts:649:14)
-scribe	Run Scribe Script	2026-01-26T06:36:38.4717086Z ##[error]Process completed with exit code 1.
+scribe	Install dependencies	﻿2026-01-26T06:56:57.0544987Z ##[group]Run npm ci
+scribe	Install dependencies	2026-01-26T06:56:57.0545403Z [36;1mnpm ci[0m
+scribe	Install dependencies	2026-01-26T06:56:57.0583398Z shell: /usr/bin/bash -e {0}
+scribe	Install dependencies	2026-01-26T06:56:57.0583709Z ##[endgroup]
+scribe	Install dependencies	2026-01-26T06:56:58.0866904Z npm warn EBADENGINE Unsupported engine {
+scribe	Install dependencies	2026-01-26T06:56:58.0867671Z npm warn EBADENGINE   package: '@isaacs/balanced-match@4.0.1',
+scribe	Install dependencies	2026-01-26T06:56:58.0868245Z npm warn EBADENGINE   required: { node: '20 || >=22' },
+scribe	Install dependencies	2026-01-26T06:56:58.0868809Z npm warn EBADENGINE   current: { node: 'v18.20.8', npm: '10.8.2' }
+scribe	Install dependencies	2026-01-26T06:56:58.0869242Z npm warn EBADENGINE }
+scribe	Install dependencies	2026-01-26T06:56:58.0869589Z npm warn EBADENGINE Unsupported engine {
+scribe	Install dependencies	2026-01-26T06:56:58.0870106Z npm warn EBADENGINE   package: '@isaacs/brace-expansion@5.0.0',
+scribe	Install dependencies	2026-01-26T06:56:58.0870670Z npm warn EBADENGINE   required: { node: '20 || >=22' },
+scribe	Install dependencies	2026-01-26T06:56:58.0871213Z npm warn EBADENGINE   current: { node: 'v18.20.8', npm: '10.8.2' }
+scribe	Install dependencies	2026-01-26T06:56:58.0871651Z npm warn EBADENGINE }
+scribe	Install dependencies	2026-01-26T06:56:58.0876054Z npm warn EBADENGINE Unsupported engine {
+scribe	Install dependencies	2026-01-26T06:56:58.0876702Z npm warn EBADENGINE   package: '@react-native/assets-registry@0.81.5',
+scribe	Install dependencies	2026-01-26T06:56:58.0877251Z npm warn EBADENGINE   required: { node: '>= 20.19.4' },
+scribe	Install dependencies	2026-01-26T06:56:58.0877756Z npm warn EBADENGINE   current: { node: 'v18.20.8', npm: '10.8.2' }
+scribe	Install dependencies	2026-01-26T06:56:58.0878112Z npm warn EBADENGINE }
+scribe	Install dependencies	2026-01-26T06:56:58.0879027Z npm warn EBADENGINE Unsupported engine {
+scribe	Install dependencies	2026-01-26T06:56:58.0879721Z npm warn EBADENGINE   package: '@react-native/babel-plugin-codegen@0.81.5',
+scribe	Install dependencies	2026-01-26T06:56:58.0880215Z npm warn EBADENGINE   required: { node: '>= 20.19.4' },
+scribe	Install dependencies	2026-01-26T06:56:58.0880673Z npm warn EBADENGINE   current: { node: 'v18.20.8', npm: '10.8.2' }
+scribe	Install dependencies	2026-01-26T06:56:58.0881039Z npm warn EBADENGINE }
+scribe	Install dependencies	2026-01-26T06:56:58.0882139Z npm warn EBADENGINE Unsupported engine {
+scribe	Install dependencies	2026-01-26T06:56:58.0882712Z npm warn EBADENGINE   package: '@react-native/babel-preset@0.81.5',
+scribe	Install dependencies	2026-01-26T06:56:58.0883173Z npm warn EBADENGINE   required: { node: '>= 20.19.4' },
+scribe	Install dependencies	2026-01-26T06:56:58.0883614Z npm warn EBADENGINE   current: { node: 'v18.20.8', npm: '10.8.2' }
+scribe	Install dependencies	2026-01-26T06:56:58.0883970Z npm warn EBADENGINE }
+scribe	Install dependencies	2026-01-26T06:56:58.0884847Z npm warn EBADENGINE Unsupported engine {
+scribe	Install dependencies	2026-01-26T06:56:58.0885399Z npm warn EBADENGINE   package: '@react-native/codegen@0.81.5',
+scribe	Install dependencies	2026-01-26T06:56:58.0886041Z npm warn EBADENGINE   required: { node: '>= 20.19.4' },
+scribe	Install dependencies	2026-01-26T06:56:58.0886488Z npm warn EBADENGINE   current: { node: 'v18.20.8', npm: '10.8.2' }
+scribe	Install dependencies	2026-01-26T06:56:58.0887078Z npm warn EBADENGINE }
+scribe	Install dependencies	2026-01-26T06:56:58.0887622Z npm warn EBADENGINE Unsupported engine {
+scribe	Install dependencies	2026-01-26T06:56:58.0888132Z npm warn EBADENGINE   package: '@react-native/community-cli-plugin@0.81.5',
+scribe	Install dependencies	2026-01-26T06:56:58.0888619Z npm warn EBADENGINE   required: { node: '>= 20.19.4' },
+scribe	Install dependencies	2026-01-26T06:56:58.0889062Z npm warn EBADENGINE   current: { node: 'v18.20.8', npm: '10.8.2' }
+scribe	Install dependencies	2026-01-26T06:56:58.0889393Z npm warn EBADENGINE }
+scribe	Install dependencies	2026-01-26T06:56:58.0892049Z npm warn EBADENGINE Unsupported engine {
+scribe	Install dependencies	2026-01-26T06:56:58.0893062Z npm warn EBADENGINE   package: '@react-native/debugger-frontend@0.81.5',
+scribe	Install dependencies	2026-01-26T06:56:58.0894044Z npm warn EBADENGINE   required: { node: '>= 20.19.4' },
+scribe	Install dependencies	2026-01-26T06:56:58.0895697Z npm warn EBADENGINE   current: { node: 'v18.20.8', npm: '10.8.2' }
+scribe	Install dependencies	2026-01-26T06:56:58.0896465Z npm warn EBADENGINE }
+scribe	Install dependencies	2026-01-26T06:56:58.0991853Z npm warn EBADENGINE Unsupported engine {
+scribe	Install dependencies	2026-01-26T06:56:58.0992841Z npm warn EBADENGINE   package: '@react-native/dev-middleware@0.81.5',
+scribe	Install dependencies	2026-01-26T06:56:58.0993771Z npm warn EBADENGINE   required: { node: '>= 20.19.4' },
+scribe	Install dependencies	2026-01-26T06:56:58.0994604Z npm warn EBADENGINE   current: { node: 'v18.20.8', npm: '10.8.2' }
+scribe	Install dependencies	2026-01-26T06:56:58.0995317Z npm warn EBADENGINE }
+scribe	Install dependencies	2026-01-26T06:56:58.0996040Z npm warn EBADENGINE Unsupported engine {
+scribe	Install dependencies	2026-01-26T06:56:58.0996878Z npm warn EBADENGINE   package: '@react-native/gradle-plugin@0.81.5',
+scribe	Install dependencies	2026-01-26T06:56:58.0997761Z npm warn EBADENGINE   required: { node: '>= 20.19.4' },
+scribe	Install dependencies	2026-01-26T06:56:58.0998610Z npm warn EBADENGINE   current: { node: 'v18.20.8', npm: '10.8.2' }
+scribe	Install dependencies	2026-01-26T06:56:58.0999797Z npm warn EBADENGINE }
+scribe	Install dependencies	2026-01-26T06:56:58.1000382Z npm warn EBADENGINE Unsupported engine {
+scribe	Install dependencies	2026-01-26T06:56:58.1001299Z npm warn EBADENGINE   package: '@react-native/js-polyfills@0.81.5',
+scribe	Install dependencies	2026-01-26T06:56:58.1002211Z npm warn EBADENGINE   required: { node: '>= 20.19.4' },
+scribe	Install dependencies	2026-01-26T06:56:58.1003108Z npm warn EBADENGINE   current: { node: 'v18.20.8', npm: '10.8.2' }
+scribe	Install dependencies	2026-01-26T06:56:58.1003794Z npm warn EBADENGINE }
+scribe	Install dependencies	2026-01-26T06:56:58.1004300Z npm warn EBADENGINE Unsupported engine {
+scribe	Install dependencies	2026-01-26T06:56:58.1005051Z npm warn EBADENGINE   package: '@supabase/auth-js@2.90.1',
+scribe	Install dependencies	2026-01-26T06:56:58.1006058Z npm warn EBADENGINE   required: { node: '>=20.0.0' },
+scribe	Install dependencies	2026-01-26T06:56:58.1006800Z npm warn EBADENGINE   current: { node: 'v18.20.8', npm: '10.8.2' }
+scribe	Install dependencies	2026-01-26T06:56:58.1007455Z npm warn EBADENGINE }
+scribe	Install dependencies	2026-01-26T06:56:58.1007965Z npm warn EBADENGINE Unsupported engine {
+scribe	Install dependencies	2026-01-26T06:56:58.1008746Z npm warn EBADENGINE   package: '@supabase/functions-js@2.90.1',
+scribe	Install dependencies	2026-01-26T06:56:58.1009583Z npm warn EBADENGINE   required: { node: '>=20.0.0' },
+scribe	Install dependencies	2026-01-26T06:56:58.1010507Z npm warn EBADENGINE   current: { node: 'v18.20.8', npm: '10.8.2' }
+scribe	Install dependencies	2026-01-26T06:56:58.1011276Z npm warn EBADENGINE }
+scribe	Install dependencies	2026-01-26T06:56:58.1011842Z npm warn EBADENGINE Unsupported engine {
+scribe	Install dependencies	2026-01-26T06:56:58.1012649Z npm warn EBADENGINE   package: '@supabase/postgrest-js@2.90.1',
+scribe	Install dependencies	2026-01-26T06:56:58.1013437Z npm warn EBADENGINE   required: { node: '>=20.0.0' },
+scribe	Install dependencies	2026-01-26T06:56:58.1014223Z npm warn EBADENGINE   current: { node: 'v18.20.8', npm: '10.8.2' }
+scribe	Install dependencies	2026-01-26T06:56:58.1014905Z npm warn EBADENGINE }
+scribe	Install dependencies	2026-01-26T06:56:58.1015653Z npm warn EBADENGINE Unsupported engine {
+scribe	Install dependencies	2026-01-26T06:56:58.1016460Z npm warn EBADENGINE   package: '@supabase/realtime-js@2.90.1',
+scribe	Install dependencies	2026-01-26T06:56:58.1017292Z npm warn EBADENGINE   required: { node: '>=20.0.0' },
+scribe	Install dependencies	2026-01-26T06:56:58.1018169Z npm warn EBADENGINE   current: { node: 'v18.20.8', npm: '10.8.2' }
+scribe	Install dependencies	2026-01-26T06:56:58.1018783Z npm warn EBADENGINE }
+scribe	Install dependencies	2026-01-26T06:56:58.1019291Z npm warn EBADENGINE Unsupported engine {
+scribe	Install dependencies	2026-01-26T06:56:58.1020044Z npm warn EBADENGINE   package: '@supabase/storage-js@2.90.1',
+scribe	Install dependencies	2026-01-26T06:56:58.1020915Z npm warn EBADENGINE   required: { node: '>=20.0.0' },
+scribe	Install dependencies	2026-01-26T06:56:58.1021762Z npm warn EBADENGINE   current: { node: 'v18.20.8', npm: '10.8.2' }
+scribe	Install dependencies	2026-01-26T06:56:58.1022454Z npm warn EBADENGINE }
+scribe	Install dependencies	2026-01-26T06:56:58.1022995Z npm warn EBADENGINE Unsupported engine {
+scribe	Install dependencies	2026-01-26T06:56:58.1023787Z npm warn EBADENGINE   package: '@supabase/supabase-js@2.90.1',
+scribe	Install dependencies	2026-01-26T06:56:58.1024613Z npm warn EBADENGINE   required: { node: '>=20.0.0' },
+scribe	Install dependencies	2026-01-26T06:56:58.1025690Z npm warn EBADENGINE   current: { node: 'v18.20.8', npm: '10.8.2' }
+scribe	Install dependencies	2026-01-26T06:56:58.1026396Z npm warn EBADENGINE }
+scribe	Install dependencies	2026-01-26T06:56:58.1026930Z npm warn EBADENGINE Unsupported engine {
+scribe	Install dependencies	2026-01-26T06:56:58.1027645Z npm warn EBADENGINE   package: 'expo-server@1.0.5',
+scribe	Install dependencies	2026-01-26T06:56:58.1028468Z npm warn EBADENGINE   required: { node: '>=20.16.0' },
+scribe	Install dependencies	2026-01-26T06:56:58.1029434Z npm warn EBADENGINE   current: { node: 'v18.20.8', npm: '10.8.2' }
+scribe	Install dependencies	2026-01-26T06:56:58.1030170Z npm warn EBADENGINE }
+scribe	Install dependencies	2026-01-26T06:56:58.1031095Z npm warn EBADENGINE Unsupported engine {
+scribe	Install dependencies	2026-01-26T06:56:58.1031795Z npm warn EBADENGINE   package: 'glob@13.0.0',
+scribe	Install dependencies	2026-01-26T06:56:58.1032552Z npm warn EBADENGINE   required: { node: '20 || >=22' },
+scribe	Install dependencies	2026-01-26T06:56:58.1033437Z npm warn EBADENGINE   current: { node: 'v18.20.8', npm: '10.8.2' }
+scribe	Install dependencies	2026-01-26T06:56:58.1034100Z npm warn EBADENGINE }
+scribe	Install dependencies	2026-01-26T06:56:58.1034631Z npm warn EBADENGINE Unsupported engine {
+scribe	Install dependencies	2026-01-26T06:56:58.1035332Z npm warn EBADENGINE   package: 'minimatch@10.1.1',
+scribe	Install dependencies	2026-01-26T06:56:58.1036413Z npm warn EBADENGINE   required: { node: '20 || >=22' },
+scribe	Install dependencies	2026-01-26T06:56:58.1037310Z npm warn EBADENGINE   current: { node: 'v18.20.8', npm: '10.8.2' }
+scribe	Install dependencies	2026-01-26T06:56:58.1038019Z npm warn EBADENGINE }
+scribe	Install dependencies	2026-01-26T06:56:58.1038592Z npm warn EBADENGINE Unsupported engine {
+scribe	Install dependencies	2026-01-26T06:56:58.1039355Z npm warn EBADENGINE   package: 'iceberg-js@0.8.1',
+scribe	Install dependencies	2026-01-26T06:56:58.1040472Z npm warn EBADENGINE   required: { node: '>=20.0.0' },
+scribe	Install dependencies	2026-01-26T06:56:58.1041415Z npm warn EBADENGINE   current: { node: 'v18.20.8', npm: '10.8.2' }
+scribe	Install dependencies	2026-01-26T06:56:58.1042140Z npm warn EBADENGINE }
+scribe	Install dependencies	2026-01-26T06:56:58.1042647Z npm error code EBADPLATFORM
+scribe	Install dependencies	2026-01-26T06:56:58.1044194Z npm error notsup Unsupported platform for lightningcss-win32-x64-msvc@1.31.1: wanted {"os":"win32","cpu":"x64"} (current: {"os":"linux","cpu":"x64"})
+scribe	Install dependencies	2026-01-26T06:56:58.1046307Z npm error notsup Valid os:   win32
+scribe	Install dependencies	2026-01-26T06:56:58.1046991Z npm error notsup Actual os:  linux
+scribe	Install dependencies	2026-01-26T06:56:58.1047617Z npm error notsup Valid cpu:  x64
+scribe	Install dependencies	2026-01-26T06:56:58.1048157Z npm error notsup Actual cpu: x64
+scribe	Install dependencies	2026-01-26T06:56:58.1055647Z npm error A complete log of this run can be found in: /home/runner/.npm/_logs/2026-01-26T06_56_57_130Z-debug-0.log
+scribe	Install dependencies	2026-01-26T06:56:58.1151006Z ##[error]Process completed with exit code 1.
