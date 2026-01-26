@@ -14,6 +14,8 @@ description: Standards for repository hygiene, security, and public documentatio
 - **Pre-Commit Scan**: Never run `git add .` without first running `git status` to check for untracked sensitive files.
   - **Explicit Block**: If you see files named `mcp.json` (especially in `.agent/`), `credentials.json`, `service_account.json`, or anything containing `token` or `secret`, **STOP**. Do not commit them. Add them to `.gitignore` immediately.
   - **Secret Scrubbing**: If you accidentally catch a secret in a commit history, you MUST rewrite the history (e.g., `git filter-branch` or `git rebase -i`) to remove it before pushing. Pushing a secret will block the push and require manual intervention.
+- **Repository Sweep (Sub-Agent)**: You can spawn a sub-agent to perform a thorough security sweep:
+  - `claude -p "Perform a deep security audit of the repository. Check all files (even ignored ones) for potential secrets and report findings." --agent "qa-bot"`
 
 ## Tool Hygiene
 - **No Hammering**: If a tool call (like `mcp_list_resources` or `run_command`) fails, **DO NOT** retry the exact same call within the same step. Analyze the error message first. If a resource or command is not found, assume it is unavailable and ask the user or try an alternative approach.
