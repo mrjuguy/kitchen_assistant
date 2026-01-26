@@ -11,11 +11,13 @@ description: Standards for repository hygiene, security, and public documentatio
 - **Rule Sharing**: `PROJECT_RULES.md` is now the shared source of truth and **SHOULD** be committed.
 - **Gitignore Audit**: Verify that `.env` and `.claude/` (personal config) are in `.gitignore`.
 - **Shell Syntax**: Use `&&` to chain commands in Bash.
-- **Pre-Commit Scan**: Never run `git add .` without first running `git status` to check for untracked files.
-  - **Explicit Block**: If you see files named `mcp.json`, `credentials.json`, `service_account.json`, or anything containing `token` or `secret`, **STOP**. Do not commit them. Add them to `.gitignore`.
+- **Pre-Commit Scan**: Never run `git add .` without first running `git status` to check for untracked sensitive files.
+  - **Explicit Block**: If you see files named `mcp.json` (especially in `.agent/`), `credentials.json`, `service_account.json`, or anything containing `token` or `secret`, **STOP**. Do not commit them. Add them to `.gitignore` immediately.
+  - **Secret Scrubbing**: If you accidentally catch a secret in a commit history, you MUST rewrite the history (e.g., `git filter-branch` or `git rebase -i`) to remove it before pushing. Pushing a secret will block the push and require manual intervention.
 
 ## Tool Hygiene
 - **No Hammering**: If a tool call (like `mcp_list_resources` or `run_command`) fails, **DO NOT** retry the exact same call within the same step. Analyze the error message first. If a resource or command is not found, assume it is unavailable and ask the user or try an alternative approach.
+- **Agent Folder Location**: The `claude` CLI strictly requires agents to be in `.claude/agents/`. **NEVER** try to place them in `.agent/agents/` or create new directories for them. Use the existing location.
 
 
 ## GitHub Operations

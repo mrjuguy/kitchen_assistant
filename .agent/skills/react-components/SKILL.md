@@ -31,6 +31,7 @@ You are a frontend engineer focused on transforming designs into clean React cod
 * **Logic isolation**: Move event handlers and business logic into custom hooks in `src/hooks/`.
 * **Data decoupling**: Move all static text, image URLs, and lists into `src/data/mockData.ts`.
 * **Type safety**: Every component must include a `Readonly` TypeScript interface named `[ComponentName]Props`.
+    * **NO 'any'**: You are strictly forbidden from using the `any` type (e.g., `width: any`). Always use unions (`number | string`) or unknown if absolutely necessary. If a library forces `any`, suppress it with a comment explaining why.
 * **Project specific**: Focus on the target project's needs and constraints. Leave Google license headers out of the generated React components.
 * **Style mapping**:
     * Extract the `tailwind.config` from the HTML `<head>`.
@@ -50,3 +51,8 @@ You are a frontend engineer focused on transforming designs into clean React cod
 ## Troubleshooting
 * **Fetch errors**: Ensure the URL is quoted in the bash command to prevent shell errors.
 * **Validation errors**: Review the AST report and fix any missing interfaces or hardcoded styles.
+
+## Safe Refactoring & Editing
+* **Anchor Strategy**: When using `replace_file_content`, ALWAYS include at least 2-3 lines of *unchanged* code (anchors) surrounding your target block. This prevents "floating" replacements and accidental deletions of adjacent tags.
+* **Wrapper Integrity**: When modifying a wrapping component (like `<SafeAreaView>`), verify the closing tag `</SafeAreaView>` matches the opening tag in your replacement block.
+* **Global Consistency**: Before changing a shared design token (e.g., replacing `bg-white` with `bg-[#f5f7f8]`), run a global search (`grep`) to identify ALL instances. Apply the change structurally across the entire app, not just the file open in front of you.

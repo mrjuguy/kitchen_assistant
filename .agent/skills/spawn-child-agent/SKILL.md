@@ -13,7 +13,7 @@ Execute via the `Bash` tool. You MUST use the `-p` (headless) flag.
 
 ```bash
 claude -p "Your detailed instructions for the child agent here" \
-  --allowedTools "Bash,Read,Grep,Glob,Edit,find_by_name,view_file,write_to_file" \
+  --allowedTools "Bash,Read,Grep,Glob,find_by_name,view_file,write_to_file,replace_file_content" \
   --model "sonnet" \
   --output-format json
 ```
@@ -21,7 +21,7 @@ claude -p "Your detailed instructions for the child agent here" \
 ## Critical Flags
 
 *   **`-p` / `--print`**: Runs non-interactive. Required.
-*   **`--allowedTools`**: Pre-authorizes tools. **CRITICAL**: If you do not include this, the child agent will hang waiting for user permission.
+*   **`--allowedTools`**: Pre-authorizes tools. **CRITICAL**: Use the exact internal tool names (e.g., `write_to_file`, NOT `Edit`). If you do not include this, the child agent will hang.
 *   **`--output-format json`**: Allows you (the parent agent) to parse the result programmatically.
 
 ## Example: Spawning a Specialized Worker
@@ -33,4 +33,4 @@ claude -p "Use the qa-bot subagent to verify the recent changes in src/utils.ts"
   --allowedTools "Bash,Read" \
   --agent "qa-bot"
 ```
-*(Note: Ensure `qa-bot` is defined in `.claude/agents/`)*
+*(Note: Agents MUST be located in `.claude/agents/` to be discoverable by the CLI. Do not put them in `.agent/agents/`.)*
