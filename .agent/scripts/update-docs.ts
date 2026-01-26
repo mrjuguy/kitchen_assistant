@@ -1,29 +1,33 @@
-const Anthropic = require('@anthropic-ai/sdk');
-const { execSync } = require('child_process');
-const dotenv = require('dotenv');
-const fs = require('fs');
-const path = require('path');
+import Anthropic from '@anthropic-ai/sdk';
+import { execSync } from 'child_process';
+import * as dotenv from 'dotenv';
+import * as fs from 'fs';
+import * as path from 'path';
 
-// Load environment variables (for local testing)
+// Load environment variables (useful for local testing)
 dotenv.config();
 
+// Initialize Anthropic Client
+// Ensure ANTHROPIC_API_KEY is set in your Repo Secrets
 const anthropic = new Anthropic({
     apiKey: process.env.ANTHROPIC_API_KEY,
 });
 
-// Configuration
+// Configuration: List of files The Scribe should maintain
 const DOCS_TO_UPDATE = [
     'README.md',
     'specs/tech-stack.md'
 ];
 
+/**
+ * Retrieves the context of the last commit to understand what changed.
+ */
 async function getGitContext() {
     try {
-        // Get the last commit message and the stat (files changed)
+        // Get commit message and file stats
         const commitInfo = execSync('git log -1 --stat', { encoding: 'utf-8' });
 
-        // Get the actual diff of the last commit to see *what* changed
-        // Limit to 4000 chars to prevent token overflow on massive PRs
+        // Get the actual code diff (truncated to prevent token limits)
         const diff = execSync('git show HEAD --pretty=""', { encoding: 'utf-8' }).slice(0, 4000);
 
         return `COMMIT INFO:\n${commitInfo}\n\nCODE CHANGES (Truncated):\n${diff}`;
@@ -33,6 +37,9 @@ async function getGitContext() {
     }
 }
 
+/**
+ * Sends the document and code context to Claude to generate an updated version.
+ */
 async function updateDocument(filePath: string, gitContext: string) {
     const fullPath = path.join(process.cwd(), filePath);
 
@@ -46,7 +53,7 @@ async function updateDocument(filePath: string, gitContext: string) {
 
     try {
         const message = await anthropic.messages.create({
-            model: "claude-3-5-sonnet-20241022",
+            model: "claude-3-5-sonnet-20241022", // Use a high-intelligence model for docs
             max_tokens: 4096,
             system: "You are 'The Scribe', a technical documentation bot. Your goal is to keep documentation 100% in sync with code. You will be given a file and a set of code changes. You must update the file to reflect the changes. Return ONLY the updated file content. Do not include markdown code fences (```) or conversational text.",
             messages: [
@@ -84,12 +91,16 @@ async function updateDocument(filePath: string, gitContext: string) {
     }
 }
 
+/**
+ * Main Execution Flow
+ */
 async function main() {
     if (!process.env.ANTHROPIC_API_KEY) {
         console.error("❌ ANTHROPIC_API_KEY is missing. Set it in Repo Secrets.");
         process.exit(1);
     }
 
+    console.log("📜 The Scribe has started...");
     const context = await getGitContext();
 
     for (const doc of DOCS_TO_UPDATE) {

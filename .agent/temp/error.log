@@ -1,0 +1,28 @@
+scribe	Run Scribe Script	﻿2026-01-26T06:36:36.3433437Z ##[group]Run npm run doc-gen
+scribe	Run Scribe Script	2026-01-26T06:36:36.3433724Z [36;1mnpm run doc-gen[0m
+scribe	Run Scribe Script	2026-01-26T06:36:36.3454865Z shell: /usr/bin/bash -e {0}
+scribe	Run Scribe Script	2026-01-26T06:36:36.3455102Z env:
+scribe	Run Scribe Script	2026-01-26T06:36:36.3456074Z   ANTHROPIC_API_KEY: ***
+scribe	Run Scribe Script	2026-01-26T06:36:36.3456284Z ##[endgroup]
+scribe	Run Scribe Script	2026-01-26T06:36:36.4589322Z 
+scribe	Run Scribe Script	2026-01-26T06:36:36.4590101Z > kitchen_app@1.0.0 doc-gen
+scribe	Run Scribe Script	2026-01-26T06:36:36.4590580Z > ts-node scripts/update-docs.ts
+scribe	Run Scribe Script	2026-01-26T06:36:36.4590788Z 
+scribe	Run Scribe Script	2026-01-26T06:36:38.4497223Z (node:2274) Warning: To load an ES module, set "type": "module" in the package.json or use the .mjs extension.
+scribe	Run Scribe Script	2026-01-26T06:36:38.4498832Z (Use `node --trace-warnings ...` to show where the warning was created)
+scribe	Run Scribe Script	2026-01-26T06:36:38.4511385Z /home/runner/work/kitchen_assistant/kitchen_assistant/scripts/update-docs.ts:1
+scribe	Run Scribe Script	2026-01-26T06:36:38.4512948Z import Anthropic from '@anthropic-ai/sdk';
+scribe	Run Scribe Script	2026-01-26T06:36:38.4513498Z ^^^^^^
+scribe	Run Scribe Script	2026-01-26T06:36:38.4513712Z 
+scribe	Run Scribe Script	2026-01-26T06:36:38.4514177Z SyntaxError: Cannot use import statement outside a module
+scribe	Run Scribe Script	2026-01-26T06:36:38.4515046Z     at internalCompileFunction (node:internal/vm:76:18)
+scribe	Run Scribe Script	2026-01-26T06:36:38.4516101Z     at wrapSafe (node:internal/modules/cjs/loader:1283:20)
+scribe	Run Scribe Script	2026-01-26T06:36:38.4516949Z     at Module._compile (node:internal/modules/cjs/loader:1328:27)
+scribe	Run Scribe Script	2026-01-26T06:36:38.4518328Z     at Module.m._compile (/home/runner/work/kitchen_assistant/kitchen_assistant/node_modules/ts-node/src/index.ts:1618:23)
+scribe	Run Scribe Script	2026-01-26T06:36:38.4519717Z     at Module._extensions..js (node:internal/modules/cjs/loader:1422:10)
+scribe	Run Scribe Script	2026-01-26T06:36:38.4521115Z     at Object.require.extensions.<computed> [as .ts] (/home/runner/work/kitchen_assistant/kitchen_assistant/node_modules/ts-node/src/index.ts:1621:12)
+scribe	Run Scribe Script	2026-01-26T06:36:38.4522369Z     at Module.load (node:internal/modules/cjs/loader:1203:32)
+scribe	Run Scribe Script	2026-01-26T06:36:38.4523139Z     at Function.Module._load (node:internal/modules/cjs/loader:1019:12)
+scribe	Run Scribe Script	2026-01-26T06:36:38.4524091Z     at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:128:12)
+scribe	Run Scribe Script	2026-01-26T06:36:38.4525312Z     at phase4 (/home/runner/work/kitchen_assistant/kitchen_assistant/node_modules/ts-node/src/bin.ts:649:14)
+scribe	Run Scribe Script	2026-01-26T06:36:38.4717086Z ##[error]Process completed with exit code 1.
