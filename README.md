@@ -5,6 +5,7 @@ A premium, inventory-first kitchen management application built with Expo and Su
 ## 🚀 Features
 
 ### Completed
+- **Frequently Expired Insights (Feature #11)**: Smart analytics engine that tracks "Waste Patterns" by aggregating item expiry history. Features a "Waste Watch" carousel in the Shopping tab that highlights top-10 most discarded items (e.g., "Spinach 3x") to nudge better purchasing decisions. Built on a new `usage_logs` immutable ledger.
 - **Pantry Core**: Real-time inventory tracking with Supabase.
 - **Inventory Organization**: Collapsible sections for Fridge, Freezer, and Pantry with custom storage location tagging.
 - **Smart Scanner**: Barcode identification via `expo-camera` and OpenFoodFacts integration.
