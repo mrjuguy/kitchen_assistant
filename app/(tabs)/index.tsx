@@ -120,6 +120,108 @@ export default function PantryScreen() {
     return { total: items.length, score: scoreValue };
   }, [items]);
 
+  const listHeader = useMemo(
+    () => (
+      <View className="pt-6 pb-4">
+        <PantryHeader onSearchPress={() => router.push("/modal")} />
+
+        {!searchQuery && (
+          <WastingSoonCarousel
+            items={wastingSoon}
+            onItemPress={setSelectedItem}
+          />
+        )}
+
+        {!searchQuery && (
+          <KitchenHealthSection
+            totalItems={stats.total}
+            freshnessScore={stats.score}
+          />
+        )}
+
+        <InventoryHeader
+          searchQuery={searchQuery}
+          setSearchQuery={setSearchQuery}
+          sortBy={sortBy}
+          setSortBy={setSortBy}
+        />
+      </View>
+    ),
+    [searchQuery, wastingSoon, stats.total, stats.score, sortBy, router],
+  );
+
+  const renderSectionHeader = useCallback(
+    ({ section }: { section: { title: string; count: number } }) => (
+      <Pressable
+        onPress={() => toggleSection(section.title)}
+        className={`flex-row items-center justify-between bg-white px-4 py-4 mx-4 mt-2 rounded-2xl shadow-sm elevation-1 ${collapsedSections[section.title] ? "rounded-b-2xl" : "rounded-b-none"}`}
+      >
+        <View className="flex-row items-center">
+          <View
+            className={`p-2 rounded-xl mr-3 ${section.title === "Fridge"
+              ? "bg-blue-100"
+              : section.title === "Freezer"
+                ? "bg-sky-100"
+                : section.title === "Expired" ||
+                  section.title === "Critical"
+                  ? "bg-red-100"
+                  : section.title === "Warning"
+                    ? "bg-amber-100"
+                    : section.title === "Good"
+                      ? "bg-green-100"
+                      : "bg-gray-100"
+              }`}
+          >
+            <Refrigerator
+              size={18}
+              color={
+                section.title === "Fridge"
+                  ? "#2563eb"
+                  : section.title === "Freezer"
+                    ? "#0284c7"
+                    : section.title === "Expired" ||
+                      section.title === "Critical"
+                      ? "#ef4444"
+                      : section.title === "Warning"
+                        ? "#f59e0b"
+                        : section.title === "Good"
+                          ? "#22c55e"
+                          : "#6b7280"
+              }
+            />
+          </View>
+          <Text className="text-base font-bold text-gray-900">
+            {section.title}
+          </Text>
+          <View className="ml-2 bg-[#f3f4f6] px-2 py-0.5 rounded-full">
+            <Text className="text-xs text-gray-500 font-bold">
+              {section.count}
+            </Text>
+          </View>
+        </View>
+        {collapsedSections[section.title] ? (
+          <ChevronDown size={20} color="#9ca3af" />
+        ) : (
+          <ChevronRight
+            size={20}
+            color="#9ca3af"
+            style={{ transform: [{ rotate: "90deg" }] }}
+          />
+        )}
+      </Pressable>
+    ),
+    [toggleSection, collapsedSections],
+  );
+
+  const renderItem = useCallback(
+    ({ item }: { item: PantryItem }) => (
+      <View className="bg-white mx-4 px-2">
+        <PantryCard item={item} onPress={() => setSelectedItem(item)} />
+      </View>
+    ),
+    [],
+  );
+
   if (isLoading) {
     return (
       <SafeAreaView className="flex-1 bg-[#f5f7f8]" edges={["top"]}>
@@ -163,106 +265,10 @@ export default function PantryScreen() {
         <SectionList
           sections={sections}
           keyExtractor={(item) => item.id}
-          ListHeaderComponent={useMemo(
-            () => (
-              <View className="pt-6 pb-4">
-                <PantryHeader onSearchPress={() => router.push("/modal")} />
-
-                {!searchQuery && (
-                  <WastingSoonCarousel
-                    items={wastingSoon}
-                    onItemPress={setSelectedItem}
-                  />
-                )}
-
-                {!searchQuery && (
-                  <KitchenHealthSection
-                    totalItems={stats.total}
-                    freshnessScore={stats.score}
-                  />
-                )}
-
-                <InventoryHeader
-                  searchQuery={searchQuery}
-                  setSearchQuery={setSearchQuery}
-                  sortBy={sortBy}
-                  setSortBy={setSortBy}
-                />
-              </View>
-            ),
-            [searchQuery, wastingSoon, stats.total, stats.score, sortBy, router],
-          )}
+          ListHeaderComponent={listHeader}
           stickySectionHeadersEnabled={false}
-          renderSectionHeader={useCallback(
-            ({ section }: { section: { title: string; count: number } }) => (
-              <Pressable
-                onPress={() => toggleSection(section.title)}
-                className={`flex-row items-center justify-between bg-white px-4 py-4 mx-4 mt-2 rounded-2xl shadow-sm elevation-1 ${collapsedSections[section.title] ? "rounded-b-2xl" : "rounded-b-none"}`}
-              >
-                <View className="flex-row items-center">
-                  <View
-                    className={`p-2 rounded-xl mr-3 ${section.title === "Fridge"
-                      ? "bg-blue-100"
-                      : section.title === "Freezer"
-                        ? "bg-sky-100"
-                        : section.title === "Expired" ||
-                          section.title === "Critical"
-                          ? "bg-red-100"
-                          : section.title === "Warning"
-                            ? "bg-amber-100"
-                            : section.title === "Good"
-                              ? "bg-green-100"
-                              : "bg-gray-100"
-                      }`}
-                  >
-                    <Refrigerator
-                      size={18}
-                      color={
-                        section.title === "Fridge"
-                          ? "#2563eb"
-                          : section.title === "Freezer"
-                            ? "#0284c7"
-                            : section.title === "Expired" ||
-                              section.title === "Critical"
-                              ? "#ef4444"
-                              : section.title === "Warning"
-                                ? "#f59e0b"
-                                : section.title === "Good"
-                                  ? "#22c55e"
-                                  : "#6b7280"
-                      }
-                    />
-                  </View>
-                  <Text className="text-base font-bold text-gray-900">
-                    {section.title}
-                  </Text>
-                  <View className="ml-2 bg-[#f3f4f6] px-2 py-0.5 rounded-full">
-                    <Text className="text-xs text-gray-500 font-bold">
-                      {section.count}
-                    </Text>
-                  </View>
-                </View>
-                {collapsedSections[section.title] ? (
-                  <ChevronDown size={20} color="#9ca3af" />
-                ) : (
-                  <ChevronRight
-                    size={20}
-                    color="#9ca3af"
-                    style={{ transform: [{ rotate: "90deg" }] }}
-                  />
-                )}
-              </Pressable>
-            ),
-            [toggleSection, collapsedSections],
-          )}
-          renderItem={useCallback(
-            ({ item }: { item: PantryItem }) => (
-              <View className="bg-white mx-4 px-2">
-                <PantryCard item={item} onPress={() => setSelectedItem(item)} />
-              </View>
-            ),
-            [],
-          )}
+          renderSectionHeader={renderSectionHeader}
+          renderItem={renderItem}
           SectionSeparatorComponent={() => <View className="h-px" />}
           renderSectionFooter={({ section }) =>
             !collapsedSections[section.title] ? (
