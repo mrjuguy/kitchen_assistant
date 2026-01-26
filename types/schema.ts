@@ -119,6 +119,8 @@ export interface Recipe {
   allergens: string[]; // list of allergens present in the recipe
   author?: string;
   source_url?: string;
+  difficulty?: "easy" | "medium" | "hard";
+  calories?: number;
   created_at: string;
 }
 

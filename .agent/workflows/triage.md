@@ -8,6 +8,15 @@ description: Triage and organize GitHub issues efficiently.
    - **Skill Check**: Read `view_file .agent/skills/github-cli/SKILL.md`.
    - Ask the user for the goal: "Are we triaging 'My Issues', 'Team Backlog', or 'Bugs'?"
 
+## 1. Architectural Philosophy: Impact-First
+- **Impact-First Prioritization**: Always prioritize tasks with the "most bang for the buck" (Highest Impact vs. Relative Effort). If an issue is mislabeled, trigger `/triage` to re-align.
+- **Inventory-First Logic**: All logic must start with existing inventory. Never assume an ingredient is available unless verified against the state.
+- **Household Isolation is Mandatory**: All database queries MUST be scoped to the `currentHousehold.id`. Never leak data between households.
+- **The "Gap Analysis Engine" is the central source of truth**: All meal suggestions or recipe views must pass through a feasibility check:
+  - **Green**: 100% stock + 100% Safe (Allergens).
+  - **Yellow**: Partial stock + 100% Safe.
+  - **Red**: Conflict with Health/Allergen profile.
+
 2. **Fetch Data**
    - Use `gh issue list` with proper filtering (`--assignee`, `--label`, `--limit 50`).
    - Display a summary of the found issues to the user.
@@ -21,10 +30,14 @@ description: Triage and organize GitHub issues efficiently.
        - Run `gh issue close [duplicate_id] --reason "not planned"`
    - **Close Stale**: Identify issues with no updates > 30 days. Ask if they should be closed.
 
-4. **Triage Action Loop**
-   - For each high-priority or unassigned issue, ask:
+4. **Triage Action Loop (Impact-First Prioritization)**
+   - For each high-priority or unassigned issue, analyze **Impact vs. Effort**:
+     - **Bang-for-Buck**: High Impact / Low Effort. (Mark as `priority:high`).
+     - **Strategic**: High Impact / Medium-High Effort. (Mark as `priority:medium`).
+     - **Maintenance**: Low Impact / Low-Medium Effort. (Mark as `priority:low`).
+   - For each issue:
+     - "Is the priority correct for maximum impact?" (Update via `gh issue edit`)
      - "Should we assign this?" (Run `gh issue edit [id] --add-assignee [user]`)
-     - "Is the priority correct?" (Add label 'priority:high' via `gh issue edit`)
      - "Does it need a Label?" (Run `gh issue edit [id] --add-label [label]`)
 
 5. **Cycle Management (Milestones)**
