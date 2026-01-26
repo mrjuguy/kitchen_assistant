@@ -8,7 +8,7 @@ description: Audits code for errors, security issues, and alignment with project
 > **IMPORTANT**: ASSUME the code has already passed tsc and eslint. Do not waste tokens checking for missing semicolons or any types. Focus on logic, user experience, and architecture.
 
 ## 1. The "North Star" Check
-- **Verification**: Does the code actually fulfill the requirements in `specs/active_PRD.md`?
+- **Verification**: Does the code actually fulfill the requirements in `specs/issue_*.md` (or `specs/active_PRD.md`)?
 - **Premium Polish**: Does the code include the required premium indicators (Haptics, Skeletons, Loading states) mentioned in the PRD or Project Rules?
 - **Visual Uniformity**: Check for inconsistent design tokens (e.g., mismatched backgrounds or fonts across screens). A visual refactor is only complete when applied globally.
 - **Scope Creep**: Did the code add unnecessary features not requested in the PRD?
