@@ -23,6 +23,8 @@ Whenever the `/plan` workflow or a similar "what should we do next" request is t
 - **Step 3**: `view_file` at least 2-3 of these core files to gauge the "maturity" of the project.
 - **Step 4**: **Skill Check**: Briefly check `.agent/skills` and `view_file` any that seem relevant to the broad feature area (e.g. `product-design`, `supabase`).
 - **Step 5**: Acknowledge existing work specifically in your response (e.g., "I see you've already implemented X in `file.tsx`").
+- **Step 6 (Sub-Agent Option)**: For very large codebases, spawn a "Cartographer" agent to map the project:
+  - `claude -p "Generate a high-level architecture map of this project and save it to specs/project_map.md" --agent "scribe"`
 
 ## Refactoring Hygiene
 - **Delete While Replacing**: If you refactor a component to replace another (e.g., creating `ProductDetailModal` to replace `PantryItemDetail`), you MUST proactively identify and delete the obsolete file in the *same* coding session. Do not leave "zombie code" for a future cleanup pass.

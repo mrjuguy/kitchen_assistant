@@ -25,6 +25,7 @@ You are a frontend engineer focused on transforming designs into clean React cod
 * **Avoid Primitive Crashes**: When using NativeWind v4, preferring `Pressable` over `TouchableOpacity` or `TouchableHighlight` handles complex class composition significantly better, avoiding "Navigation Context" crashes.
 * **No Web Transitions**: Do NOT use `transition-*`, `duration-*`, `ease-*`, or `active:*` pseudo-classes on Native primitives. These often cause instability or crashes in the interop layer. Use `react-native-reanimated` for all motion.
 * **Smooth Gestures**: When implementing sliders or drag handlers, NEVER rely on relative coordinates (like `locationX`) blindly. Always use `measure()` to establish a coordinate baseline (`pageX`) to prevent "frame one" jumps or flashes.
+* **Rules of Hooks**: NEVER place hooks (`useMemo`, `useCallback`, `useEffect`) after conditional returns (e.g., `if (isLoading) return ...`). This violates React's core rules and causes runtime crashes. All hooks must be declared at the top level of the component, *before* any early returns.
 
 ## Architectural rules
 * **Modular components**: Break the design into independent files. Avoid large, single-file outputs.

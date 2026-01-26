@@ -155,3 +155,16 @@ export type CreateMealPlan = Omit<
   MealPlan,
   "id" | "created_at" | "user_id" | "household_id" | "recipe"
 > & { household_id?: string };
+
+export interface UsageLog {
+  id: string;
+  user_id: string;
+  household_id: string;
+  item_name: string;
+  action: "consumed" | "expired" | "discarded" | "donated";
+  quantity?: number;
+  unit?: string;
+  logged_at: string;
+}
+
+export type CreateUsageLog = Omit<UsageLog, "id" | "logged_at">;

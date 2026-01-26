@@ -14,7 +14,10 @@ This applies systematic debugging methodology with evidence gathering, hypothesi
 1. Invoke the view_file tool on .agent/skills/debug-like-expert/SKILL.md
 2. Pass the issue description: $ARGUMENTS
 3. Follow the skill's debugging methodology
-4. Apply rigorous investigation and verification
+4. **Delegate (Optional)**: If the issue is complex, spawn sub-agents for specialized tasks:
+   - **Researcher**: `claude -p "Search for root cause of $ARGUMENTS..." --agent "researcher"`
+   - **Reproducer**: `claude -p "Create a minimal reproduction for $ARGUMENTS..."`
+5. Apply rigorous investigation and verification
 </process>
 
 <success_criteria>

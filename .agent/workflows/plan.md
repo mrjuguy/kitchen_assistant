@@ -14,10 +14,14 @@ description: Scans the codebase first, then interviews the user to generate a PR
      - Check milestones: `gh api repos/:owner/:repo/milestones`.
    - **Propose**: "Next feature based on backlog is [Feature]."
    - **Define Slug**: Ask user for a short, unique slug for this feature (e.g., `user-login`).
+   - **Research (Optional)**: If the feature involves unfamiliar technology or complex third-party APIs:
+     - **Action**: Spawn `researcher` agent.
+     - **Instruction**: "claude -p 'Research implementation best practices and API documentation for [Feature Description] within our Expo/Supabase stack.' --agent 'researcher'"
+     - **Result**: Researcher saves findings to `specs/drafts/[slug]_tech_notes.md`.
 
 3. **Phase 2: Draft PRD (Collision-Free)**
    - Draft the requirements in `specs/drafts/[slug]_PRD.md`.
-   - **Content**: Must include User Stories, UX Guidelines, Implementation Plan, and Verification Plan.
+   - **Content**: Must include User Stories, UX Guidelines, Implementation Plan (incorporating `specs/drafts/[slug]_tech_notes.md` if available), and Verification Plan.
    - **Constraint**: Reference existing files correctly.
 
 4. **Phase 3: GitHub Sync (Source of Truth)**
