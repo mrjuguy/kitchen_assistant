@@ -20,11 +20,11 @@ const DOCS_TO_UPDATE = [
 async function getGitContext() {
     try {
         // Get the last commit message and the stat (files changed)
-        const commitInfo = execSync('git log -1 --stat', { encoding: 'utf-8' });
+        const commitInfo = execSync('git log -1 --stat', { encoding: 'utf-8', maxBuffer: 1024 * 1024 * 10 });
 
         // Get the actual diff of the last commit to see *what* changed
         // Limit to 4000 chars to prevent token overflow on massive PRs
-        const diff = execSync('git show HEAD --pretty=""', { encoding: 'utf-8' }).slice(0, 4000);
+        const diff = execSync('git show HEAD --pretty=""', { encoding: 'utf-8', maxBuffer: 1024 * 1024 * 10 }).slice(0, 4000);
 
         return `COMMIT INFO:\n${commitInfo}\n\nCODE CHANGES (Truncated):\n${diff}`;
     } catch (error) {
