@@ -3,32 +3,29 @@ import {
   ChevronDown,
   ChevronRight,
   Plus,
-  Refrigerator,
-  Search,
-  ShoppingBasket,
+  Refrigerator
 } from "lucide-react-native";
-import React, { useMemo, useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import {
   LayoutAnimation,
   Platform,
   Pressable,
   RefreshControl,
-  ScrollView,
   SectionList,
   Text,
-  TextInput,
   UIManager,
-  View,
+  View
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-import { KitchenHealthStat } from "../../components/Inventory/KitchenHealthStat";
+import { InventoryHeader } from "../../components/Inventory/InventoryHeader";
+import { KitchenHealthSection } from "../../components/Inventory/KitchenHealthSection";
 import { PantryCard } from "../../components/Inventory/PantryCard";
+import { PantryHeader } from "../../components/Inventory/PantryHeader";
 import { ProductDetailModal } from "../../components/Inventory/ProductDetailModal";
 import { PantryCardSkeleton } from "../../components/Inventory/Skeleton";
-import { WastingSoonCard } from "../../components/Inventory/WastingSoonCard";
+import { WastingSoonCarousel } from "../../components/Inventory/WastingSoonCarousel";
 import { usePantry } from "../../hooks/usePantry";
-import { supabase } from "../../services/supabase";
 import { PantryItem } from "../../types/schema";
 import {
   groupItemsByExpiry,
@@ -59,10 +56,10 @@ export default function PantryScreen() {
   >({});
   const router = useRouter();
 
-  const toggleSection = (title: string) => {
+  const toggleSection = useCallback((title: string) => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
     setCollapsedSections((prev) => ({ ...prev, [title]: !prev[title] }));
-  };
+  }, []);
 
   const sections = useMemo(() => {
     if (!items) return [];
@@ -82,10 +79,17 @@ export default function PantryScreen() {
         ? groupItemsByLocation(filtered)
         : groupItemsByExpiry(filtered);
 
-    return grouped.filter(
-      (section) => section.data.length > 0 || !searchQuery.trim(),
-    );
-  }, [items, searchQuery, sortBy]);
+    // Filter out empty sections and inject item counts for optimization
+    return grouped
+      .filter((section) => section.data.length > 0)
+      .map((section) => ({
+        ...section,
+        count: section.data.length,
+        // If the section is collapsed, we provide an empty array to the SectionList
+        // This is significantly faster than rendering null in renderItem
+        data: collapsedSections[section.title] ? [] : section.data,
+      }));
+  }, [items, searchQuery, sortBy, collapsedSections]);
 
   const wastingSoon = useMemo(() => {
     if (!items) return [];
@@ -157,207 +161,108 @@ export default function PantryScreen() {
     <SafeAreaView className="flex-1 bg-[#f5f7f8]" edges={["top"]}>
       <View className="flex-1">
         <SectionList
-          sections={sections.filter((s) => s.data.length > 0)}
+          sections={sections}
           keyExtractor={(item) => item.id}
-          ListHeaderComponent={
-            <View className="pt-6 pb-4">
-              {/* Header */}
-              <View className="flex-row items-center justify-between px-4 mb-8">
-                <View className="flex-row items-center gap-3">
-                  <Pressable
-                    onPress={() => supabase.auth.signOut()}
-                    className="w-10 h-10 rounded-full bg-gray-200 border-2 border-white overflow-hidden"
-                  >
-                    <View className="flex-1 items-center justify-center bg-gray-300">
-                      <Text className="text-[10px] text-gray-600 font-bold">
-                        USER
-                      </Text>
-                    </View>
-                  </Pressable>
-                  <View>
-                    <Text className="text-xs text-gray-500 font-medium">
-                      Culinary OS
-                    </Text>
-                    <Text className="text-lg font-bold text-gray-900">
-                      Kitchen Assistant
-                    </Text>
-                  </View>
-                </View>
-                <Pressable
-                  onPress={() => router.push("/modal")}
-                  className="w-10 h-10 rounded-full bg-white items-center justify-center shadow-sm elevation-3"
-                >
-                  <Search size={20} color="#111827" />
-                </Pressable>
-              </View>
+          ListHeaderComponent={useMemo(
+            () => (
+              <View className="pt-6 pb-4">
+                <PantryHeader onSearchPress={() => router.push("/modal")} />
 
-              {/* Wasting Soon */}
-              {wastingSoon.length > 0 && !searchQuery && (
-                <View className="mb-8">
-                  <View className="flex-row items-center justify-between px-4 mb-4">
-                    <Text className="text-xl font-extrabold text-gray-900">
-                      Wasting Soon
-                    </Text>
-                    <Pressable>
-                      <Text className="text-blue-600 font-semibold text-sm">
-                        View All
-                      </Text>
-                    </Pressable>
-                  </View>
-                  <ScrollView
-                    horizontal
-                    showsHorizontalScrollIndicator={false}
-                    contentContainerClassName="px-4 pb-1"
-                  >
-                    {wastingSoon.map((item) => (
-                      <WastingSoonCard
-                        key={item.id}
-                        item={item}
-                        onPress={() => setSelectedItem(item)}
-                      />
-                    ))}
-                  </ScrollView>
-                </View>
-              )}
-
-              {/* Kitchen Health */}
-              {!searchQuery && (
-                <View className="px-4 mb-8">
-                  <Text className="text-xl font-extrabold text-gray-900 mb-4">
-                    Kitchen Health
-                  </Text>
-                  <View className="flex-row gap-3">
-                    <KitchenHealthStat
-                      label="Total Items"
-                      value={stats.total}
-                      trend="+2 new"
-                      Icon={Refrigerator}
-                      color="#0d7ff2"
-                      bgColor="#eff6ff"
-                    />
-                    <KitchenHealthStat
-                      label="Freshness Score"
-                      value={`${stats.score}%`}
-                      trend={stats.score > 90 ? "Optimal" : "Check list"}
-                      Icon={ShoppingBasket}
-                      color="#8b5cf6"
-                      bgColor="#f5f3ff"
-                    />
-                  </View>
-                </View>
-              )}
-
-              {/* Search Bar */}
-              <View className="px-4 mb-4">
-                <View className="flex-row items-center justify-between mb-4">
-                  <Text className="text-xl font-extrabold text-gray-900">
-                    Live Inventory
-                  </Text>
-
-                  <View className="flex-row bg-[#f3f4f6] p-1 rounded-xl">
-                    <Pressable
-                      onPress={() => setSortBy("location")}
-                      className={`px-3 py-1.5 rounded-lg ${sortBy === "location" ? "bg-white shadow-sm elevation-1" : "bg-transparent"}`}
-                    >
-                      <Text
-                        className={`text-xs font-bold ${sortBy === "location" ? "text-emerald-500" : "text-gray-500"}`}
-                      >
-                        Location
-                      </Text>
-                    </Pressable>
-                    <Pressable
-                      onPress={() => setSortBy("expiry")}
-                      className={`px-3 py-1.5 rounded-lg ${sortBy === "expiry" ? "bg-white shadow-sm elevation-1" : "bg-transparent"}`}
-                    >
-                      <Text
-                        className={`text-xs font-bold ${sortBy === "expiry" ? "text-emerald-500" : "text-gray-500"}`}
-                      >
-                        Expiry
-                      </Text>
-                    </Pressable>
-                  </View>
-                </View>
-
-                <View className="flex-row items-center bg-white px-4 py-3 rounded-2xl border border-gray-100">
-                  <Search size={18} color="#9ca3af" />
-                  <TextInput
-                    placeholder="Search your pantry..."
-                    placeholderTextColor="#9ca3af"
-                    className="flex-1 ml-3 text-gray-900 text-base"
-                    value={searchQuery}
-                    onChangeText={setSearchQuery}
+                {!searchQuery && (
+                  <WastingSoonCarousel
+                    items={wastingSoon}
+                    onItemPress={setSelectedItem}
                   />
-                </View>
+                )}
+
+                {!searchQuery && (
+                  <KitchenHealthSection
+                    totalItems={stats.total}
+                    freshnessScore={stats.score}
+                  />
+                )}
+
+                <InventoryHeader
+                  searchQuery={searchQuery}
+                  setSearchQuery={setSearchQuery}
+                  sortBy={sortBy}
+                  setSortBy={setSortBy}
+                />
               </View>
-            </View>
-          }
+            ),
+            [searchQuery, wastingSoon, stats.total, stats.score, sortBy, router],
+          )}
           stickySectionHeadersEnabled={false}
-          renderSectionHeader={({ section: { title } }) => (
-            <Pressable
-              onPress={() => toggleSection(title)}
-              className={`flex-row items-center justify-between bg-white px-4 py-4 mx-4 mt-2 rounded-2xl shadow-sm elevation-1 ${collapsedSections[title] ? "rounded-b-2xl" : "rounded-b-none"}`}
-            >
-              <View className="flex-row items-center">
-                <View
-                  className={`p-2 rounded-xl mr-3 ${
-                    title === "Fridge"
+          renderSectionHeader={useCallback(
+            ({ section }: { section: { title: string; count: number } }) => (
+              <Pressable
+                onPress={() => toggleSection(section.title)}
+                className={`flex-row items-center justify-between bg-white px-4 py-4 mx-4 mt-2 rounded-2xl shadow-sm elevation-1 ${collapsedSections[section.title] ? "rounded-b-2xl" : "rounded-b-none"}`}
+              >
+                <View className="flex-row items-center">
+                  <View
+                    className={`p-2 rounded-xl mr-3 ${section.title === "Fridge"
                       ? "bg-blue-100"
-                      : title === "Freezer"
+                      : section.title === "Freezer"
                         ? "bg-sky-100"
-                        : title === "Expired" || title === "Critical"
+                        : section.title === "Expired" ||
+                          section.title === "Critical"
                           ? "bg-red-100"
-                          : title === "Warning"
+                          : section.title === "Warning"
                             ? "bg-amber-100"
-                            : title === "Good"
+                            : section.title === "Good"
                               ? "bg-green-100"
                               : "bg-gray-100"
-                  }`}
-                >
-                  <Refrigerator
-                    size={18}
-                    color={
-                      title === "Fridge"
-                        ? "#2563eb"
-                        : title === "Freezer"
-                          ? "#0284c7"
-                          : title === "Expired" || title === "Critical"
-                            ? "#ef4444"
-                            : title === "Warning"
-                              ? "#f59e0b"
-                              : title === "Good"
-                                ? "#22c55e"
-                                : "#6b7280"
-                    }
-                  />
-                </View>
-                <Text className="text-base font-bold text-gray-900">
-                  {title}
-                </Text>
-                <View className="ml-2 bg-[#f3f4f6] px-2 py-0.5 rounded-full">
-                  <Text className="text-xs text-gray-500 font-bold">
-                    {sections.find((s) => s.title === title)?.data.length || 0}
+                      }`}
+                  >
+                    <Refrigerator
+                      size={18}
+                      color={
+                        section.title === "Fridge"
+                          ? "#2563eb"
+                          : section.title === "Freezer"
+                            ? "#0284c7"
+                            : section.title === "Expired" ||
+                              section.title === "Critical"
+                              ? "#ef4444"
+                              : section.title === "Warning"
+                                ? "#f59e0b"
+                                : section.title === "Good"
+                                  ? "#22c55e"
+                                  : "#6b7280"
+                      }
+                    />
+                  </View>
+                  <Text className="text-base font-bold text-gray-900">
+                    {section.title}
                   </Text>
+                  <View className="ml-2 bg-[#f3f4f6] px-2 py-0.5 rounded-full">
+                    <Text className="text-xs text-gray-500 font-bold">
+                      {section.count}
+                    </Text>
+                  </View>
                 </View>
-              </View>
-              {collapsedSections[title] ? (
-                <ChevronDown size={20} color="#9ca3af" />
-              ) : (
-                <ChevronRight
-                  size={20}
-                  color="#9ca3af"
-                  style={{ transform: [{ rotate: "90deg" }] }}
-                />
-              )}
-            </Pressable>
+                {collapsedSections[section.title] ? (
+                  <ChevronDown size={20} color="#9ca3af" />
+                ) : (
+                  <ChevronRight
+                    size={20}
+                    color="#9ca3af"
+                    style={{ transform: [{ rotate: "90deg" }] }}
+                  />
+                )}
+              </Pressable>
+            ),
+            [toggleSection, collapsedSections],
           )}
-          renderItem={({ item, section }) => {
-            if (collapsedSections[section.title]) return null;
-            return (
+          renderItem={useCallback(
+            ({ item }: { item: PantryItem }) => (
               <View className="bg-white mx-4 px-2">
                 <PantryCard item={item} onPress={() => setSelectedItem(item)} />
               </View>
-            );
-          }}
+            ),
+            [],
+          )}
           SectionSeparatorComponent={() => <View className="h-px" />}
           renderSectionFooter={({ section }) =>
             !collapsedSections[section.title] ? (
