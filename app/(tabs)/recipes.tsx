@@ -14,20 +14,14 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { RecipeCard } from "../../components/Recipes/RecipeCard";
-import { useGapAnalysis, GapAnalysis } from "../../hooks/useGapAnalysis";
+import { GapAnalysis, useGapAnalysis } from "../../hooks/useGapAnalysis";
 import { useAddToPlan } from "../../hooks/useMealPlan";
 import { useRecipes } from "../../hooks/useRecipes";
 import { RecipeStackParamList } from "../../types/navigation";
 import { filterRecipes, getAvailableTags } from "../../utils/recipeFilters";
 
 export default function RecipesScreen() {
-  const {
-    data: recipes,
-    isLoading,
-    isError,
-    refetch,
-    isRefetching,
-  } = useRecipes();
+  const { data: recipes, isLoading, refetch, isRefetching } = useRecipes();
   const router = useRouter();
   const { mode, date, meal_type } =
     useLocalSearchParams<RecipeStackParamList["(tabs)/recipes"]>();

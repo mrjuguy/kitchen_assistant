@@ -88,7 +88,7 @@ export const useUpdateShoppingItem = () => {
 
       return { previousItems };
     },
-    onError: (err, variables, context) => {
+    onError: (_err, _variables, context) => {
       if (context?.previousItems) {
         queryClient.setQueryData(["shopping_list"], context.previousItems);
       }

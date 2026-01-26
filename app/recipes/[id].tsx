@@ -50,6 +50,11 @@ export default function RecipeDetailScreen() {
 
   const recipe = recipes?.find((r) => r.id === id);
 
+  // Set initial servings from recipe on mount
+  React.useEffect(() => {
+    if (recipe?.servings) setServings(recipe.servings);
+  }, [recipe?.servings]);
+
   if (isLoading || !recipe) {
     return (
       <View className="flex-1 bg-white items-center justify-center">
@@ -57,11 +62,6 @@ export default function RecipeDetailScreen() {
       </View>
     );
   }
-
-  // Set initial servings from recipe on mount
-  React.useEffect(() => {
-    if (recipe?.servings) setServings(recipe.servings);
-  }, [recipe?.servings]);
 
   const percentage = analysis ? Math.round(analysis.percentage * 100) : 0;
   const missingCount = analysis ? analysis.missingIngredients.length : 0;

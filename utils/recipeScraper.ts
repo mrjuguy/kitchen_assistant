@@ -223,8 +223,8 @@ export function parseIsoDuration(duration: string): number | undefined {
   if (!match) return undefined;
 
   let minutes = 0;
-  if (match[1]) minutes += parseInt(match[1].replace("H", "")) * 60;
-  if (match[2]) minutes += parseInt(match[2].replace("M", ""));
+  if (match[1]) minutes += parseInt(match[1].replace("H", ""), 10) * 60;
+  if (match[2]) minutes += parseInt(match[2].replace("M", ""), 10);
 
   return minutes > 0 ? minutes : undefined;
 }
@@ -239,7 +239,7 @@ export function parseIngredient(raw: string): {
 
   // Regex for "number unit rest"
   // Supports fractions 1/2, ranges 1-2, decimals 1.5
-  const regex = /^([\d\.\/\-\s]+)?\s*([a-zA-Z]+)?\s+(.*)$/;
+  const regex = /^([\d./-\s]+)?\s*([a-zA-Z]+)?\s+(.*)$/;
   const match = cleaned.match(regex);
 
   if (!match) {

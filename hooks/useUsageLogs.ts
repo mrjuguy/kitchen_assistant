@@ -1,10 +1,10 @@
 // Force refresh
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
+import { useCurrentHousehold } from "./useHousehold";
 import { supabase } from "../services/supabase";
 import { CreateUsageLog, UsageLog } from "../types/schema";
 import { computeExpiredStats } from "../utils/analytics";
-import { useCurrentHousehold } from "./useHousehold";
 
 export const useLogUsage = () => {
   const queryClient = useQueryClient();

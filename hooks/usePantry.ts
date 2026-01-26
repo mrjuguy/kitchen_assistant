@@ -98,7 +98,7 @@ export const useUpdatePantryItem = () => {
       return { previousItems };
     },
     // If the mutation fails, use the context returned from onMutate to roll back
-    onError: (err, newTodo, context) => {
+    onError: (_err, _newTodo, context) => {
       if (context?.previousItems) {
         queryClient.setQueryData(["pantry"], context.previousItems);
       }

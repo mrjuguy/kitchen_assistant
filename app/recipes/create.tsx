@@ -159,9 +159,9 @@ export default function CreateRecipeScreen() {
     const recipeData = {
       name: name.trim(),
       description: description.trim(),
-      prep_time: parseInt(prepTime) || 0,
-      cook_time: parseInt(cookTime) || 0,
-      servings: parseInt(servings) || 2,
+      prep_time: parseInt(prepTime, 10) || 0,
+      cook_time: parseInt(cookTime, 10) || 0,
+      servings: parseInt(servings, 10) || 2,
       ingredients: validIngredients.map((i) => ({
         name: i.name.trim(),
         quantity: parseFloat(i.quantity) || 0,

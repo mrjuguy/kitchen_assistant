@@ -28,7 +28,6 @@ export default function PlannerScreen() {
 
   const {
     data: mealPlans,
-    isLoading,
     refetch,
     isRefetching,
   } = useMealPlan(startDate, endDate);
@@ -81,7 +80,7 @@ export default function PlannerScreen() {
           "You already have all the ingredients for this week's plan.",
         );
       }
-    } catch (error) {
+    } catch (_error) {
       Alert.alert("Error", "Failed to generate shopping list.");
     }
   };

@@ -72,7 +72,6 @@ export const AddItemForm: React.FC<AddItemFormProps> = ({
   const [labels, setLabels] = useState<string[] | undefined>(undefined);
   const [target, setTarget] = useState<"pantry" | "shopping">(defaultTarget);
   const [isScanning, setIsScanning] = useState(startWithScanner);
-  const [isFetchingInfo, setIsFetchingInfo] = useState(false);
 
   const [permission, requestPermission] = useCameraPermissions();
   const addPantryMutation = useAddPantryItem();
@@ -84,9 +83,7 @@ export const AddItemForm: React.FC<AddItemFormProps> = ({
     setBarcode(data);
     Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
 
-    setIsFetchingInfo(true);
     const product = await fetchProductByBarcode(data);
-    setIsFetchingInfo(false);
 
     if (product) {
       setName(product.name);
