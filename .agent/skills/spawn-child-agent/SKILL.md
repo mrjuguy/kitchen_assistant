@@ -24,6 +24,11 @@ claude -p "Your detailed instructions for the child agent here" \
 *   **`--allowedTools`**: Pre-authorizes tools. **CRITICAL**: Use the exact internal tool names (e.g., `write_to_file`, NOT `Edit`). If you do not include this, the child agent will hang.
 *   **`--output-format json`**: Allows you (the parent agent) to parse the result programmatically.
 
+## Sub-Agent Permission & Reliability Rules
+1. **The Write Wall**: Sub-agents running with `-p` may still fail to write files if they encounter a confirmation prompt they cannot bypass. 
+2. **Verification (Mandatory)**: After a sub-agent completes a task that involves writing files (like `scribe` or `qa-bot`), the parent agent **MUST** run `git status` or `view_file` to verify the changes were actually applied.
+3. **Takeover Protocol**: If the sub-agent reports that it "prepared content" but "couldn't write due to permissions", the parent agent **MUST** immediately read that prepared content from the sub-agent's output and apply the changes manually using its own tools. Do not ask the user for help unless the parent also fails.
+
 ## Example: Spawning a Specialized Worker
 
 If you want the child to use a specific sub-agent (e.g., `qa-bot`):

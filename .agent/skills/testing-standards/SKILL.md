@@ -39,3 +39,4 @@ description: Standards for writing and running tests. Use this whenever writing 
 3. **Clean Output**: When running tests, use the verbose flag only if debugging. Otherwise, keep output minimal.
 4. **Logic Extraction**: If a UI component contains data transformation logic (e.g., sorting, filtering, grouping) longer than 5 lines, **EXTRACT IT** to a pure function in `utils/` and write a Unit Test for it immediately. Do not test complex logic implicitly via UI snapshots.
 5. **Refactor Safety**: When modifying any file in `utils/`, you MUST first check for the existence of `utils/__tests__/[file].test.ts`. If it exists, you MUST run it immediately after your changes to verify no regression. Do not wait for the final "Verify" step to run known unit tests.
+6. **Naming Conventions**: React Hooks MUST follow the `useCamelCase` standard (e.g., `useFrequentlyStats`). Custom utility functions should be descriptive and use `camelCase`.

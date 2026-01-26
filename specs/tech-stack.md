@@ -23,6 +23,7 @@
 - **State Management**: [TanStack Query](https://tanstack.com/query/latest) (React Query)
   - *Rationale*: Efficient server state management, caching, and real-time updates.
 - **API Layer**: Supabase-js client.
+- **Analytics System**: Lightweight, immutable `usage_logs` system for tracking consumption and waste patterns. Aggregates data via pure utility functions with 100% test coverage.
 
 ## Development Tools
 - **Package Manager**: npm
@@ -43,7 +44,7 @@ As of January 2026, all UI components have been refactored to use NativeWind v4 
 - **Login Screen**: Email/password inputs, branded ChefHat hero icon, responsive layout.
 - **Inventory Tab**: `PantryCard`, `ExpiryBadge`, `ProductDetailModal`, `AddItemForm`, `QuantityControl`, `WastingSoonCard`.
 - **Recipes Tab**: `RecipeCard`, `IngredientMatcher` with gap analysis visuals.
-- **Shopping Tab**: `ShoppingItemCard` with aisle grouping.
+- **Shopping Tab**: `ShoppingItemCard` with aisle grouping, `FrequentlyExpiredList` analytics widget.
 - **Planner Tab**: `MealCard`, `WeekStrip` calendar UI.
 - **Profile Tab**: User settings, household management UI.
 

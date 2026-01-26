@@ -2,9 +2,31 @@ import { Trash2 } from "lucide-react-native";
 import React from "react";
 import { FlatList, Text, View } from "react-native";
 
+import { useFrequentlyExpiredStats } from "../../hooks/useUsageLogs";
 
 export const FrequentlyExpiredList = () => {
-  const { data: items } = useFrequentlyExpiredStats();
+  const { data: items, isLoading, isError } = useFrequentlyExpiredStats();
+
+  if (isLoading) {
+    return (
+      <View className="mb-6">
+        <View className="flex-row items-center px-4 mb-3">
+          <View className="w-5 h-5 bg-gray-100 rounded-full animate-pulse" />
+          <View className="w-32 h-6 bg-gray-100 rounded-md ml-2 animate-pulse" />
+        </View>
+        <View className="flex-row px-4 gap-3">
+          {[1, 2, 3].map((i) => (
+            <View
+              key={i}
+              className="bg-gray-50 p-3 rounded-2xl min-w-[120px] items-center border border-gray-100 h-[120px] animate-pulse"
+            />
+          ))}
+        </View>
+      </View>
+    );
+  }
+
+  if (isError) return null; // Silent fail for errors in this insight widget is often better for UX than a big error box
 
   if (!items || items.length === 0) return null;
 

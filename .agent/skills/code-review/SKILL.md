@@ -19,6 +19,9 @@ description: Audits code for errors, security issues, and alignment with project
 - **Types/Safety**:
   - Are there any `any` types? (Strictly forbidden).
   - Are errors handled gracefully (try/catch)?
+- **Syntax & Linting**:
+  - **Mandatory Lint**: You MUST run `npm run lint` or `npx eslint [files]` on all modified files *before* finalizing the review.
+  - **Naming Conventions**: Ensure hooks start with `use` followed by an uppercase letter (e.g., `useFrequently` NOT `usefrequently`).
 
 ## 3. Security & Cleanliness
 - **Secrets**: Are there any hardcoded API keys or passwords? (FLAG IMMEDIATELY).
