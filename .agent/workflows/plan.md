@@ -4,7 +4,8 @@ description: Scans the codebase first, then interviews the user to generate a PR
 
 # Feature Planning Workflow
 
-1. **State Analysis**
+1. **State Analysis & Sync**
+   - **Infrastructure Sync**: Run `git checkout main && git pull origin main`.
    - **Pre-Plan Audit**: Use `view_file .agent/skills/codebase-awareness/SKILL.md`.
    - **Rules**: Read `specs/tech-stack.md` (if exists).
 

@@ -4,13 +4,15 @@ description: Run this at the start of every session to get context and pick up w
 
 # Morning Briefing Workflow
 
-1. **Synchronize (Safety Check)**
+1. **Synchronize (Global Sync)**
    - **Dirty State Check**: Run `git status --porcelain`.
-   - If output is not empty:
-     - **STOP**: "Uncommitted changes detected. Please `stash` or `commit` before starting a new session to avoid merge conflicts."
-   - If clean:
-     - Run `git pull origin [current-branch]`.
+   - If output is clean:
+     - Run `git fetch origin`.
+     - Run `git checkout main && git pull origin main`. (Updates local main to match cloud).
+     - **Return to Work**: If a feature branch was active, `git checkout [previous-branch]` and `git merge main`.
      - Run `npm install` (to ensure dependencies are fresh).
+   - Else:
+     - **STOP**: "Uncommitted changes detected. Please `stash` or `commit` before starting a new session."
 
 2. **Context Retrieval**
    - **Last Win**: Check `git log -1 --stat` to remind the user what was last finished.
