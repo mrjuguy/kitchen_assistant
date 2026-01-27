@@ -196,6 +196,10 @@ function mapJsonLdToRecipe(
     servings,
     author,
     source_url: sourceUrl,
+    calories: data.nutrition?.calories
+      ? parseInt(data.nutrition.calories.match(/\d+/)?.[0] || "0", 10)
+      : undefined,
+    difficulty: undefined, // Usually not available in machine-readable format
     tags: data.keywords
       ? typeof data.keywords === "string"
         ? data.keywords.split(",")

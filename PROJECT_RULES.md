@@ -1,9 +1,10 @@
 # Project Rules: Kitchen Assistant
 
-## 1. Architectural Philosophy: Inventory-First
-- **All logic must start with existing inventory.** Never assume an ingredient is available unless verified against the state.
-- **Household Isolation is Mandatory.** All database queries (Pantry, Recipes, Shopping Lists) MUST be scoped to the `currentHousehold.id`. Never leak data between households.
-- **The "Gap Analysis Engine" is the central source of truth.** All meal suggestions or recipe views must pass through a feasibility check:
+## 1. Architectural Philosophy: Impact-First
+- **Impact-First Prioritization**: Always prioritize tasks with the "most bang for the buck" (Highest Impact vs. Relative Effort). If an issue is mislabeled, trigger `/triage` to re-align.
+- **Inventory-First Logic**: All logic must start with existing inventory. Never assume an ingredient is available unless verified against the state.
+- **Household Isolation is Mandatory**: All database queries MUST be scoped to the `currentHousehold.id`. Never leak data between households.
+- **The "Gap Analysis Engine" is the central source of truth**: All meal suggestions or recipe views must pass through a feasibility check:
   - **Green**: 100% stock + 100% Safe (Allergens).
   - **Yellow**: Partial stock + 100% Safe.
   - **Red**: Conflict with Health/Allergen profile.

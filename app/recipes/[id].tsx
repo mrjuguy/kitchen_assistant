@@ -219,14 +219,14 @@ export default function RecipeDetailScreen() {
               </View>
               <View className="flex-row items-center gap-1.5 px-3 py-1.5 rounded-full bg-white dark:bg-[#1a2632] border border-gray-200 dark:border-gray-700 shadow-sm">
                 <Activity size={16} color="#0d7ff2" />
-                <Text className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                  Easy
+                <Text className="text-sm font-medium text-gray-700 dark:text-gray-300 capitalize">
+                  {recipe.difficulty || "Easy"}
                 </Text>
               </View>
               <View className="flex-row items-center gap-1.5 px-3 py-1.5 rounded-full bg-white dark:bg-[#1a2632] border border-gray-200 dark:border-gray-700 shadow-sm">
                 <Flame size={16} color="#0d7ff2" />
                 <Text className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                  540 kcal
+                  {recipe.calories || "---"} kcal
                 </Text>
               </View>
             </View>

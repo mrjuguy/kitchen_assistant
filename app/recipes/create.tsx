@@ -1,3 +1,4 @@
+import * as Haptics from "expo-haptics";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import {
   ChevronLeft,
@@ -37,6 +38,10 @@ export default function CreateRecipeScreen() {
   const [cookTime, setCookTime] = useState("");
   const [servings, setServings] = useState("");
   const [tags, setTags] = useState("");
+  const [difficulty, setDifficulty] = useState<"easy" | "medium" | "hard">(
+    "easy",
+  );
+  const [calories, setCalories] = useState("");
 
   // Ingredients State
   const [ingredients, setIngredients] = useState<
@@ -110,6 +115,8 @@ export default function CreateRecipeScreen() {
     if (recipe.cook_time) setCookTime(recipe.cook_time.toString());
     if (recipe.servings) setServings(recipe.servings.toString());
     if (recipe.author) setAuthor(recipe.author);
+    if (recipe.calories) setCalories(recipe.calories.toString());
+    if (recipe.difficulty) setDifficulty(recipe.difficulty);
     setSourceUrlData(recipe.source_url || importUrl.trim());
 
     if (recipe.ingredients && recipe.ingredients.length > 0) {
@@ -173,6 +180,8 @@ export default function CreateRecipeScreen() {
         .map((t: string) => t.trim())
         .filter((t: string) => t !== ""),
       author: author.trim(),
+      difficulty,
+      calories: parseInt(calories, 10) || 0,
       source_url: sourceUrlData || undefined,
     };
 
@@ -360,6 +369,69 @@ export default function CreateRecipeScreen() {
                 backgroundColor: "#f9fafb",
                 padding: 12,
                 borderRadius: 12,
+              }}
+            />
+          </View>
+        </View>
+
+        <View style={{ flexDirection: "row", marginBottom: 16 }}>
+          <View style={{ flex: 1, marginRight: 8 }}>
+            <Text style={{ fontSize: 12, color: "#6b7280", marginBottom: 4 }}>
+              Difficulty
+            </Text>
+            <View
+              style={{
+                flexDirection: "row",
+                backgroundColor: "#f9fafb",
+                borderRadius: 12,
+                overflow: "hidden",
+                height: 44,
+              }}
+            >
+              {(["easy", "medium", "hard"] as const).map((d) => (
+                <Pressable
+                  key={d}
+                  onPress={() => {
+                    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                    setDifficulty(d);
+                  }}
+                  style={{
+                    flex: 1,
+                    padding: 10,
+                    alignItems: "center",
+                    justifyContent: "center",
+                    backgroundColor:
+                      difficulty === d ? "#10b981" : "transparent",
+                  }}
+                >
+                  <Text
+                    style={{
+                      fontSize: 10,
+                      fontWeight: "bold",
+                      color: difficulty === d ? "white" : "#6b7280",
+                      textTransform: "capitalize",
+                    }}
+                  >
+                    {d}
+                  </Text>
+                </Pressable>
+              ))}
+            </View>
+          </View>
+          <View style={{ flex: 1 }}>
+            <Text style={{ fontSize: 12, color: "#6b7280", marginBottom: 4 }}>
+              Calories (kcal)
+            </Text>
+            <TextInput
+              value={calories}
+              onChangeText={setCalories}
+              keyboardType="numeric"
+              placeholder="0"
+              style={{
+                backgroundColor: "#f9fafb",
+                padding: 12,
+                borderRadius: 12,
+                height: 44,
               }}
             />
           </View>

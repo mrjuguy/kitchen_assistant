@@ -79,7 +79,7 @@ export default function ProfileScreen() {
         dietary_preferences: selectedPrefs,
       });
       Alert.alert("Success", "Profile updated successfully");
-    } catch (_error) {
+    } catch {
       Alert.alert("Error", "Failed to update profile");
     }
   };

@@ -26,7 +26,7 @@ jest.mock("lucide-react-native", () => {
   return new Proxy(
     {},
     {
-      get: (target, name) => {
+      get: (_, name) => {
         if (name === "__esModule") return true;
         return () => null;
       },
