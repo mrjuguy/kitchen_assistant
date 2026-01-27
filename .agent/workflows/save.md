@@ -8,7 +8,7 @@ description: Zero-Friction Save & Branch - Non-blocking save that auto-handles b
    - Run `git branch --show-current`.
    - Attempt to find an **Active ID**:
      - Check current branch name (e.g., `feat/12-login` -> `12`).
-     - Check for `specs/active_PRD.md` or files matching `specs/issue_*.md`.
+     - Check for `specs/active/*.md` or files matching `specs/issue_*.md`.
      - Read `.agent/temp/active_issue` if it exists.
 
 2. **Branch Management**
@@ -26,9 +26,14 @@ description: Zero-Friction Save & Branch - Non-blocking save that auto-handles b
    - If an **Active ID** (e.g. `12`) is found, append `(closes #12)` to the message.
    - Run `git commit -m "[message]"` (or `git commit --amend --no-edit` if fixing a CI failure).
 
-4. **Push & Publish (Cloud QA)**
+4. **Documentation Sync (The Scribe)**
+   - **Check**: Did we change architecture, `utils/`, or add new features? 
+   - **Action**: Run `/document` to update `README.md` and technical specs *before* the PR is finalized.
+   - **Commit**: `git add . && git commit --amend --no-edit` to include docs in the feature commit.
+
+5. **Push & Publish (Cloud QA)**
    - Run `git push origin HEAD`.
    - **Check for PR**: Run `gh pr view --json state --template "{{.state}}"` (Ignore errors).
    - **Create PR if missing**:
-     - If no PR exists: `gh pr create --title "[Commit Message Title]" --body "Architectural changes for Issue #[ID]. Triggering Cloud QA." --draft`. (Use `--draft` if the user might want more changes, or omit for immediate review).
-   - Output: "🚀 Pushed to [current-branch] and published PR. Cloud QA (Scribe/QA Bot) is now active."
+     - If no PR exists: `gh pr create --title "[Commit Message Title]" --body "Architectural changes for Issue #[ID]. Triggering Cloud QA." --draft`.
+   - Output: "🚀 Pushed and published PR. Cloud QA active. Run **/ship** once CI passes to merge and clean up."
