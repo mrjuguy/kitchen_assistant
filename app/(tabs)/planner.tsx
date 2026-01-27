@@ -80,7 +80,7 @@ export default function PlannerScreen() {
           "You already have all the ingredients for this week's plan.",
         );
       }
-    } catch (_error) {
+    } catch {
       Alert.alert("Error", "Failed to generate shopping list.");
     }
   };

@@ -36,7 +36,7 @@ export default function HouseholdScreen() {
       await joinMutation.mutateAsync(inviteCode.trim());
       Alert.alert("Success", "You have joined the household!");
       setInviteCode("");
-    } catch (_error) {
+    } catch {
       Alert.alert(
         "Error",
         "Failed to join household. Check the code and try again.",

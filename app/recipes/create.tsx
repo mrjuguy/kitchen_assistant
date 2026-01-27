@@ -1,3 +1,4 @@
+import * as Haptics from "expo-haptics";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import {
   ChevronLeft,
@@ -390,13 +391,17 @@ export default function CreateRecipeScreen() {
               {(["easy", "medium", "hard"] as const).map((d) => (
                 <Pressable
                   key={d}
-                  onPress={() => setDifficulty(d)}
+                  onPress={() => {
+                    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                    setDifficulty(d);
+                  }}
                   style={{
                     flex: 1,
                     padding: 10,
                     alignItems: "center",
                     justifyContent: "center",
-                    backgroundColor: difficulty === d ? "#10b981" : "transparent",
+                    backgroundColor:
+                      difficulty === d ? "#10b981" : "transparent",
                   }}
                 >
                   <Text

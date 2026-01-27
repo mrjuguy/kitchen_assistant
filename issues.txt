@@ -1,3 +1,0 @@
-21	OPEN	Product Knowledge & User Overrides	Feature, priority:medium	2026-01-26T00:29:21Z
-20	OPEN	Deep Recipe Metadata (Difficulty & Nutrition)	Feature, priority:low	2026-01-26T00:29:25Z
-12	OPEN	Gamify Healthy Decisions	Feature, UI/UX, priority:low	2026-01-26T00:29:18Z

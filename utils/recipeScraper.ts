@@ -44,13 +44,13 @@ interface JsonLdRecipe {
   "@type"?: string | string[];
   name?: string;
   description?: string;
-  image?: string | string[] | { url?: string;[key: string]: any };
+  image?: string | string[] | { url?: string; [key: string]: any };
   recipeInstructions?: string | any[];
   recipeIngredient?: string | string[];
   prepTime?: string;
   cookTime?: string;
   recipeYield?: string | number;
-  author?: string | any[] | { name?: string;[key: string]: any };
+  author?: string | any[] | { name?: string; [key: string]: any };
   keywords?: string | string[];
   [key: string]: any;
 }
