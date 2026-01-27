@@ -58,6 +58,21 @@ jest.mock("../../../services/openFoodFacts", () => ({
 
 const queryClient = new QueryClient();
 
+jest.mock("../../../hooks/useProductKnowledge", () => ({
+  useHouseholdProductSettings: jest.fn(() => ({
+    data: [],
+    isLoading: false,
+  })),
+  useUpdateProductSettings: jest.fn(() => ({
+    mutate: jest.fn(),
+  })),
+  useProductKnowledge: jest.fn(() => ({
+    estimatedExpiryDate: null,
+    productSetting: null,
+    isLoading: false,
+  })),
+}));
+
 describe("AddItemForm Integration", () => {
   it("renders with SmartDateChips for pantry target", () => {
     const { getByText } = render(
