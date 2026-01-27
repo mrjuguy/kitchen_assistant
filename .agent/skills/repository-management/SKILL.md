@@ -35,8 +35,8 @@ description: Standards for repository hygiene, security, and public documentatio
 - Use the format: `type(scope): description`.
 - Common types: `feat`, `fix`, `chore`, `docs`, `refactor`, `style`, `test`.
 
-## Workflow Stewardship
-- **STRICT ADHERENCE**: Always follow the exact step-by-step instructions in `.agent/workflows/[workflow].md`. Never merge or shuffle steps between different workflows.
-- **Checkpoint vs Completion**: When saving, explicitly verify if the work is a "Checkpoint" (partial work) or "Feature Complete". **NEVER** close the GitHub Issue for a Checkpoint save. Only close when the feature-set in the PRD is 100% finished.
-- **State Restoration**: If you accidentally delete or move a specification file, DO NOT guess its content or restore a DIFFERENT file. Use your history or `git checkout` to restore the exact state.
-- **REMOTE SYNCHRONIZATION**: Never consider a task "saved" or "done" until changes have been pushed to the remote repository (`origin`). Local commits alone create state drift that confuses both the user and the agent. The `@[/save]` workflow MUST always end with a successful `git push`.
+## System Evolution & Reflection
+- **Continuous Learning**: Before starting any task (especially those involving /save, /ship, or /teach), the agent MUST reflect on the current chat history to identify procedural or technical mistakes.
+- **Skill Updates**: If a mistake is recurring (e.g., CRLF warnings, missing haptics, RLS leakage), the agent MUST update the corresponding `SKILL.md` file using the `/teach` workflow.
+- **Self-Correction First**: The agent is responsible for identifying its own errors through active reflection, rather than waiting for the user to point them out.
+- **Rule Synchronization**: If a new technical standard is established during a session (e.g., a new unit conversion rule), it must be added to `PROJECT_RULES.md` and the relevant `SKILL.md`.

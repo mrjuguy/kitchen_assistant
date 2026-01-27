@@ -49,8 +49,8 @@
 - **Architect Role**: The user provides high-level intent and PRDs. The user DOES NOT write code, fix typos, or run manual tests.
 
 - **Agent Responsibility**:
-  - **Implementation**: Agents must generate complete, functional code. No "placeholders" or "TODOs" unless explicitly authorized.
   - **Self-Correction**: If a command fails (e.g., a missing file), the agent must attempt to fix it automatically before asking the user.
+  - **Active Reflection**: Before starting a new task or closing a session, the agent MUST reflect on the chat history to identify technical mistakes or friction points and update the corresponding Skills/Rules.
   - **Verification**: Agents must strictly verify their own work (e.g., "Did I actually update the file?") before reporting success.
 
 - **Hybrid Execution**:
