@@ -100,7 +100,8 @@ For the best experience, use a physical device via **Expo Go** to access the Sma
 - `hooks/`: Custom React hooks for business logic and data fetching.
 - `services/`: Supabase client, OpenFoodFacts integration, and external API clients.
 - `types/`: Global TypeScript types, database schemas, and component prop interfaces.
-- `specs/`: Project requirements, completed features, design system documentation, and test plans.
+- `specs/`: Project requirements, completed features, design system documentation, test plans, and **QA reviews**.
+- `specs/reviews/`: Official validation artifacts and shippability assessments.
 - `tailwind.config.js`: NativeWind v4 configuration with premium color palette and component content paths.
 
 ## 🎨 Design Philosophy
@@ -110,6 +111,8 @@ For the best experience, use a physical device via **Expo Go** to access the Sma
 - **Accessibility**: WCAG-compliant contrast ratios and semantic color coding
 - **Feedback**: Haptic responses and skeleton loaders for all async operations
 - **Hierarchy**: Clear visual priority system using the "Traffic Light" freshness model (Green/Yellow/Orange/Red)
+- **Hygiene**: Strict enforcement of LF line endings via `.gitattributes` to ensure cross-platform consistency (Windows/macOS/Linux).
+
 
 ## 📜 License
 

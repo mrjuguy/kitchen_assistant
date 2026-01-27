@@ -28,6 +28,7 @@
 ## Development Tools
 - **Package Manager**: npm
 - **Testing**: Jest & React Native Testing Library
+- **Hygiene**: `.gitattributes` enforcement of LF line endings for cross-platform stability.
 - **Tooling**: Prettier, ESLint (standard Expo config)
 
 ## Styling Architecture (Post-Issue #10 Refactor)
