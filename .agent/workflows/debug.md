@@ -11,13 +11,17 @@ This applies systematic debugging methodology with evidence gathering, hypothesi
 </objective>
 
 <process>
-1. Invoke the view_file tool on .agent/skills/debug-like-expert/SKILL.md
-2. Pass the issue description: $ARGUMENTS
-3. Follow the skill's debugging methodology
-4. **Delegate (Optional)**: If the issue is complex, spawn sub-agents for specialized tasks:
-   - **Researcher**: `claude -p "Search for root cause of $ARGUMENTS..." --agent "researcher"`
-   - **Reproducer**: `claude -p "Create a minimal reproduction for $ARGUMENTS..."`
-5. Apply rigorous investigation and verification
+1. **Triage**: Analyze the issue description ($ARGUMENTS).
+2. **Decision**:
+   - **Quick Fix** (Typos, visible UI bugs, single-file logic):
+     - Load `debug-like-expert` skill yourself.
+     - Execute the fix immediately.
+   - **Deep Investigation** (Crashes, Race Conditions, Unknown Errors, "Why is this happening?"):
+     - **DELEGATE** to a sub-agent.
+     - Run: `claude -p "Use the .agent/skills/debug-like-expert/SKILL.md to investigate: $ARGUMENTS" --allowedTools "Bash,Read,Grep,Glob,find_by_name,view_file,write_to_file,replace_file_content"`
+     - Wait for the sub-agent to report the **Root Cause** and **Proposed Solution**.
+     - Review the solution with your expert judgment before applying.
+3. **Verify**: Run tests or visually confirm the fix.
 </process>
 
 <success_criteria>

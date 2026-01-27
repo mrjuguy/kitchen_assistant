@@ -14,22 +14,24 @@ description: Run this at the start of every session to get context and pick up w
    - Else:
      - **STOP**: "Uncommitted changes detected. Please `stash` or `commit` before starting a new session."
 
-2. **Context Retrieval**
+2. **Context Retrieval (Deep Dive)**
    - **Last Win**: Check `git log -1 --stat` to remind the user what was last finished.
-   - **Current Priorities**:
-     - Run `gh issue list --label "priority:high" --limit 3`.
-     - Run `gh issue list --assignee "@me"`.
-   - **Roadmap**: Check active Milestones.
+   - **Open Issues Audit**:
+     - Run `gh issue list --json number,title,labels,body --limit 20`.
+     - **Value Analysis**: For each issue, analyze the "Impact vs Effort" based on current project goals and complexity.
+   - **Roadmap**: Check active Milestones and `specs/roadmap.md` if it exists.
 
 3. **Health Check**
    - Run the project's verification script (e.g., `npx expo-doctor` for Expo, or `npm run lint`).
    - *Constraint*: If it fails, the first task of the day is FIXING it.
 
 4. **The Briefing**
-   - Output a succinct summary:
+   - Output a succulent summary:
      > **Project Status**: [Healthy/Broken]
      > **Last Session**: We finished [Commit Message].
-     > **Today's Menu**:
-     > 1. [Issue #A] Title
-     > 2. [Issue #B] Title
-   - Ask: "Shall I `/execute` an existing issue or `/plan` a new one?"
+     > **Active Issues Analysis**:
+     > - **High Value**: [Issue #N] [Title] (High Impact / Low Effort) - *Reasoning...*
+     > - **Current Task**: [Issue #M] [Title] (Deep Logic / Complex) - *Reasoning...*
+     > - **Quick Win**: [Issue #L] [Title] (Visual / Text) - *Reasoning...*
+   - Explicitly recommend the "Highest Value" item to work on next.
+   - Ask: "Shall I `/execute` the recommended task or do you have a different priority?"
