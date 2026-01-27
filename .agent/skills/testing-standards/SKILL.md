@@ -31,7 +31,11 @@ description: Standards for writing and running tests. Use this whenever writing 
 - **Mock External Libraries**: If a library uses native modules (e.g., `expo-haptics`, `expo-camera`, `@react-native-community/datetimepicker`), you **MUST** mock it immediately in the test file or setup file.
   - **Critical**: Native modules will cause Jest to **HANG** or crash silently if unmocked. Do not assume they work in a Node.js test environment.
   - *Action*: When adding a new dependency, check if it has native code. If yes, write the mock *before* running the first test.
+- **Mock Eager Services**: Services initialized at the top level (like `services/supabase.ts`) **MUST** be mocked in component tests.
+  - *Why*: Importing them triggers initialization, which often fails in test environments due to missing environment variables (e.g., `EXPO_PUBLIC_SUPABASE_URL`).
+  - *Action*: Mock the hook that consumes the service (e.g., `useProductKnowledge`) OR mock the service file directly.
 - **Transform Ignore Patterns**: If using modern ESM-only libraries (like `lucide-react-native`) in Expo/Jest, ensure they are added to `transformIgnorePatterns` in `jest.config.js`.
+- **Proxy Mocks**: When mocking proxies in Jest (e.g., for `lucide-react-native` or `expo-router` params), ensure unused arguments in the traps are prefixed with `_` to pass the linter. (Example: `get: (_, name) => ...`).
 
 ## Rules for the Agent
 1. **Self-Correction**: If a test fails, analyze the error message. Do not ask the user for help unless you fail 3 times.

@@ -26,6 +26,7 @@ You are a frontend engineer focused on transforming designs into clean React cod
 * **No Web Transitions**: Do NOT use `transition-*`, `duration-*`, `ease-*`, or `active:*` pseudo-classes on Native primitives. These often cause instability or crashes in the interop layer. Use `react-native-reanimated` for all motion.
 * **Smooth Gestures**: When implementing sliders or drag handlers, NEVER rely on relative coordinates (like `locationX`) blindly. Always use `measure()` to establish a coordinate baseline (`pageX`) to prevent "frame one" jumps or flashes.
 * **Rules of Hooks**: NEVER place hooks (`useMemo`, `useCallback`, `useEffect`) after conditional returns (e.g., `if (isLoading) return ...`). This violates React's core rules and causes runtime crashes. All hooks must be declared at the top level of the component, *before* any early returns.
+* **Premium Haptics**: Every interactive state change (e.g., Tab Press, Segment Select, Toggle Switch) MUST trigger `Haptics.impactAsync`. Import `* as Haptics from 'expo-haptics'`.
 
 ## Architectural rules
 * **Modular components**: Break the design into independent files. Avoid large, single-file outputs.
@@ -33,6 +34,7 @@ You are a frontend engineer focused on transforming designs into clean React cod
 * **Data decoupling**: Move all static text, image URLs, and lists into `src/data/mockData.ts`.
 * **Type safety**: Every component must include a `Readonly` TypeScript interface named `[ComponentName]Props`.
     * **NO 'any'**: You are strictly forbidden from using the `any` type (e.g., `width: any`). Always use unions (`number | string`) or unknown if absolutely necessary. If a library forces `any`, suppress it with a comment explaining why.
+    * **Catch Variables**: To pass strict linting (`no-unused-vars`), do not declare the error variable in `try/catch` blocks unless you explicitly use it (log or rethrow). Use `catch { ... }` (TS 4.0+) instead of `catch (error) { ... }` if unused.
 * **Project specific**: Focus on the target project's needs and constraints. Leave Google license headers out of the generated React components.
 * **Style mapping**:
     * Extract the `tailwind.config` from the HTML `<head>`.
