@@ -30,7 +30,6 @@ jest.mock("expo-haptics", () => ({
 }));
 
 jest.mock("@react-native-community/datetimepicker", () => {
-  const React = require("react");
   return {
     __esModule: true,
     default: (props: any) => {
@@ -58,6 +57,21 @@ jest.mock("../../../services/openFoodFacts", () => ({
 }));
 
 const queryClient = new QueryClient();
+
+jest.mock("../../../hooks/useProductKnowledge", () => ({
+  useHouseholdProductSettings: jest.fn(() => ({
+    data: [],
+    isLoading: false,
+  })),
+  useUpdateProductSettings: jest.fn(() => ({
+    mutate: jest.fn(),
+  })),
+  useProductKnowledge: jest.fn(() => ({
+    estimatedExpiryDate: null,
+    productSetting: null,
+    isLoading: false,
+  })),
+}));
 
 describe("AddItemForm Integration", () => {
   it("renders with SmartDateChips for pantry target", () => {

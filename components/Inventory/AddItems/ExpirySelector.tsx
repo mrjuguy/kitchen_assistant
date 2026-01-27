@@ -15,11 +15,13 @@ import { calculateSmartDate, getLabelForDate } from "../../../utils/date";
 
 interface ExpirySelectorProps {
   readonly currentDate?: Date | null;
+  readonly knowledgeDate?: string | null;
   readonly onSelect: (date: Date) => void;
 }
 
 export const ExpirySelector: React.FC<ExpirySelectorProps> = ({
   currentDate,
+  knowledgeDate,
   onSelect,
 }) => {
   const [selectedLabel, setSelectedLabel] = useState<string | null>(null);
@@ -29,11 +31,18 @@ export const ExpirySelector: React.FC<ExpirySelectorProps> = ({
   useEffect(() => {
     if (currentDate) {
       const label = getLabelForDate(currentDate);
-      setSelectedLabel(label || "Custom");
+      if (
+        knowledgeDate &&
+        currentDate.toISOString().split("T")[0] === knowledgeDate
+      ) {
+        setSelectedLabel("Household Knowledge");
+      } else {
+        setSelectedLabel(label || "Custom");
+      }
     } else {
       setSelectedLabel(null);
     }
-  }, [currentDate]);
+  }, [currentDate, knowledgeDate]);
 
   const handleSelect = (label: string, calculateDate: () => Date) => {
     Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
@@ -67,6 +76,74 @@ export const ExpirySelector: React.FC<ExpirySelectorProps> = ({
       </View>
 
       <View className="flex-row flex-wrap gap-3">
+        {/* Household Knowledge: Smart learning from behavior */}
+        {knowledgeDate && (
+          <Pressable
+            onPress={() =>
+              handleSelect("Household Knowledge", () => new Date(knowledgeDate))
+            }
+            className={`w-full p-4 rounded-2xl border-2 flex-row items-center mb-1 ${
+              selectedLabel === "Household Knowledge"
+                ? "bg-slate-900 border-slate-900 shadow-lg"
+                : "bg-slate-50 border-slate-100 dark:bg-slate-800 dark:border-slate-700 shadow-sm"
+            }`}
+            accessibilityLabel="Use Household Recommended Expiry"
+            accessibilityRole="radio"
+            accessibilityState={{
+              checked: selectedLabel === "Household Knowledge",
+            }}
+          >
+            <View
+              className={`p-2 rounded-xl mr-4 ${
+                selectedLabel === "Household Knowledge"
+                  ? "bg-slate-700"
+                  : "bg-white dark:bg-slate-700 shadow-sm"
+              }`}
+            >
+              <CalendarClock
+                size={22}
+                color={
+                  selectedLabel === "Household Knowledge"
+                    ? "#10b981"
+                    : "#0d7ff2"
+                }
+              />
+            </View>
+            <View className="flex-1">
+              <View className="flex-row items-center gap-2 mb-0.5">
+                <Text
+                  className={`text-[10px] font-bold uppercase tracking-[1px] ${
+                    selectedLabel === "Household Knowledge"
+                      ? "text-emerald-400"
+                      : "text-blue-500"
+                  }`}
+                >
+                  Household Knowledge
+                </Text>
+                {selectedLabel === "Household Knowledge" && (
+                  <CheckCircle2 size={12} color="#10b981" />
+                )}
+              </View>
+              <Text
+                className={`text-base font-bold ${
+                  selectedLabel === "Household Knowledge"
+                    ? "text-white"
+                    : "text-slate-900 dark:text-white"
+                }`}
+              >
+                Recommended based on your use
+              </Text>
+            </View>
+            {selectedLabel !== "Household Knowledge" && (
+              <View className="bg-blue-50 dark:bg-slate-700 px-3 py-1 rounded-lg">
+                <Text className="text-xs font-bold text-blue-600 dark:text-blue-400">
+                  USE
+                </Text>
+              </View>
+            )}
+          </Pressable>
+        )}
+
         {/* Smart Pick: +1 Week */}
         <Pressable
           onPress={() =>

@@ -1,5 +1,4 @@
 import { fireEvent, render } from "@testing-library/react-native";
-import React from "react";
 
 import { ExpirySelector } from "../../../../components/Inventory/AddItems/ExpirySelector";
 import * as dateUtils from "../../../../utils/date";

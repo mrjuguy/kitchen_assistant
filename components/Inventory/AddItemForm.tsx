@@ -17,6 +17,10 @@ import { QuantitySlider } from "./AddItems/QuantitySlider";
 import { SmartItemInput } from "./AddItems/SmartItemInput";
 import { StorageCategorySelector } from "./AddItems/StorageCategorySelector";
 import { useAddPantryItem } from "../../hooks/usePantry";
+import {
+  useProductKnowledge,
+  useUpdateProductSettings,
+} from "../../hooks/useProductKnowledge";
 import { useAddShoppingItem } from "../../hooks/useShoppingList";
 import { fetchProductByBarcode } from "../../services/openFoodFacts";
 import {
@@ -76,6 +80,16 @@ export const AddItemForm: React.FC<AddItemFormProps> = ({
   const [permission, requestPermission] = useCameraPermissions();
   const addPantryMutation = useAddPantryItem();
   const addShoppingMutation = useAddShoppingItem();
+  const updateProductSettingsMutation = useUpdateProductSettings();
+
+  const { estimatedExpiryDate } = useProductKnowledge(name);
+
+  // Apply household preference if available and no expiry is set
+  React.useEffect(() => {
+    if (estimatedExpiryDate && !expiryDate && target === "pantry") {
+      setExpiryDate(estimatedExpiryDate);
+    }
+  }, [estimatedExpiryDate, target]);
 
   const handleBarcodeScanned = async ({ data }: { data: string }) => {
     if (!isScanning) return;
@@ -149,6 +163,23 @@ export const AddItemForm: React.FC<AddItemFormProps> = ({
         expiry_date: expiryDate,
         storage_location: storageLocation,
       };
+
+      // If use sets a custom expiry, learn it for the household
+      if (expiryDate) {
+        const today = new Date();
+        const expiry = new Date(expiryDate);
+        const diffDays = Math.ceil(
+          (expiry.getTime() - today.getTime()) / (1000 * 60 * 60 * 24),
+        );
+
+        if (diffDays > 0) {
+          updateProductSettingsMutation.mutate({
+            product_name: name.trim(),
+            default_expiry_days: diffDays,
+          } as any);
+        }
+      }
+
       addPantryMutation.mutate(pantryData, {
         onSuccess: () => onClose(),
         onError: (error) => {
@@ -220,6 +251,7 @@ export const AddItemForm: React.FC<AddItemFormProps> = ({
         {target === "pantry" && (
           <ExpirySelector
             currentDate={expiryDate ? new Date(expiryDate) : null}
+            knowledgeDate={estimatedExpiryDate}
             onSelect={(date) => setExpiryDate(date.toISOString())}
           />
         )}
