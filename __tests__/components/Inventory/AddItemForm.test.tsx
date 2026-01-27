@@ -30,7 +30,6 @@ jest.mock("expo-haptics", () => ({
 }));
 
 jest.mock("@react-native-community/datetimepicker", () => {
-  const React = require("react");
   return {
     __esModule: true,
     default: (props: any) => {

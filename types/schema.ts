@@ -170,3 +170,20 @@ export interface UsageLog {
 }
 
 export type CreateUsageLog = Omit<UsageLog, "id" | "logged_at">;
+
+export interface HouseholdProductSettings {
+  id: string;
+  household_id: string;
+  product_name: string;
+  default_expiry_days?: number;
+  metadata?: Record<string, any>;
+  created_at: string;
+  updated_at: string;
+}
+
+export type CreateHouseholdProductSettings = Omit<
+  HouseholdProductSettings,
+  "id" | "created_at" | "updated_at"
+>;
+export type UpdateHouseholdProductSettings =
+  Partial<CreateHouseholdProductSettings>;
