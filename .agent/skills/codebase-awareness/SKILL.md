@@ -17,9 +17,9 @@ Before proposing a PRD, technical plan, or new feature implementation, you MUST 
 4.  **Fit, Don't Replace**: New features must fit into the existing architecture. If the user asks for a feature that is 50% done, your plan must be "Complete the X feature" rather than "Implement the X feature".
 5.  **The Truthiness Check**: Before recommending a task as "Active" or "Next", you MUST verify its status against three sources:
     - **Local State**: Check for existing spec files in `specs/`.
-    - **GitHub State**: Run `gh issue list --state all` to see if the issue is closed.
+    - **GitHub State**: Run `gh issue list --state closed` AND `gh issue list --state open` (the default `gh issue list` is insufficient on its own).
     - **Git History**: Run `git log --grep="issue-number"` or `git log --oneline -50` to see if commits related to the task already exist in main.
-    - **CRITICAL**: If a spec file exists but the code and issue are complete, DELETE the spec file to prevent "zobby" (zombie) feature drift.
+    - **CRITICAL**: If a spec file exists but the code and issue are complete, DELETE the spec file to prevent "zombie" feature drift.
 
 ## Workflow: The "Pre-Plan" Audit
 Whenever the `/plan` workflow or a similar "what should we do next" request is triggered:
