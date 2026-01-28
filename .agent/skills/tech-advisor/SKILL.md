@@ -25,3 +25,21 @@ When the user is a beginner, prioritize **Stability** and **AI-Support** over pe
 
 ## Stack Generation
 When a stack is chosen, you must be able to list the exact terminal commands to install it (e.g., `npx create-next-app@latest`).
+## Delegation Logic (Heavy vs. Light)
+You must follow the **Antigravity-First** principle to maximize speed and minimize token overhead.
+
+### 1. The Rubric
+- **LIGHT (Antigravity Directly)**: 
+  - UI Tweaks (CSS/NativeWind, Colors, Text).
+  - Documentation (README, Specs, Reviews).
+  - Single-file logic bugs or type fixes.
+  - Verification & Codebase audits.
+- **HEAVY (Spawn Child Agent)**:
+  - New multi-file features or complex scaffolding.
+  - Deep architectural refactors.
+  - Specialized long-running research.
+
+### 2. Forbidden Delegations
+- **NEVER** use `browser_subagent` for general coding or review tasks. It is ONLY for browser-specific automation (e.g., testing on web, taking screenshots).
+- **NEVER** spawn a child agent for documentation or simple UI fixes.
+- **NEVER** use `read_url_content` for local file system paths. For local files, ALWAYS use `view_file` or `view_file_outline`.
