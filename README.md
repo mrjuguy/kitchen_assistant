@@ -106,6 +106,7 @@ For the best experience, use a physical device via **Expo Go** to access the Sma
 - `types/`: Global TypeScript types, database schemas, and component prop interfaces.
 - `specs/`: Project requirements, completed features, design system documentation, test plans, and **QA reviews**.
 - `specs/reviews/`: Official validation artifacts and shippability assessments.
+- `.agent/workflows/`: Professional development lifecycle automation (Plan, Ship, Release).
 - `tailwind.config.js`: NativeWind v4 configuration with premium color palette and component content paths.
 
 ## 🎨 Design Philosophy

@@ -17,8 +17,9 @@ The agent should search the codebase, read documentation, and potentially browse
      claude -p "Research this question: $ARGUMENTS. 
      1. Search the codebase for relevant usage.
      2. If needed, search the web for external library docs.
-     3. Summarize your findings in a brief markdown report.
-     4. Suggest the next step." \
+     3. Summarize your findings in a markdown report.
+     4. **Constraint**: You MUST start with a '## TL;DR' section providing the direct answer.
+     5. Suggest the next step." \
      --allowedTools "Bash,Read,Grep,Glob,find_by_name,view_file,search_web"
      ```
 

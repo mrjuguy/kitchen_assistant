@@ -18,16 +18,16 @@ description: Triage and organize GitHub issues efficiently.
   - **Red**: Conflict with Health/Allergen profile.
 
 2. **Fetch Data**
-   - Use `gh issue list` with proper filtering (`--assignee`, `--label`, `--limit 50`).
+   - Use `gh issue list` with sorting to aid visual scanning:
+     - `gh issue list --sort title --state all --limit 100 --json number,title,state` (Group by name to spot duplicates).
+     - `gh issue list --assignee "@me" --limit 50` (My workload).
    - Display a summary of the found issues to the user.
 
 3. **Duplicate Cleanup & Hygiene**
    - **Internal Audit**: Compare issue titles from the list to find potential duplicates.
-   - For each duplicate pair (A, B):
-     - Ask: "Issue #A ('Title A') and #B ('Title B') look similar. Is one a duplicate?"
-     - If yes:
-       - Run `gh issue comment [duplicate_id] --body "Duplicate of #[original_id]"`
-       - Run `gh issue close [duplicate_id] --reason "not planned"`
+   - **Batch Action**: Present a table of all suspected duplicates (Issue A vs Issue B).
+   - **Action**: Ask: "Which of these should I close as duplicates?" 
+   - **Execute**: For all selected, run `gh issue comment [duplicate_id] --body "Duplicate of #[original_id]" && gh issue close [duplicate_id] --reason "not planned"`.
    - **Close Stale**: Identify issues with no updates > 30 days. Ask if they should be closed.
 
 4. **Triage Action Loop (Impact-First Prioritization)**

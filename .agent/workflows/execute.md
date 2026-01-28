@@ -12,11 +12,17 @@ description: The Decision Engine - Determines whether to delegate to Heavy Coder
      - IF on `main`: Create a new branch `git checkout -b [type]/[issue-id]-[desc]`.
      - IF on existing feature branch: Continue.
 
-3. **Evaluate Complexity (Internal Monologue)**
+3. **Context Warm-up (Codebase Awareness)**
+   - **Action**: Locate relevant code *before* deciding on complexity.
+   - **Tools**: Use `find_by_name` or `grep_search` to find related files/functions.
+   - **Goal**: Do we already have a utility for this? Is there a similar pattern? 
+   - *Constraint*: Do NOT skip this. Ignorance leads to duplicated code.
+
+4. **Evaluate Complexity (Internal Monologue)**
    - Is this "Heavy"? (New Feature, Scaffolding, Refactoring >1 file).
    - Is this "Light"? (UI Tweak, Text Change, Config Update).
 
-4. **Execution Path**
+5. **Execution Path**
    - **IF HEAVY**: 
      - "⚙️ Building: Delegating to Heavy Coder..."
      - Spawn heavy-coder with full PRD context.
@@ -24,5 +30,5 @@ description: The Decision Engine - Determines whether to delegate to Heavy Coder
      - "⚡ Tweaking: Handling this directly..."
      - YOU (Antigravity) perform the file edit immediately using your file tools.
 
-5. **Completion**
+6. **Completion**
    - Output: "Done. Run /save to trigger Cloud QA."

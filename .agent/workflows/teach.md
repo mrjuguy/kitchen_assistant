@@ -12,7 +12,8 @@ description: Updates a Skill or Rule based on a recent mistake.
 2. **Analyze the Failure**
    - Ask the user: "Did I miss any other mistakes? Which Skill does this belong to? (or should I create a new one?)"
 
-2. **Propose the Fix**
+2. **Conflict Check & Proposal**
+   - **Action**: Check `PROJECT_RULES.md` and related skills to ensure this new rule does not contradict existing ones. 
    - Locate the relevant `.agent/skills/[skill-name]/SKILL.md`.
    - Read the file.
    - Create a draft update to the Markdown that explicitly forbids the mistake.

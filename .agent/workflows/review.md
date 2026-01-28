@@ -12,8 +12,8 @@ description: Spawns a sub-agent to audit recent changes and generate a permanent
      - Do NOT spawn the child agent.
 
 2. **The Context**
-   - **Action**: Run `git diff --stat -p` to capture the exact changes.
-   - **Note**: If the diff is too large, consider running it per file or focusing on the most recent commits.
+   - **Action**: Run `git diff --stat -p ':(exclude)package-lock.json' ':(exclude)npm-lock.yaml' ':(exclude)*.lock'` to capture the exact changes without noise.
+   - **Note**: If the diff is still too large (>500 lines), focus on specific directories (e.g., `git diff ... -- app/ components/`).
 
 3. **The Reviewer**
    - **Action (Antigravity-First)**: For light features or documentation, perform the audit directly against the standards in `.agent/skills/code-review/SKILL.md`.

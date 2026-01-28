@@ -5,25 +5,38 @@ description: Scans the codebase first, then interviews the user to generate a PR
 # Feature Planning Workflow
 
 1. **State Analysis & Sync**
-   - **Infrastructure Sync**: Run `git checkout main && git pull origin main`.
-   - **Pre-Plan Audit**: Use `view_file .agent/skills/codebase-awareness/SKILL.md`.
-   - **Rules**: Read `specs/tech-stack.md` (if exists).
+// turbo
+   - **Action**: Run `git checkout main && git pull origin main`.
+   - **Action**: Read `specs/tech-stack.md` and `.agent/skills/codebase-awareness/SKILL.md`.
 
 2. **Phase 1: Discovery**
    - **GitHub Scan**: 
-     - Check priorities: `gh issue list --label "priority:high"`.
-     - Check milestones: `gh api repos/:owner/:repo/milestones`.
-   - **Propose**: "Next feature based on backlog is [Feature]."
+     - Run `gh issue list --label "priority:high" --json number,title,body,labels`.
+   - **Candidate Selection**: Identify the "Highest Value" (Impact/Effort) task from the list. 
+   - **Reality Check (The Neophyte Shield)**:
+     - **Constraint**: Before finalizing the choice, you **MUST** validate the specific candidate:
+     - **History Audit**: Run `gh issue list --state closed --search "[Key Terms]"` to verify it hasn't been solved previously.
+     - **Codebase Audit**: Run `find_by_name [Key Terms]` to ensure the features don't already exist (Ghost Code).
+     - **Outcome**: Only proceed if the path is clear.
+
+   - **Prioritization Engine**: 
+     - Analyze the backlog using the **Impact/Effort Matrix**:
+       1. **Quick Wins** (High Impact / Low Effort) -> Prioritize First.
+       2. **Major Projects** (High Impact / High Effort) -> Plan carefully.
+     - **Constraint**: Always propose the "Highest Value" option unless user explicitly overrides.
    - **Define Slug**: Ask user for a short, unique slug for this feature (e.g., `user-login`).
-   - **Research (Optional)**: If the feature involves unfamiliar technology or complex third-party APIs:
-     - **Action**: Spawn `researcher` agent.
-     - **Instruction**: "claude -p 'Research implementation best practices and API documentation for [Feature Description] within our Expo/Supabase stack.' --agent 'researcher'"
-     - **Result**: Researcher saves findings to `specs/drafts/[slug]_tech_notes.md`.
+   - **Research (Optional)**: If complex:
+     - **Action**: Spawn `researcher` agent to save findings to `specs/drafts/[slug]_tech_notes.md`.
 
 3. **Phase 2: Draft PRD (Collision-Free)**
    - Draft the requirements in `specs/drafts/[slug]_PRD.md`.
    - **Content**: Must include User Stories, UX Guidelines, Implementation Plan (incorporating `specs/drafts/[slug]_tech_notes.md` if available), and Verification Plan.
    - **Constraint**: Reference existing files correctly.
+
+3b. **RFC / Technical Design Review (For High Complexity)**
+   - **Trigger**: If the feature involves database schema changes, new architecture, or security/auth.
+   - **Action**: Pause and ask: "This feature is complex. Shall I initiate a formal RFC or Design Review before finalizing the PRD?"
+   - **Outcome**: If yes, spawn `claude -p "Review this PRD and proposed architecture for potential pitfalls."`.
 
 4. **Phase 3: GitHub Sync (Source of Truth)**
    - **Create Issue**: 

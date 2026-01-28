@@ -22,7 +22,14 @@ description: Auto-Fix Workflow - Fetches remote errors and fixes them locally.
      - **Allowed Tools**: `Bash,Read,Grep,Glob,find_by_name,view_file,write_to_file,replace_file_content`.
      - **Agent**: `qa-bot` (if available) or generic.
    - **Context Injection**:
-  "Analyze this CI failure log. Locate the file and error. Fix the code to resolve the error. Do not refactor unrelated code. Use the 'repair' skill if available."
+  "Analyze this CI failure log. Locate the file and error. 
+  
+  **CRITICAL RULES:**
+  1. Fix the code to resolve the error.
+  2. **DO NOT DELETE TESTS** or use `// @ts-ignore` to silence errors. Fix the underlying logic.
+  3. **VERIFY** your fix locally (run the test/lint) before reporting success.
+  
+  Use the 'repair' skill if available."
 
 4. **Push**
 - Step: Stage changes `git add .`

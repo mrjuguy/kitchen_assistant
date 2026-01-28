@@ -20,16 +20,12 @@ description: Ship Workflow - Merges the current PR, cleans up branches, and sync
    - Run `gh pr merge --squash --delete-branch`.
    - Output: "🤝 PR merged and remote branch deleted."
 
+// turbo-all
 4. **Local Cleanup & Sync**
-   - Run `git checkout main`.
-   - Run `git pull origin main`.
-   - Run `git remote prune origin`.
+   - **Action**: Run `git checkout main && git pull origin main && git remote prune origin`.
 
 5. **Resource Archiving**
-   - Identify active PRD (e.g., `specs/active/12-login.md`).
-   - Run `mv specs/active/[FILE] specs/completed/`.
-   - Output: "📦 PRD archived to `specs/completed/`."
+   - **Action**: Identify and move the active PRD (e.g., `specs/issue_*.md`) to `specs/completed/`.
 
 6. **Final Status**
-   - Run `/status`.
-   - Output: "🚀 Feature successfully shipped. You are now balanced on `main`."
+   - **Action**: Output "🚀 Feature successfully shipped. You are now balanced on `main`."
