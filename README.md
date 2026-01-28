@@ -35,6 +35,7 @@ A premium, inventory-first kitchen management application built with Expo and Su
 - **Accessibility & UX Foundations**: Comprehensive WCAG-compliant accessibility labels, localized date formatting, and high-contrast Emerald branding for secondary active states.
 - **Premium UI Modernization (Issue #10)**: Complete migration from inline styles to NativeWind v4 (Tailwind CSS). All 30+ components across 6 main tabs refactored to utility-first styling, reducing style code by 700+ lines. Standardized design system on premium off-white palette (#f5f7f8) with improved type safety (Skeleton system) and refined error handling (Planner alerts). Foundation established for future dark mode implementation.
 - **Account Deletion & Data Privacy (Issue #35)**: Integrated in-app account deletion workflow compliant with Apple App Store Review Guidelines 5.1.1(v). Features a secure "Danger Zone" in the Profile tab with native confirmation alerts and a Supabase Edge Function to wipe user data, including automated cleanup for orphaned households.
+- **Privacy Policy & Terms of Service (Issue #38)**: Comprehensive legal compliance with in-app document viewing via `expo-web-browser`. Adds a dedicated "Legal" section to the Profile tab and integrates policy URLs into `app.json` for App Store indexing.
 
 ## 🛠 Tech Stack
 
@@ -96,7 +97,7 @@ For the best experience, use a physical device via **Expo Go** to access the Sma
 
 ## 📁 Project Structure
 
-- `app/`: Expo Router file-based pages (Login, Tabs: Inventory, Recipes, Shopping, Planner, Profile).
+- `app/`: Expo Router file-based pages (Login, Tabs: Inventory, Recipes, Shopping, Planner, Profile). Includes a dedicated Legal section for App Store compliance.
 - `components/`: 30+ reusable UI components, 100% NativeWind-styled with type-safe props (Issue #10).
 - `hooks/`: Custom React hooks for business logic and data fetching.
 - `services/`: Supabase client, OpenFoodFacts integration, and external API clients.

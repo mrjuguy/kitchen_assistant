@@ -16,7 +16,11 @@ description: Spawns a sub-agent to audit recent changes and generate a permanent
    - **Note**: If the diff is too large, consider running it per file or focusing on the most recent commits.
 
 3. **The Delegate**
-   - **Action**: Spawn the `claude` child agent.
+   - **Action**: Spawn the `claude` child agent using the `run_command` tool.
+   - **Command Config**:
+     - Use `-p` for headless mode.
+     - **Allowed Tools**: `Bash,Read,Grep,Glob,find_by_name,view_file,write_to_file,replace_file_content`.
+     - **Agent**: `qa-bot` (if available) or generic.
    - **Context Injection**:
      - **Rules**: Content of `.agent/skills/code-review/SKILL.md`.
      - **Diff**: The output from `git diff` in Step 2.

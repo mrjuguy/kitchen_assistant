@@ -1,9 +1,11 @@
 import { useRouter } from "expo-router";
+import * as WebBrowser from "expo-web-browser";
 import {
   ArrowRight,
   Heart,
   LogOut,
   Save,
+  Shield,
   ShieldCheck,
   Trash2,
   User,
@@ -114,6 +116,14 @@ export default function ProfileScreen() {
         },
       ],
     );
+  };
+
+  const handleOpenLegal = async (url: string) => {
+    try {
+      await WebBrowser.openBrowserAsync(url);
+    } catch {
+      Alert.alert("Error", "Could not open browser");
+    }
   };
 
   if (isLoading) {
@@ -269,6 +279,40 @@ export default function ProfileScreen() {
             </>
           )}
         </TouchableOpacity>
+
+        {/* Legal */}
+        <View className="mt-8">
+          <View className="flex-row items-center mb-3">
+            <Shield size={20} color="#10b981" className="mr-2" />
+            <Text className="text-lg font-semibold text-gray-900">Legal</Text>
+          </View>
+          <TouchableOpacity
+            className="bg-gray-50 border border-gray-100 rounded-2xl p-4 flex-row items-center justify-between mb-3"
+            onPress={() =>
+              handleOpenLegal(
+                "https://github.com/mrjuguy/kitchen_assistant/blob/main/legal/privacy.md",
+              )
+            }
+          >
+            <Text className="text-base text-gray-900 font-medium">
+              Privacy Policy
+            </Text>
+            <ArrowRight size={20} color="#9ca3af" />
+          </TouchableOpacity>
+          <TouchableOpacity
+            className="bg-gray-50 border border-gray-100 rounded-2xl p-4 flex-row items-center justify-between"
+            onPress={() =>
+              handleOpenLegal(
+                "https://github.com/mrjuguy/kitchen_assistant/blob/main/legal/tos.md",
+              )
+            }
+          >
+            <Text className="text-base text-gray-900 font-medium">
+              Terms of Service
+            </Text>
+            <ArrowRight size={20} color="#9ca3af" />
+          </TouchableOpacity>
+        </View>
 
         {/* Danger Zone */}
         <View className="mt-12 mb-8 pt-8 border-t border-gray-100">
