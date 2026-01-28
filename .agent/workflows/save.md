@@ -5,11 +5,11 @@ description: Zero-Friction Save & Branch - Non-blocking save that auto-handles b
 # Zero-Friction Save & Branch
 
 1. **Find Context (Auto-Discovery)**
-   - Run `git branch --show-current`.
-   - Attempt to find an **Active ID**:
-     - Check current branch name (e.g., `feat/12-login` -> `12`).
-     - Check for `specs/active/*.md` or files matching `specs/issue_*.md`.
-     - Read `.agent/temp/active_issue` if it exists.
+   - **Action**: Identify **Active ID** by checking:
+     1. Files in `specs/active/` or matching `specs/issue_*.md`.
+     2. Current branch name (e.g., `feat/12-login` -> `12`).
+     3. `.agent/temp/active_issue`.
+   - **Heuristic**: If an active PRD exists, prioritize its ID over the branch name.
 
 2. **Branch Management**
    - If current branch is `main`:
@@ -20,18 +20,28 @@ description: Zero-Friction Save & Branch - Non-blocking save that auto-handles b
    - Else: 
      - Stay on current branch.
 
-3. **Atomic Commit**
+3. **Pre-Flight Check (Professional Standard)**
+// turbo
+   - **Action**: Run `npm run type-check` (or `tsc --noEmit`).
+   - **Logic**: 
+     - If PASS: Continue.
+     - If FAIL: Warn user "⚠️ Type checks failed. Do you want to fix them or force save?"
+     - (Allow user to type 'force' to skip).
+
+4. **Atomic Commit**
    - Run `git add .`.
    - Analyze changes to generate a `type(scope): description` message.
    - If an **Active ID** (e.g. `12`) is found, append `(closes #12)` to the message.
    - Run `git commit -m "[message]"` (or `git commit --amend --no-edit` if fixing a CI failure).
 
-4. **Documentation Sync (The Scribe)**
+5. **Documentation Sync (The Scribe)**
    - **Check**: Did we change architecture, `utils/`, or add new features? 
-   - **Action**: Run `/document` to update `README.md` and technical specs *before* the PR is finalized.
-   - **Commit**: `git add . && git commit --amend --no-edit` to include docs in the feature commit.
+   - **Action**: You (Antigravity) MUST now perform the "Scribe" duties immediately:
+     1. **System Docs**: Update `README.md` (Features list) and `specs/tech-stack.md` if tools changed.
+     2. **Living PRD**: Read `specs/issue_*.md` (active PRD). Compare code vs Verification Plan. Mark completed items with `[x]`.
+   - **Commit**: Run `git add . && git commit --amend --no-edit` to merge these docs into the feature commit.
 
-5. **Push & Publish (Cloud QA)**
+6. **Push & Publish (Cloud QA)**
    - Run `git push origin HEAD`.
    - **Check for PR**: Run `gh pr view --json state --template "{{.state}}"` (Ignore errors).
    - **Create PR if missing**:

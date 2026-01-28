@@ -1,34 +1,35 @@
 ---
-description: Brainstorms a project idea and determines the best beginner-friendly tech stack.
+description: Brainstorms new features or projects and converts them into GitHub Issues.
 ---
 
-# Project Inception Workflow
+# Ideation & Intake Workflow
 
-1. **Phase 1: The Concept**
-   - **Goal**: Define the Minimum Viable Product (MVP).
-   - Ask the user: "What is the core idea? Who is it for? What is the one thing it MUST do?"
-   - Ask: "Is this a web app, a mobile app, a CLI tool, or a background service?"
-   - *Goal*: Understand the "Shape" of the software.
+1. **Context Check**
+   - **Action**: Check if `package.json` or `README.md` exists.
+   - **Branch (New Project)**: If NO files exist, proceed to **Phase 2a (Inception)**.
+   - **Branch (Existing Project)**: If files exist, proceed to **Phase 2b (Feature Intake)**.
 
-2. **Phase 2: Technical Needs Assessment**
-   - Analyze the complexity. Does it need:
-     - A database? (Persistence)
-     - Real-time updates? (Sockets/Polling)
-     - External APIs?
-   - *Internal Thought*: "Match the user's complexity level to the simplest possible tool that can do the job."
+---
 
-3. **Phase 3: The CTO Decision**
-   - Propose a **Tech Stack** optimized for the user's skill level and the project requirements.
-   - **Constraint**: Read `view_file .agent/skills/tech-advisor/SKILL.md` to make this decision.
-   - Explain *Why*: "I recommend **[Stack Name]** because..."
+## Phase 2a: Project Inception (Zero to One)
+1. **The Concept**: Define the MVP. Ask "What is the core value?"
+2. **The Stack**: Propose a Tech Stack (Read `.agent/skills/tech-advisor/SKILL.md`).
+3. **The Setup**: Create `specs/tech-stack.md` and `PROJECT_RULES.md`.
+4. **The Backlog**: Generate the first batch of issues using `gh issue create`.
 
-4. **Phase 4: Lock it In**
-   - Create a directory `specs/` if it doesn't exist.
-   - Create a file `specs/tech-stack.md`.
-   - Write down the chosen languages, frameworks, testing tools, and package managers.
-   - **Crucial Step**: Create a `PROJECT_RULES.md` file that sets the global constraints for this specific stack.
+---
 
-5. **GitHub Project Setup**
-   - **Skill Check**: Read `view_file .agent/skills/github-cli/SKILL.md`.
-   - Initialize the first set of "Backlog" issues based on the Phase 1 goals (`gh issue create`).
-   - (Optional) Create a GitHub Project or Milestone to track the MVP.
+## Phase 2b: Feature Intake (Continuous Improvement)
+1. **Brainstorming**:
+   - Ask: "What is the new feature or improvement?"
+   - **Refinement**: Challenge the idea. "Does this align with the current MVP?" check `specs/roadmap.md` if exists.
+   
+2. **Technical Feasibility Scan**:
+   - **Action**: Search codebase (`find_by_name`, `grep_search`) to see if this is already partially built or conflicts with existing architecture.
+   - **Reality Check**: "We already have a similar feature in `files/xyz`. Should we extend that instead?"
+
+3. **Issue Generation**:
+   - **Draft**: Create a title and body.
+   - **Body Requirement**: Must include "User Story", "Acceptance Criteria", and "Impact".
+   - **Action**: Run `gh issue create --title "[Title]" --body "[Body]" --label "enhancement"`.
+   - **Output**: "✅ Created Issue #[ID]. Run `/plan` to start working on it."

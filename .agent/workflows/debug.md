@@ -11,17 +11,30 @@ This applies systematic debugging methodology with evidence gathering, hypothesi
 </objective>
 
 <process>
-1. **Triage**: Analyze the issue description ($ARGUMENTS).
-2. **Decision**:
-   - **Quick Fix** (Typos, visible UI bugs, single-file logic):
-     - Load `debug-like-expert` skill yourself.
-     - Execute the fix immediately.
-   - **Deep Investigation** (Crashes, Race Conditions, Unknown Errors, "Why is this happening?"):
-     - **DELEGATE** to a sub-agent.
-     - Run: `claude -p "Use the .agent/skills/debug-like-expert/SKILL.md to investigate: $ARGUMENTS" --allowedTools "Bash,Read,Grep,Glob,find_by_name,view_file,write_to_file,replace_file_content"`
-     - Wait for the sub-agent to report the **Root Cause** and **Proposed Solution**.
-     - Review the solution with your expert judgment before applying.
-3. **Verify**: Run tests or visually confirm the fix.
+1. **Triage & History Check**
+   - **Search**: Run `gh issue list --search "[Keywords from $ARGUMENTS]" --state all`.
+   - **Check**: Is this a known issue? If Closed, how was it fixed?
+
+2. **Context Warm-up**
+   - **Locate**: Run `find_by_name` or `grep_search` to identify the files involved.
+   - **Scope**: Is this isolated to one component or a system-wide failure?
+
+3. **Reproduction (The "Red" Test)**
+   - **Constraint**: You (or the delegate) MUST create a reproduction case before fixing.
+   - **Option A (Unit)**: Create `utils/__tests__/repro_issue.test.ts` that fails.
+   - **Option B (Script)**: Create `scripts/repro_issue.ts` that demonstrates the bug.
+   - **Option C (Manual)**: If UI-only, strictly define the "Fail State" steps.
+
+4. **Investigation & Fix**
+   - **Decision**:
+     - **Quick Fix** (Typos, One File): Handle it yourself using `debug-like-expert`.
+     - **Deep Dive** (Crashes, Logic Gaps):
+       - **DELEGATE**: Spawn `claude -p "Investigate $ARGUMENTS. Use .agent/skills/debug-like-expert/SKILL.md. 1. Reproduce. 2. Fix. 3. Verify."`
+       - **Wait**: Review the sub-agent's findings.
+
+5. **Verify (The "Green" Test)**
+   - **Action**: Run the reproduction test/script. It MUST pass now.
+   - **Cleanup**: Delete the temporary reproduction file unless it's a valuable regression test.
 </process>
 
 <success_criteria>

@@ -33,10 +33,14 @@ EXPO_PUBLIC_SUPABASE_URL=
 EXPO_PUBLIC_SUPABASE_ANON_KEY=
 ```
 
-## Documentation & Workflows
-*   **Detailed Rules**: Read `PROJECT_RULES.md` before starting heavy work.
-*   **Process**: Read `DEVELOPMENT_LIFECYCLE.md` for the "Cybernetic" workflow.
-*   **Agent Commands**: `CLAUDE.md` is for the CLI agent. The IDE agent uses `.agent/workflows/` (e.g., `/debug`, `/save`).
+## Agent Workflows (The "Cybernetic" Interface)
+*   **Startup**: `/start-session` (Syncs git, analyzes backlog, health check).
+*   **Intake**: `/ideate` (Brainstorm new features -> Issues).
+*   **Plan**: `/plan` (Issue -> PRD with duplication checks).
+*   **Execute**: `/execute` (Decides Heavy vs Light -> Code).
+*   **Save**: `/save` (Pre-Flight Check -> Commit -> Living PRD Update).
+*   **Ship**: `/ship` (Merge PR -> Cleanup Branches).
+*   **Release**: `/release` (Version Bump -> Changelog -> Tag).
 
 ## Critical Instructions
 1.  **Inventory First**: Never assume ingredients exist. Check `useGapAnalysis`.
