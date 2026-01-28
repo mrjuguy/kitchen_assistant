@@ -51,3 +51,22 @@ export const useUpdateProfile = () => {
     },
   });
 };
+
+export const useDeleteAccount = () => {
+  return useMutation({
+    mutationFn: async () => {
+      const { data, error } = await supabase.functions.invoke(
+        "delete-account",
+        {
+          method: "POST",
+        },
+      );
+
+      if (error) throw error;
+      return data;
+    },
+    onSuccess: async () => {
+      await supabase.auth.signOut();
+    },
+  });
+};

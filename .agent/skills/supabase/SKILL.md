@@ -5,6 +5,15 @@ description: Integration and best practices for Supabase Backend-as-a-Service.
 
 # Supabase Best Practices
 
+## Edge Functions & TypeScript (CRITICAL)
+- **Runtime Conflict**: Edge Functions run on Deno, which uses URL imports (e.g., `import ... from "https://..."`). The main React Native project runs on Node/Metro and will fail to compile these imports.
+- **The Rule**: Whenever you create or modify a file in `supabase/functions/`, you **MUST** ensure that `supabase/functions` is added to the `exclude` array in the root `tsconfig.json`.
+  - **Check**: Run `cat tsconfig.json` immediately after creating an Edge Function.
+  - **Fix**:
+    ```json
+    "exclude": ["node_modules", "supabase/functions"]
+    ```
+
 ## Client Setup
 - Initialize the client in `src/lib/supabase.ts`.
 - Use environment variables for `SUPABASE_URL` and `SUPABASE_ANON_KEY`.

@@ -34,6 +34,7 @@ A premium, inventory-first kitchen management application built with Expo and Su
 - **Smart Expiry Selection**: Optimized date input with one-tap chips (+1 Week, +1 Month, etc.), satisfying haptic feedback, and a native system calendar for custom dates. Intelligent synchronization ensures UI chips react to manual date selections.
 - **Accessibility & UX Foundations**: Comprehensive WCAG-compliant accessibility labels, localized date formatting, and high-contrast Emerald branding for secondary active states.
 - **Premium UI Modernization (Issue #10)**: Complete migration from inline styles to NativeWind v4 (Tailwind CSS). All 30+ components across 6 main tabs refactored to utility-first styling, reducing style code by 700+ lines. Standardized design system on premium off-white palette (#f5f7f8) with improved type safety (Skeleton system) and refined error handling (Planner alerts). Foundation established for future dark mode implementation.
+- **Account Deletion & Data Privacy (Issue #35)**: Integrated in-app account deletion workflow compliant with Apple App Store Review Guidelines 5.1.1(v). Features a secure "Danger Zone" in the Profile tab with native confirmation alerts and a Supabase Edge Function to wipe user data, including automated cleanup for orphaned households.
 
 ## 🛠 Tech Stack
 

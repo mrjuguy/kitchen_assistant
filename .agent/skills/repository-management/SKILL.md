@@ -5,6 +5,16 @@ description: Standards for repository hygiene, security, and public documentatio
 
 # Repository Management Best Practices
 
+## Branching Strategy (MANDATORY)
+- **Protected Main**: NEVER commit code directly to `main` unless it is a documentation-only change (e.g., updating `README.md` or `specs/`).
+- **Feature Branches**: Before writing ANY code for a feature or fix, you must create a branch.
+  - **Naming Convention**: `type/issue-id-short-description`
+  - Examples:
+    - `feat/35-account-deletion`
+    - `fix/login-crash`
+    - `chore/update-deps`
+- **Workflow Integration**: The `/execute` workflow MUST trigger this branch creation immediately after analyzing the request.
+
 ## Security & Hygiene
 - **CRITICAL**: Never commit `.env` files or any file containing secrets/API keys.
 - **Agent Sharing**: You **SHOULD** commit the `.agent/` folder (workflows, skills, rules) so that the team shares the same capabilities.

@@ -5,6 +5,7 @@ import {
   LogOut,
   Save,
   ShieldCheck,
+  Trash2,
   User,
   Users,
 } from "lucide-react-native";
@@ -20,7 +21,11 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-import { useProfile, useUpdateProfile } from "../../hooks/useProfile";
+import {
+  useDeleteAccount,
+  useProfile,
+  useUpdateProfile,
+} from "../../hooks/useProfile";
 import { supabase } from "../../services/supabase";
 
 const ALLERGENS = [
@@ -45,6 +50,7 @@ const DIETARY_PREFERENCES = [
 export default function ProfileScreen() {
   const { data: profile, isLoading } = useProfile();
   const updateProfile = useUpdateProfile();
+  const deleteAccount = useDeleteAccount();
   const router = useRouter();
 
   const [displayName, setDisplayName] = useState("");
@@ -86,6 +92,28 @@ export default function ProfileScreen() {
 
   const handleSignOut = async () => {
     await supabase.auth.signOut();
+  };
+
+  const handleDeleteAccount = () => {
+    Alert.alert(
+      "Delete Account",
+      "Are you sure? This will permanently delete your account and all associated data. This action cannot be undone.",
+      [
+        { text: "Cancel", style: "cancel" },
+        {
+          text: "Delete",
+          style: "destructive",
+          onPress: async () => {
+            try {
+              await deleteAccount.mutateAsync();
+              Alert.alert("Success", "Account deleted successfully");
+            } catch {
+              Alert.alert("Error", "Failed to delete account");
+            }
+          },
+        },
+      ],
+    );
   };
 
   if (isLoading) {
@@ -241,6 +269,33 @@ export default function ProfileScreen() {
             </>
           )}
         </TouchableOpacity>
+
+        {/* Danger Zone */}
+        <View className="mt-12 mb-8 pt-8 border-t border-gray-100">
+          <Text className="text-lg font-semibold text-gray-900 mb-4">
+            Danger Zone
+          </Text>
+          <TouchableOpacity
+            onPress={handleDeleteAccount}
+            className="bg-red-50 flex-row items-center justify-center py-4 rounded-2xl border border-red-100"
+            disabled={deleteAccount.isPending}
+          >
+            {deleteAccount.isPending ? (
+              <ActivityIndicator color="#ef4444" />
+            ) : (
+              <>
+                <Trash2 size={20} color="#ef4444" className="mr-2" />
+                <Text className="text-red-500 text-base font-bold">
+                  Delete Account
+                </Text>
+              </>
+            )}
+          </TouchableOpacity>
+          <Text className="text-xs text-gray-400 text-center mt-4 px-4">
+            Permanently delete your account and all data. This follows Apple
+            Data Privacy guidelines.
+          </Text>
+        </View>
 
         <View className="h-10" />
       </ScrollView>
