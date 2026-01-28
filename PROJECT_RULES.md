@@ -54,5 +54,9 @@
   - **Verification**: Agents must strictly verify their own work (e.g., "Did I actually update the file?") before reporting success.
 
 - **Hybrid Execution**:
-  - **Heavy Tasks**: Delegate to heavy-coder (Claude Code) for features requiring deep context or multiple files.
-  - **Tweaks**: The active Antigravity session MUST handle small changes (styles, text, simple logic) directly to minimize latency.
+  - **Heavy Tasks**: Delegate to specialized child agents (e.g., `heavy-coder`) ONLY for features requiring deep logic, multi-file refactoring, or complex scaffolding.
+  - **Antigravity-First**: The active Antigravity session MUST handle all "Light" tasks directly, including:
+    - Documentation updates (`README.md`, specs, reviews).
+    - UI/UX tweaks (styling, spacing, icon changes).
+    - Simple logic bugs or configuration updates.
+    - Requirements verification (first-pass QA).

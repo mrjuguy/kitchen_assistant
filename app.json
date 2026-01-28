@@ -36,6 +36,9 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "privacyPolicyUrl": "https://github.com/mrjuguy/kitchen_assistant/blob/main/legal/privacy.md"
     }
   }
 }
