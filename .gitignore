@@ -49,3 +49,5 @@ specs/issue_*.md
 specs/draft_PRD.md
 .claude/
 !.claude/agents/ # Allow sharing of project-specific agents
+
+.env.local
