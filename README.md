@@ -37,6 +37,7 @@ A premium, inventory-first kitchen management application built with Expo and Su
 - **Account Deletion & Data Privacy (Issue #35)**: Integrated in-app account deletion workflow compliant with Apple App Store Review Guidelines 5.1.1(v). Features a secure "Danger Zone" in the Profile tab with native confirmation alerts and a Supabase Edge Function to wipe user data, including automated cleanup for orphaned households.
 - **Privacy Policy & Terms of Service (Issue #38)**: Comprehensive legal compliance with in-app document viewing via `expo-web-browser`. Adds a dedicated "Legal" section to the Profile tab and integrates policy URLs into `app.json` for App Store indexing.
 - **Production Assets & Branding (Issue #37)**: Replaced default Expo placeholders with high-fidelity, AI-generated professional branding. Includes a custom minimalist app icon, a full-screen gradient splash screen, and an adaptive Android icon. Standardized the splash screen configuration to `resizeMode: cover` for edge-to-edge branding.
+- **App Analytics & User Insights (Issue #36)**: Integrated PostHog for behavior tracking. Captures critical events including recipe cooking, shopping checkouts, item additions, and meal planning. Includes automated user identification and session tracking for product-led growth analysis.
 
 
 ## 🛠 Tech Stack
@@ -54,6 +55,7 @@ A premium, inventory-first kitchen management application built with Expo and Su
 - **Native Modules**: `@react-native-community/datetimepicker` for smart expiry selection
 - **Icons**: [Lucide React Native](https://lucide.dev/)
 - **Animations**: [React Native Reanimated](https://docs.expo.dev/versions/latest/sdk/reanimated/)
+- **Product Analytics**: [PostHog](https://posthog.com/)
 
 ## 🏁 Getting Started
 

@@ -22,6 +22,7 @@ import {
   useUpdateProductSettings,
 } from "../../hooks/useProductKnowledge";
 import { useAddShoppingItem } from "../../hooks/useShoppingList";
+import { posthog } from "../../services/analytics";
 import { fetchProductByBarcode } from "../../services/openFoodFacts";
 import {
   CommonInventoryItemData,
@@ -156,6 +157,14 @@ export const AddItemForm: React.FC<AddItemFormProps> = ({
       allergens,
       labels,
     };
+
+    posthog.capture("item_added", {
+      name: name.trim(),
+      category,
+      target,
+      source: barcode ? "barcode" : "manual",
+      unit,
+    });
 
     if (target === "pantry") {
       const pantryData: CreatePantryItem = {
