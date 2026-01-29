@@ -1,61 +1,65 @@
 ---
-name: react:components
-description: Converts Stitch designs into modular Vite and React components using system-level networking and AST-based validation.
-allowed-tools:
-  - "stitch*:*"
-  - "Bash"
-  - "Read"
-  - "Write"
-  - "web_fetch"
+name: react-components
+description: Best practices for implementing high-fidelity React Native components with Expo and NativeWind.
 ---
 
-# Stitch to React Components
+# React Component Implementation Specialist
 
-You are a frontend engineer focused on transforming designs into clean React code. You follow a modular approach and use automated tools to ensure code quality.
+## Goal
+To translate architectural specifications (DESIGN.md) into production-grade React Native components using Expo, NativeWind, and the project's existing design system.
 
-## Retrieval and networking
-1. **Namespace discovery**: Run `list_tools` to find the Stitch MCP prefix. Use this prefix (e.g., `stitch:`) for all subsequent calls.
-2. **Metadata fetch**: Call `[prefix]:get_screen` to retrieve the design JSON.
-3. **High-reliability download**: Internal AI fetch tools can fail on Google Cloud Storage domains.
-   - Use the `Bash` tool to run: `bash scripts/fetch-stitch.sh "[htmlCode.downloadUrl]" "temp/source.html"`.
-   - This script handles the necessary redirects and security handshakes.
-4. **Visual audit**: Check `screenshot.downloadUrl` to confirm the design intent and layout details.
+## Core Stack
+- **Framework**: React Native (Expo)
+- **Styling**: NativeWind (Tailwind CSS for Native)
+- **Icons**: `lucide-react-native`
+- **Navigation**: Expo Router (File-based routing)
 
-## React Native / NativeWind Stability
-* **Avoid Primitive Crashes**: When using NativeWind v4, preferring `Pressable` over `TouchableOpacity` or `TouchableHighlight` handles complex class composition significantly better, avoiding "Navigation Context" crashes.
-* **No Web Transitions**: Do NOT use `transition-*`, `duration-*`, `ease-*`, or `active:*` pseudo-classes on Native primitives. These often cause instability or crashes in the interop layer. Use `react-native-reanimated` for all motion.
-* **Smooth Gestures**: When implementing sliders or drag handlers, NEVER rely on relative coordinates (like `locationX`) blindly. Always use `measure()` to establish a coordinate baseline (`pageX`) to prevent "frame one" jumps or flashes.
-* **Rules of Hooks**: NEVER place hooks (`useMemo`, `useCallback`, `useEffect`) after conditional returns (e.g., `if (isLoading) return ...`). This violates React's core rules and causes runtime crashes. All hooks must be declared at the top level of the component, *before* any early returns.
-* **Premium Haptics**: Every interactive state change (e.g., Tab Press, Segment Select, Toggle Switch) MUST trigger `Haptics.impactAsync`. Import `* as Haptics from 'expo-haptics'`.
+## Implementation Rules
 
-## Architectural rules
-* **Modular components**: Break the design into independent files. Avoid large, single-file outputs.
-* **Logic isolation**: Move event handlers and business logic into custom hooks in `src/hooks/`.
-* **Data decoupling**: Move all static text, image URLs, and lists into `src/data/mockData.ts`.
-* **Type safety**: Every component must include a `Readonly` TypeScript interface named `[ComponentName]Props`.
-    * **NO 'any'**: You are strictly forbidden from using the `any` type (e.g., `width: any`). Always use unions (`number | string`) or unknown if absolutely necessary. If a library forces `any`, suppress it with a comment explaining why.
-    * **Catch Variables**: To pass strict linting (`no-unused-vars`), do not declare the error variable in `try/catch` blocks unless you explicitly use it (log or rethrow). Use `catch { ... }` (TS 4.0+) instead of `catch (error) { ... }` if unused.
-* **Project specific**: Focus on the target project's needs and constraints. Leave Google license headers out of the generated React components.
-* **Style mapping**:
-    * Extract the `tailwind.config` from the HTML `<head>`.
-    * Sync these values with `resources/style-guide.json`.
-    * Use theme-mapped Tailwind classes instead of arbitrary hex codes.
+### 1. Styling Strategy (NativeWind)
+- **Primary**: Use `className="..."` for 95% of styling.
+- **Exceptions**: Use `style={{ ... }}` ONLY for:
+  - Dynamic values (animations, drag offsets).
+  - Platform-specific shadows (`elevation` on Android).
+  - React Native specific props not covered by Tailwind (e.g., `hitSlop`).
+- **SafeArea**: Always consider `useSafeAreaInsets` for top/bottom padding instead of hardcoded values.
 
-## Execution steps
-1. **Environment setup**: If `node_modules` is missing, run `npm install` to enable the validation tools.
-2. **Data layer**: Create `src/data/mockData.ts` based on the design content.
-3. **Component drafting**: Use `resources/component-template.tsx` as a base. Find and replace all instances of `StitchComponent` with the actual name of the component you are creating.
-4. **Application wiring**: Update the project entry point (like `App.tsx`) to render the new components.
-5. **Quality check**:
-    * Run `npm run validate <file_path>` for each component.
-    * Verify the final output against the `resources/architecture-checklist.md`.
-    * Start the dev server with `npm run dev` to verify the live result.
+### 2. Component Structure
+```tsx
+import { View, Text, Pressable } from 'react-native';
+import { Link } from 'expo-router';
+import { LucideIcon } from 'lucide-react-native';
 
-## Troubleshooting
-* **Fetch errors**: Ensure the URL is quoted in the bash command to prevent shell errors.
-* **Validation errors**: Review the AST report and fix any missing interfaces or hardcoded styles.
+interface ComponentProps {
+  title: string;
+  isActive?: boolean;
+}
 
-## Safe Refactoring & Editing
-* **Anchor Strategy**: When using `replace_file_content`, ALWAYS include at least 2-3 lines of *unchanged* code (anchors) surrounding your target block. This prevents "floating" replacements and accidental deletions of adjacent tags.
-* **Wrapper Integrity**: When modifying a wrapping component (like `<SafeAreaView>`), verify the closing tag `</SafeAreaView>` matches the opening tag in your replacement block.
-* **Global Consistency**: Before changing a shared design token (e.g., replacing `bg-white` with `bg-[#f5f7f8]`), run a global search (`grep`) to identify ALL instances. Apply the change structurally across the entire app, not just the file open in front of you.
+export const ComponentName = ({ title, isActive }: ComponentProps) => {
+  return (
+    <View className={`p-4 rounded-xl ${isActive ? 'bg-blue-500' : 'bg-gray-100'}`}>
+      <Text className="text-lg font-bold text-gray-900">{title}</Text>
+    </View>
+  );
+};
+```
+
+### 3. "Premium" Polish Checklist
+To meet the "Wow" factor requirements:
+- **Touch Feedback**: Wrap interactive elements in `Pressable` and add `({ pressed }) => opacity` styles or `Haptics`.
+- **Micro-Animations**: Use `react-native-reanimated` for layout transitions (entering/exiting).
+- **Glassmorphism**: Use `<BlurView>` (expo-blur) with `intensity={...}` instead of just CSS `backdrop-filter` (which doesn't work on mobile natively).
+- **Borders**: Native borders are 1 logical pixel. For "hairlines", use `border-[0.5px]` or `border-black/5`.
+
+### 4. Integration with DESIGN.md
+When converting a spec:
+- **Topology**: Map "Bento Grid" to `<View className="flex-row flex-wrap gap-4">`.
+- **Typography**: Map "Tracking Tight" to `className="tracking-tighter"`.
+- **Colors**: Use the project's `tailwinc.config.js` tokens. Don't hardcode hex unless specified as an override.
+
+## Common Pitfalls
+- ❌ **Do NOT use `<div>`, `<span>`, `<img>`**: This is React Native. Use `<View>`, `<Text>`, `<Image>`.
+- ❌ **Do NOT use CSS Shadows**: Native shadows work differently.
+  - iOS: `shadow-sm`, `shadow-md` (works via NativeWind).
+  - Android: Needs `elevation-X`.
+- ❌ **Do NOT Forget Accessibility**: Add `accessibilityLabel` and `accessibilityRole`.

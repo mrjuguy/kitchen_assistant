@@ -12,7 +12,7 @@ description: Spawns a sub-agent to audit recent changes and generate a permanent
      - Do NOT spawn the child agent.
 
 2. **The Context**
-   - **Action**: Run `git diff --stat -p ':(exclude)package-lock.json' ':(exclude)npm-lock.yaml' ':(exclude)*.lock'` to capture the exact changes without noise.
+   - **Action**: Run `git diff -U0 --stat -p ':(exclude)package-lock.json' ':(exclude)npm-lock.yaml' ':(exclude)*.lock'` to capture the exact changes without noise.
    - **Note**: If the diff is still too large (>500 lines), focus on specific directories (e.g., `git diff ... -- app/ components/`).
 
 3. **The Reviewer**
@@ -24,12 +24,17 @@ description: Spawns a sub-agent to audit recent changes and generate a permanent
      - **Agent**: `qa-bot`.
    - **Prompt**:
      - **Rules**: Content of `.agent/skills/code-review/SKILL.md`.
+     - **Design Specs**: Content of `specs/DESIGN.md` (if it exists).
      - **Diff**: The output from `git diff` in Step 2.
    - **Prompt**:
      > "You are the QA Bot.
      >
      > **AUDIT RULES (Follow Strictly):**
      > [Insert SKILL.md content]
+     >
+     > **DESIGN SYSTEM COMPLIANCE (If applicable):**
+     > [Insert DESIGN.md content is available]
+     > *Check that new UI components adhere to the defined tokens (typography, spacing, shadows).*
      >
      > **CONTEXT:**
      > The following changes have passed the strict Gatekeeper (TypeScript + ESLint):
