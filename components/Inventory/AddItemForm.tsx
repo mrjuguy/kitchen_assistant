@@ -214,9 +214,15 @@ export const AddItemForm: React.FC<AddItemFormProps> = ({
       <View className="flex-1 bg-black">
         <CameraView
           className="flex-1"
+          facing="back"
+          style={{ flex: 1 }}
           onBarcodeScanned={handleBarcodeScanned}
           barcodeScannerSettings={{
             barcodeTypes: ["ean13", "ean8", "upc_a", "upc_e"],
+          }}
+          onMountError={(error) => {
+            console.error("Camera mount error:", error);
+            Alert.alert("Camera Error", "Failed to start camera preview.");
           }}
         >
           <View className="flex-1 items-center justify-center">
