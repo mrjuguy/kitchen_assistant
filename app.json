@@ -32,7 +32,15 @@
     "plugins": [
       "expo-router",
       "expo-secure-store",
-      "@react-native-community/datetimepicker"
+      "@react-native-community/datetimepicker",
+      [
+        "@sentry/react-native/expo",
+        {
+          "url": "https://sentry.io/",
+          "project": "kitchen-assistant",
+          "organization": "manifest-automations"
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true

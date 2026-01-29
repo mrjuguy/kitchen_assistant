@@ -4,18 +4,21 @@ import {
   DefaultTheme,
   ThemeProvider,
 } from "@react-navigation/native";
+import * as Sentry from "@sentry/react-native";
 import { Session } from "@supabase/supabase-js";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import Constants, { ExecutionEnvironment } from "expo-constants";
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
+import { PostHogProvider } from "posthog-react-native";
 import React, { useEffect, useState } from "react";
 import { ActivityIndicator, View } from "react-native";
 import "react-native-reanimated";
 import "../global.css";
 
 import LoginScreen from "./login";
+import { posthog } from "../services/analytics";
 import { supabase } from "../services/supabase";
 
 import { useColorScheme } from "@/components/useColorScheme";
@@ -50,9 +53,15 @@ if (!isExpoGo) {
   });
 }
 
+Sentry.init({
+  dsn: process.env.EXPO_PUBLIC_SENTRY_DSN,
+  debug: __DEV__,
+  enabled: !isExpoGo,
+});
+
 const queryClient = new QueryClient();
 
-export default function RootLayout() {
+function RootLayout() {
   const [loaded, error] = useFonts({
     SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
     ...FontAwesome.font,
@@ -80,10 +89,14 @@ export default function RootLayout() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <RootLayoutNav />
+      <PostHogProvider client={posthog}>
+        <RootLayoutNav />
+      </PostHogProvider>
     </QueryClientProvider>
   );
 }
+
+export default Sentry.wrap(RootLayout);
 
 function RootLayoutNav() {
   const colorScheme = useColorScheme();
@@ -102,6 +115,14 @@ function RootLayoutNav() {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
+      if (session?.user) {
+        posthog.identify(session.user.id, {
+          email: session.user.email || "",
+        });
+        posthog.capture("session_started");
+      } else {
+        posthog.reset();
+      }
     });
 
     return () => subscription.unsubscribe();
