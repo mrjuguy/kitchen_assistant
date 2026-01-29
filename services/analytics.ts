@@ -1,6 +1,7 @@
 import PostHog from "posthog-react-native";
 
-const posthogApiKey = process.env.EXPO_PUBLIC_POSTHOG_API_KEY || "";
+const posthogApiKey =
+  process.env.EXPO_PUBLIC_POSTHOG_API_KEY || "dummy_key_for_tests";
 const posthogHost =
   process.env.EXPO_PUBLIC_POSTHOG_HOST || "https://app.posthog.com";
 
