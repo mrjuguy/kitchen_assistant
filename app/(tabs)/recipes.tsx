@@ -17,6 +17,7 @@ import { RecipeCard } from "../../components/Recipes/RecipeCard";
 import { GapAnalysis, useGapAnalysis } from "../../hooks/useGapAnalysis";
 import { useAddToPlan } from "../../hooks/useMealPlan";
 import { useRecipes } from "../../hooks/useRecipes";
+import { posthog } from "../../services/analytics";
 import { RecipeStackParamList } from "../../types/navigation";
 import { filterRecipes, getAvailableTags } from "../../utils/recipeFilters";
 
@@ -47,6 +48,11 @@ export default function RecipesScreen() {
           {
             text: "Schedule",
             onPress: () => {
+              posthog.capture("meal_planned", {
+                recipeId,
+                date,
+                mealType: meal_type,
+              });
               addToPlanMutation.mutate(
                 {
                   date,

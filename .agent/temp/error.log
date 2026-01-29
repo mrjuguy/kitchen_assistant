@@ -1,188 +1,183 @@
-test	Run Tests	﻿2026-01-27T05:28:50.5580505Z ##[group]Run npm test -- --passWithNoTests
-test	Run Tests	2026-01-27T05:28:50.5580896Z [36;1mnpm test -- --passWithNoTests[0m
-test	Run Tests	2026-01-27T05:28:50.5614266Z shell: /usr/bin/bash -e {0}
-test	Run Tests	2026-01-27T05:28:50.5614532Z ##[endgroup]
-test	Run Tests	2026-01-27T05:28:50.6588982Z 
-test	Run Tests	2026-01-27T05:28:50.6589845Z > kitchen_app@1.0.0 test
-test	Run Tests	2026-01-27T05:28:50.6590298Z > jest --passWithNoTests
-test	Run Tests	2026-01-27T05:28:50.6590524Z 
-test	Run Tests	2026-01-27T05:28:54.7726799Z PASS utils/recipeScraper.test.ts
-test	Run Tests	2026-01-27T05:28:54.8046737Z   ● Console
-test	Run Tests	2026-01-27T05:28:54.8055727Z 
-test	Run Tests	2026-01-27T05:28:54.8056321Z     console.warn
-test	Run Tests	2026-01-27T05:28:54.8064499Z       Failed to fetch URL: 404
-test	Run Tests	2026-01-27T05:28:54.8065547Z 
-test	Run Tests	2026-01-27T05:28:54.8066985Z     [0m [90m 22 |[39m
-test	Run Tests	2026-01-27T05:28:54.8067917Z      [90m 23 |[39m     [36mif[39m ([33m![39mresponse[33m.[39mok) {
-test	Run Tests	2026-01-27T05:28:54.8069784Z     [31m[1m>[22m[39m[90m 24 |[39m       console[33m.[39mwarn([32m"Failed to fetch URL:"[39m[33m,[39m response[33m.[39mstatus)[33m;[39m
-test	Run Tests	2026-01-27T05:28:54.8074275Z      [90m    |[39m               [31m[1m^[22m[39m
-test	Run Tests	2026-01-27T05:28:54.8075103Z      [90m 25 |[39m       [36mreturn[39m [36mnull[39m[33m;[39m
-test	Run Tests	2026-01-27T05:28:54.8075902Z      [90m 26 |[39m     }
-test	Run Tests	2026-01-27T05:28:54.8076400Z      [90m 27 |[39m[0m
-test	Run Tests	2026-01-27T05:28:54.8076626Z 
-test	Run Tests	2026-01-27T05:28:54.8076876Z       at warn (utils/recipeScraper.ts:24:15)
-test	Run Tests	2026-01-27T05:28:54.8077694Z       at asyncGeneratorStep (node_modules/@babel/runtime/helpers/asyncToGenerator.js:3:17)
-test	Run Tests	2026-01-27T05:28:54.8078673Z       at _next (node_modules/@babel/runtime/helpers/asyncToGenerator.js:17:9)
-test	Run Tests	2026-01-27T05:28:54.8085608Z 
-test	Run Tests	2026-01-27T05:28:54.8085817Z     console.warn
-test	Run Tests	2026-01-27T05:28:54.8086183Z       No JSON-LD found
-test	Run Tests	2026-01-27T05:28:54.8086408Z 
-test	Run Tests	2026-01-27T05:28:54.8086667Z     [0m [90m 30 |[39m
-test	Run Tests	2026-01-27T05:28:54.8087277Z      [90m 31 |[39m     [36mif[39m ([33m![39mjsonLdData) {
-test	Run Tests	2026-01-27T05:28:54.8088265Z     [31m[1m>[22m[39m[90m 32 |[39m       console[33m.[39mwarn([32m"No JSON-LD found"[39m)[33m;[39m
-test	Run Tests	2026-01-27T05:28:54.8089165Z      [90m    |[39m               [31m[1m^[22m[39m
-test	Run Tests	2026-01-27T05:28:54.8089855Z      [90m 33 |[39m       [36mreturn[39m [36mnull[39m[33m;[39m
-test	Run Tests	2026-01-27T05:28:54.8090406Z      [90m 34 |[39m     }
-test	Run Tests	2026-01-27T05:28:54.8090812Z      [90m 35 |[39m[0m
-test	Run Tests	2026-01-27T05:28:54.8091051Z 
-test	Run Tests	2026-01-27T05:28:54.8091281Z       at warn (utils/recipeScraper.ts:32:15)
-test	Run Tests	2026-01-27T05:28:54.8092106Z       at asyncGeneratorStep (node_modules/@babel/runtime/helpers/asyncToGenerator.js:3:17)
-test	Run Tests	2026-01-27T05:28:54.8093111Z       at _next (node_modules/@babel/runtime/helpers/asyncToGenerator.js:17:9)
-test	Run Tests	2026-01-27T05:28:54.8093613Z 
-test	Run Tests	2026-01-27T05:28:54.8328186Z PASS utils/__tests__/inventory.test.ts
-test	Run Tests	2026-01-27T05:28:55.0044721Z PASS utils/__tests__/recipeFilters.test.ts
-test	Run Tests	2026-01-27T05:28:55.1843111Z PASS utils/__tests__/units.test.ts
-test	Run Tests	2026-01-27T05:28:55.1955451Z   ● Console
-test	Run Tests	2026-01-27T05:28:55.1956167Z 
-test	Run Tests	2026-01-27T05:28:55.1980320Z     console.warn
-test	Run Tests	2026-01-27T05:28:55.1981012Z       Invalid units: unknown -> gal
-test	Run Tests	2026-01-27T05:28:55.1982560Z 
-test	Run Tests	2026-01-27T05:28:55.1983129Z     [0m [90m 42 |[39m
-test	Run Tests	2026-01-27T05:28:55.1984162Z      [90m 43 |[39m   [36mif[39m ([33m![39mfromDef [33m||[39m [33m![39mtoDef) {
-test	Run Tests	2026-01-27T05:28:55.1986223Z     [31m[1m>[22m[39m[90m 44 |[39m     console[33m.[39mwarn([32m`Invalid units: ${fromUnit} -> ${toUnit}`[39m)[33m;[39m
-test	Run Tests	2026-01-27T05:28:55.1987584Z      [90m    |[39m             [31m[1m^[22m[39m
-test	Run Tests	2026-01-27T05:28:55.1988482Z      [90m 45 |[39m     [36mreturn[39m value[33m;[39m
-test	Run Tests	2026-01-27T05:28:55.1989215Z      [90m 46 |[39m   }
-test	Run Tests	2026-01-27T05:28:55.1989854Z      [90m 47 |[39m[0m
-test	Run Tests	2026-01-27T05:28:55.1990268Z 
-test	Run Tests	2026-01-27T05:28:55.1990631Z       at warn (utils/units.ts:44:13)
-test	Run Tests	2026-01-27T05:28:55.1991542Z       at Object.<anonymous> (utils/__tests__/units.test.ts:28:25)
-test	Run Tests	2026-01-27T05:28:55.1992203Z 
-test	Run Tests	2026-01-27T05:28:55.1992512Z     console.warn
-test	Run Tests	2026-01-27T05:28:55.1993102Z       Invalid units: gal -> unknown
-test	Run Tests	2026-01-27T05:28:55.1994274Z 
-test	Run Tests	2026-01-27T05:28:55.1994685Z     [0m [90m 42 |[39m
-test	Run Tests	2026-01-27T05:28:55.1995916Z      [90m 43 |[39m   [36mif[39m ([33m![39mfromDef [33m||[39m [33m![39mtoDef) {
-test	Run Tests	2026-01-27T05:28:55.1997473Z     [31m[1m>[22m[39m[90m 44 |[39m     console[33m.[39mwarn([32m`Invalid units: ${fromUnit} -> ${toUnit}`[39m)[33m;[39m
-test	Run Tests	2026-01-27T05:28:55.1998839Z      [90m    |[39m             [31m[1m^[22m[39m
-test	Run Tests	2026-01-27T05:28:55.1999774Z      [90m 45 |[39m     [36mreturn[39m value[33m;[39m
-test	Run Tests	2026-01-27T05:28:55.2000553Z      [90m 46 |[39m   }
-test	Run Tests	2026-01-27T05:28:55.2001263Z      [90m 47 |[39m[0m
-test	Run Tests	2026-01-27T05:28:55.2001803Z 
-test	Run Tests	2026-01-27T05:28:55.2002262Z       at warn (utils/units.ts:44:13)
-test	Run Tests	2026-01-27T05:28:55.2003018Z       at Object.<anonymous> (utils/__tests__/units.test.ts:29:25)
-test	Run Tests	2026-01-27T05:28:55.2003532Z 
-test	Run Tests	2026-01-27T05:28:55.3522215Z PASS utils/__tests__/analytics.test.ts
-test	Run Tests	2026-01-27T05:28:55.6647925Z PASS utils/__tests__/itemHealth.test.ts
-test	Run Tests	2026-01-27T05:28:56.7876764Z PASS utils/__tests__/notifications.test.ts
-test	Run Tests	2026-01-27T05:28:57.0278870Z PASS utils/__tests__/date.test.ts
-test	Run Tests	2026-01-27T05:28:57.2667395Z 
-test	Run Tests	2026-01-27T05:28:57.2669314Z ReferenceError: You are trying to `import` a file after the Jest environment has been torn down. From components/__tests__/StyledText-test.js.
-test	Run Tests	2026-01-27T05:28:57.2670712Z 
-test	Run Tests	2026-01-27T05:28:57.2671334Z     [0m [90m 2 |[39m
-test	Run Tests	2026-01-27T05:28:57.2672594Z      [90m 3 |[39m [36mexport[39m [36mfunction[39m [33mMonoText[39m(props[33m:[39m [33mTextProps[39m) {
-test	Run Tests	2026-01-27T05:28:57.2675102Z     [31m[1m>[22m[39m[90m 4 |[39m   [36mreturn[39m [33m<[39m[33mText[39m {[33m...[39mprops} style[33m=[39m{[props[33m.[39mstyle[33m,[39m { fontFamily[33m:[39m [32m"SpaceMono"[39m }]} [33m/[39m[33m>[39m[33m;[39m
-test	Run Tests	2026-01-27T05:28:57.2677344Z      [90m   |[39m          [31m[1m^[22m[39m
-test	Run Tests	2026-01-27T05:28:57.2678149Z      [90m 5 |[39m }
-test	Run Tests	2026-01-27T05:28:57.2678801Z      [90m 6 |[39m[0m
-test	Run Tests	2026-01-27T05:28:57.2679253Z 
-test	Run Tests	2026-01-27T05:28:57.2679996Z       at Object.require [as Platform] (node_modules/react-native/index.js:267:12)
-test	Run Tests	2026-01-27T05:28:57.2681952Z       at maybeHijackSafeAreaProvider (node_modules/react-native-css-interop/src/runtime/third-party-libs/react-native-safe-area-context.native.tsx:31:22)
-test	Run Tests	2026-01-27T05:28:57.2683831Z       at node_modules/react-native-css-interop/src/runtime/wrap-jsx.ts:21:39
-test	Run Tests	2026-01-27T05:28:57.2684887Z       at MonoText (components/StyledText.tsx:4:10)
-test	Run Tests	2026-01-27T05:28:57.2686599Z       at Object.react-stack-bottom-frame (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:13976:20)
-test	Run Tests	2026-01-27T05:28:57.2688438Z       at renderWithHooks (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:2866:22)
-test	Run Tests	2026-01-27T05:28:57.2690603Z       at updateFunctionComponent (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:6006:19)
-test	Run Tests	2026-01-27T05:28:57.2692256Z       at beginWork (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:7474:18)
-test	Run Tests	2026-01-27T05:28:57.2693849Z       at runWithFiberInDEV (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:1574:13)
-test	Run Tests	2026-01-27T05:28:57.2695736Z       at performUnitOfWork (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:10972:22)
-test	Run Tests	2026-01-27T05:28:57.2697432Z       at workLoopSync (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:10816:41)
-test	Run Tests	2026-01-27T05:28:57.2699091Z       at renderRootSync (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:10797:11)
-test	Run Tests	2026-01-27T05:28:57.2700835Z       at performWorkOnRoot (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:10349:13)
-test	Run Tests	2026-01-27T05:28:57.2767023Z       at performWorkOnRootViaSchedulerTask (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:2094:7)
-test	Run Tests	2026-01-27T05:28:57.2769679Z       at Immediate.performWorkUntilDeadline [as _onImmediate] (node_modules/scheduler/cjs/scheduler.native.development.js:45:48)
-test	Run Tests	2026-01-27T05:28:57.2834984Z 
-test	Run Tests	2026-01-27T05:28:57.2838090Z   ●  Cannot log after tests are done. Did you forget to wait for something async in your test?
-test	Run Tests	2026-01-27T05:28:57.2839193Z     Attempted to log "An error occurred in the <MonoText> component.
-test	Run Tests	2026-01-27T05:28:57.2839684Z 
-test	Run Tests	2026-01-27T05:28:57.2840209Z     Consider adding an error boundary to your tree to customize error handling behavior.
-test	Run Tests	2026-01-27T05:28:57.2841348Z     Visit https://react.dev/link/error-boundaries to learn more about error boundaries.
-test	Run Tests	2026-01-27T05:28:57.2842092Z     ".
-test	Run Tests	2026-01-27T05:28:57.2842271Z 
-test	Run Tests	2026-01-27T05:28:57.2842740Z       at console.warn (node_modules/@jest/console/build/BufferedConsole.js:191:10)
-test	Run Tests	2026-01-27T05:28:57.2844036Z       at defaultOnUncaughtError (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:5452:15)
-test	Run Tests	2026-01-27T05:28:57.2845783Z       at logUncaughtError (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:5512:11)
-test	Run Tests	2026-01-27T05:28:57.2847278Z       at runWithFiberInDEV (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:1574:13)
-test	Run Tests	2026-01-27T05:28:57.2848742Z       at lane.callback (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:5542:9)
-test	Run Tests	2026-01-27T05:28:57.2850097Z       at callCallback (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:2700:16)
-test	Run Tests	2026-01-27T05:28:57.2851534Z       at commitCallbacks (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:2720:11)
-test	Run Tests	2026-01-27T05:28:57.2852979Z       at runWithFiberInDEV (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:1574:13)
-test	Run Tests	2026-01-27T05:28:57.2854561Z       at commitLayoutEffectOnFiber (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:8936:15)
-test	Run Tests	2026-01-27T05:28:57.2856362Z       at flushLayoutEffects (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:11356:13)
-test	Run Tests	2026-01-27T05:28:57.2857748Z       at commitRoot (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:11310:9)
-test	Run Tests	2026-01-27T05:28:57.2859178Z       at commitRootWhenReady (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:10532:7)
-test	Run Tests	2026-01-27T05:28:57.2860739Z       at performWorkOnRoot (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:10494:15)
-test	Run Tests	2026-01-27T05:28:57.2862416Z       at performWorkOnRootViaSchedulerTask (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:2094:7)
-test	Run Tests	2026-01-27T05:28:57.2864112Z       at Immediate.performWorkUntilDeadline [as _onImmediate] (node_modules/scheduler/cjs/scheduler.native.development.js:45:48)
-test	Run Tests	2026-01-27T05:28:57.2865012Z 
-test	Run Tests	2026-01-27T05:28:57.2865836Z PASS components/__tests__/StyledText-test.js
-test	Run Tests	2026-01-27T05:28:57.2882555Z   ● Console
-test	Run Tests	2026-01-27T05:28:57.2883426Z 
-test	Run Tests	2026-01-27T05:28:57.2883753Z     console.error
-test	Run Tests	2026-01-27T05:28:57.2884359Z       An update to Root inside a test was not wrapped in act(...).
-test	Run Tests	2026-01-27T05:28:57.2884960Z       
-test	Run Tests	2026-01-27T05:28:57.2885901Z       When testing, code that causes React state updates should be wrapped into act(...):
-test	Run Tests	2026-01-27T05:28:57.2886664Z       
-test	Run Tests	2026-01-27T05:28:57.2886977Z       act(() => {
-test	Run Tests	2026-01-27T05:28:57.2887417Z         /* fire events that update state */
-test	Run Tests	2026-01-27T05:28:57.2887899Z       });
-test	Run Tests	2026-01-27T05:28:57.2888274Z       /* assert on the output */
-test	Run Tests	2026-01-27T05:28:57.2888691Z       
-test	Run Tests	2026-01-27T05:28:57.2889798Z       This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
-test	Run Tests	2026-01-27T05:28:57.2890787Z 
-test	Run Tests	2026-01-27T05:28:57.2891035Z     [0m [90m  5 |[39m
-test	Run Tests	2026-01-27T05:28:57.2891823Z      [90m  6 |[39m it([32m`renders correctly`[39m[33m,[39m () [33m=>[39m {
-test	Run Tests	2026-01-27T05:28:57.2893955Z     [31m[1m>[22m[39m[90m  7 |[39m   [36mconst[39m tree [33m=[39m renderer[33m.[39mcreate([33m<[39m[33mMonoText[39m[33m>[39m[33mSnapshot[39m test[33m![39m[33m<[39m[33m/[39m[33mMonoText[39m[33m>[39m)[33m.[39mtoJSON()[33m;[39m
-test	Run Tests	2026-01-27T05:28:57.2896000Z      [90m    |[39m                         [31m[1m^[22m[39m
-test	Run Tests	2026-01-27T05:28:57.2896843Z      [90m  8 |[39m
-test	Run Tests	2026-01-27T05:28:57.2897534Z      [90m  9 |[39m   expect(tree)[33m.[39mtoMatchSnapshot()[33m;[39m
-test	Run Tests	2026-01-27T05:28:57.2898244Z      [90m 10 |[39m })[33m;[39m[0m
-test	Run Tests	2026-01-27T05:28:57.2898546Z 
-test	Run Tests	2026-01-27T05:28:57.2899104Z       at node_modules/react-test-renderer/cjs/react-test-renderer.development.js:11801:19
-test	Run Tests	2026-01-27T05:28:57.2900444Z       at runWithFiberInDEV (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:1574:13)
-test	Run Tests	2026-01-27T05:28:57.2902110Z       at warnIfUpdatesNotWrappedWithActDEV (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:11800:9)
-test	Run Tests	2026-01-27T05:28:57.2903867Z       at scheduleUpdateOnFiber (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:10326:9)
-test	Run Tests	2026-01-27T05:28:57.2905791Z       at updateContainerImpl (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:12382:10)
-test	Run Tests	2026-01-27T05:28:57.2907307Z       at updateContainer (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:12326:7)
-test	Run Tests	2026-01-27T05:28:57.2909077Z       at Object.<anonymous>.process.env.NODE_ENV.exports.create (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:14630:7)
-test	Run Tests	2026-01-27T05:28:57.2910521Z       at Object.create (components/__tests__/StyledText-test.js:7:25)
-test	Run Tests	2026-01-27T05:28:57.2911028Z 
-test	Run Tests	2026-01-27T05:28:57.8721646Z PASS __tests__/components/Inventory/AddItems/ExpirySelector.test.tsx (5.656 s)
-test	Run Tests	2026-01-27T05:28:58.2807091Z FAIL __tests__/components/Inventory/AddItemForm.test.tsx
-test	Run Tests	2026-01-27T05:28:58.2811216Z   ● Test suite failed to run
-test	Run Tests	2026-01-27T05:28:58.2811806Z 
-test	Run Tests	2026-01-27T05:28:58.2812060Z     supabaseUrl is required.
-test	Run Tests	2026-01-27T05:28:58.2812557Z 
-test	Run Tests	2026-01-27T05:28:58.2813959Z     [0m [90m 18 |[39m [36mconst[39m supabaseAnonKey [33m=[39m process[33m.[39menv[33m.[39m[33mEXPO_PUBLIC_SUPABASE_ANON_KEY[39m [33m||[39m [32m""[39m[33m;[39m
-test	Run Tests	2026-01-27T05:28:58.2815642Z      [90m 19 |[39m
-test	Run Tests	2026-01-27T05:28:58.2817160Z     [31m[1m>[22m[39m[90m 20 |[39m [36mexport[39m [36mconst[39m supabase [33m=[39m createClient(supabaseUrl[33m,[39m supabaseAnonKey[33m,[39m {
-test	Run Tests	2026-01-27T05:28:58.2818729Z      [90m    |[39m                                     [31m[1m^[22m[39m
-test	Run Tests	2026-01-27T05:28:58.2819725Z      [90m 21 |[39m   auth[33m:[39m {
-test	Run Tests	2026-01-27T05:28:58.2820892Z      [90m 22 |[39m     storage[33m:[39m [33mExpoSecureStoreAdapter[39m[33m,[39m
-test	Run Tests	2026-01-27T05:28:58.2822178Z      [90m 23 |[39m     autoRefreshToken[33m:[39m [36mtrue[39m[33m,[39m[0m
-test	Run Tests	2026-01-27T05:28:58.2824803Z 
-test	Run Tests	2026-01-27T05:28:58.2825627Z       at validateSupabaseUrl (node_modules/@supabase/supabase-js/src/lib/helpers.ts:86:11)
-test	Run Tests	2026-01-27T05:28:58.2827462Z       at new SupabaseClient (node_modules/@supabase/supabase-js/src/SupabaseClient.ts:117:21)
-test	Run Tests	2026-01-27T05:28:58.2828761Z       at createClient (node_modules/@supabase/supabase-js/src/index.ts:60:10)
-test	Run Tests	2026-01-27T05:28:58.2829689Z       at Object.<anonymous> (services/supabase.ts:20:37)
-test	Run Tests	2026-01-27T05:28:58.2830431Z       at Object.require (hooks/useHousehold.ts:3:1)
-test	Run Tests	2026-01-27T05:28:58.2831168Z       at Object.require (hooks/useProductKnowledge.ts:3:1)
-test	Run Tests	2026-01-27T05:28:58.2832011Z       at Object.require (components/Inventory/AddItemForm.tsx:20:1)
-test	Run Tests	2026-01-27T05:28:58.2833017Z       at Object.require (__tests__/components/Inventory/AddItemForm.test.tsx:5:1)
-test	Run Tests	2026-01-27T05:28:58.2833577Z 
-test	Run Tests	2026-01-27T05:28:58.3574636Z Test Suites: 1 failed, 10 passed, 11 total
-test	Run Tests	2026-01-27T05:28:58.3575609Z Tests:       57 passed, 57 total
-test	Run Tests	2026-01-27T05:28:58.3576060Z Snapshots:   1 passed, 1 total
-test	Run Tests	2026-01-27T05:28:58.3576423Z Time:        6.799 s
-test	Run Tests	2026-01-27T05:28:58.3576726Z Ran all test suites.
-test	Run Tests	2026-01-27T05:28:58.3985028Z ##[error]Process completed with exit code 1.
+test	Run Tests	﻿2026-01-29T00:28:11.5345488Z ##[group]Run npm test -- --passWithNoTests
+test	Run Tests	2026-01-29T00:28:11.5345856Z [36;1mnpm test -- --passWithNoTests[0m
+test	Run Tests	2026-01-29T00:28:11.5378940Z shell: /usr/bin/bash -e {0}
+test	Run Tests	2026-01-29T00:28:11.5379399Z ##[endgroup]
+test	Run Tests	2026-01-29T00:28:11.6324310Z 
+test	Run Tests	2026-01-29T00:28:11.6324809Z > kitchen_app@1.0.0 test
+test	Run Tests	2026-01-29T00:28:11.6325281Z > jest --passWithNoTests
+test	Run Tests	2026-01-29T00:28:11.6325484Z 
+test	Run Tests	2026-01-29T00:28:15.4955463Z PASS utils/recipeScraper.test.ts
+test	Run Tests	2026-01-29T00:28:15.5260537Z   ● Console
+test	Run Tests	2026-01-29T00:28:15.5260809Z 
+test	Run Tests	2026-01-29T00:28:15.5261013Z     console.warn
+test	Run Tests	2026-01-29T00:28:15.5261423Z       Failed to fetch URL: 404
+test	Run Tests	2026-01-29T00:28:15.5261724Z 
+test	Run Tests	2026-01-29T00:28:15.5261932Z     [0m [90m 22 |[39m
+test	Run Tests	2026-01-29T00:28:15.5262654Z      [90m 23 |[39m     [36mif[39m ([33m![39mresponse[33m.[39mok) {
+test	Run Tests	2026-01-29T00:28:15.5264125Z     [31m[1m>[22m[39m[90m 24 |[39m       console[33m.[39mwarn([32m"Failed to fetch URL:"[39m[33m,[39m response[33m.[39mstatus)[33m;[39m
+test	Run Tests	2026-01-29T00:28:15.5265261Z      [90m    |[39m               [31m[1m^[22m[39m
+test	Run Tests	2026-01-29T00:28:15.5266096Z      [90m 25 |[39m       [36mreturn[39m [36mnull[39m[33m;[39m
+test	Run Tests	2026-01-29T00:28:15.5266700Z      [90m 26 |[39m     }
+test	Run Tests	2026-01-29T00:28:15.5267112Z      [90m 27 |[39m[0m
+test	Run Tests	2026-01-29T00:28:15.5267338Z 
+test	Run Tests	2026-01-29T00:28:15.5267571Z       at warn (utils/recipeScraper.ts:24:15)
+test	Run Tests	2026-01-29T00:28:15.5268425Z       at asyncGeneratorStep (node_modules/@babel/runtime/helpers/asyncToGenerator.js:3:17)
+test	Run Tests	2026-01-29T00:28:15.5269690Z       at _next (node_modules/@babel/runtime/helpers/asyncToGenerator.js:17:9)
+test	Run Tests	2026-01-29T00:28:15.5270225Z 
+test	Run Tests	2026-01-29T00:28:15.5270363Z     console.warn
+test	Run Tests	2026-01-29T00:28:15.5270702Z       No JSON-LD found
+test	Run Tests	2026-01-29T00:28:15.5270924Z 
+test	Run Tests	2026-01-29T00:28:15.5271150Z     [0m [90m 30 |[39m
+test	Run Tests	2026-01-29T00:28:15.5271755Z      [90m 31 |[39m     [36mif[39m ([33m![39mjsonLdData) {
+test	Run Tests	2026-01-29T00:28:15.5272831Z     [31m[1m>[22m[39m[90m 32 |[39m       console[33m.[39mwarn([32m"No JSON-LD found"[39m)[33m;[39m
+test	Run Tests	2026-01-29T00:28:15.5273768Z      [90m    |[39m               [31m[1m^[22m[39m
+test	Run Tests	2026-01-29T00:28:15.5274514Z      [90m 33 |[39m       [36mreturn[39m [36mnull[39m[33m;[39m
+test	Run Tests	2026-01-29T00:28:15.5275128Z      [90m 34 |[39m     }
+test	Run Tests	2026-01-29T00:28:15.5275593Z      [90m 35 |[39m[0m
+test	Run Tests	2026-01-29T00:28:15.5275846Z 
+test	Run Tests	2026-01-29T00:28:15.5276091Z       at warn (utils/recipeScraper.ts:32:15)
+test	Run Tests	2026-01-29T00:28:15.5276985Z       at asyncGeneratorStep (node_modules/@babel/runtime/helpers/asyncToGenerator.js:3:17)
+test	Run Tests	2026-01-29T00:28:15.5278069Z       at _next (node_modules/@babel/runtime/helpers/asyncToGenerator.js:17:9)
+test	Run Tests	2026-01-29T00:28:15.5278571Z 
+test	Run Tests	2026-01-29T00:28:15.6021602Z PASS utils/__tests__/inventory.test.ts
+test	Run Tests	2026-01-29T00:28:15.6946752Z PASS utils/__tests__/recipeFilters.test.ts
+test	Run Tests	2026-01-29T00:28:15.9092036Z PASS utils/__tests__/units.test.ts
+test	Run Tests	2026-01-29T00:28:15.9205675Z   ● Console
+test	Run Tests	2026-01-29T00:28:15.9209962Z 
+test	Run Tests	2026-01-29T00:28:15.9213423Z     console.warn
+test	Run Tests	2026-01-29T00:28:15.9217373Z       Invalid units: unknown -> gal
+test	Run Tests	2026-01-29T00:28:15.9221654Z 
+test	Run Tests	2026-01-29T00:28:15.9225651Z     [0m [90m 42 |[39m
+test	Run Tests	2026-01-29T00:28:15.9230404Z      [90m 43 |[39m   [36mif[39m ([33m![39mfromDef [33m||[39m [33m![39mtoDef) {
+test	Run Tests	2026-01-29T00:28:15.9234109Z     [31m[1m>[22m[39m[90m 44 |[39m     console[33m.[39mwarn([32m`Invalid units: ${fromUnit} -> ${toUnit}`[39m)[33m;[39m
+test	Run Tests	2026-01-29T00:28:15.9237010Z      [90m    |[39m             [31m[1m^[22m[39m
+test	Run Tests	2026-01-29T00:28:15.9239247Z      [90m 45 |[39m     [36mreturn[39m value[33m;[39m
+test	Run Tests	2026-01-29T00:28:15.9245547Z      [90m 46 |[39m   }
+test	Run Tests	2026-01-29T00:28:15.9263422Z      [90m 47 |[39m[0m
+test	Run Tests	2026-01-29T00:28:15.9263700Z 
+test	Run Tests	2026-01-29T00:28:15.9263948Z       at warn (utils/units.ts:44:13)
+test	Run Tests	2026-01-29T00:28:15.9264643Z       at Object.<anonymous> (utils/__tests__/units.test.ts:28:25)
+test	Run Tests	2026-01-29T00:28:15.9265114Z 
+test	Run Tests	2026-01-29T00:28:15.9265256Z     console.warn
+test	Run Tests	2026-01-29T00:28:15.9265729Z       Invalid units: gal -> unknown
+test	Run Tests	2026-01-29T00:28:15.9266414Z 
+test	Run Tests	2026-01-29T00:28:15.9266662Z     [0m [90m 42 |[39m
+test	Run Tests	2026-01-29T00:28:15.9267466Z      [90m 43 |[39m   [36mif[39m ([33m![39mfromDef [33m||[39m [33m![39mtoDef) {
+test	Run Tests	2026-01-29T00:28:15.9268824Z     [31m[1m>[22m[39m[90m 44 |[39m     console[33m.[39mwarn([32m`Invalid units: ${fromUnit} -> ${toUnit}`[39m)[33m;[39m
+test	Run Tests	2026-01-29T00:28:15.9270137Z      [90m    |[39m             [31m[1m^[22m[39m
+test	Run Tests	2026-01-29T00:28:15.9271197Z      [90m 45 |[39m     [36mreturn[39m value[33m;[39m
+test	Run Tests	2026-01-29T00:28:15.9272111Z      [90m 46 |[39m   }
+test	Run Tests	2026-01-29T00:28:15.9272825Z      [90m 47 |[39m[0m
+test	Run Tests	2026-01-29T00:28:15.9273105Z 
+test	Run Tests	2026-01-29T00:28:15.9273317Z       at warn (utils/units.ts:44:13)
+test	Run Tests	2026-01-29T00:28:15.9273964Z       at Object.<anonymous> (utils/__tests__/units.test.ts:29:25)
+test	Run Tests	2026-01-29T00:28:15.9274431Z 
+test	Run Tests	2026-01-29T00:28:16.0583686Z PASS utils/__tests__/analytics.test.ts
+test	Run Tests	2026-01-29T00:28:17.5293638Z PASS utils/__tests__/notifications.test.ts
+test	Run Tests	2026-01-29T00:28:17.7177975Z PASS utils/__tests__/itemHealth.test.ts
+test	Run Tests	2026-01-29T00:28:17.9215140Z PASS utils/__tests__/date.test.ts
+test	Run Tests	2026-01-29T00:28:18.1233336Z 
+test	Run Tests	2026-01-29T00:28:18.1236179Z ReferenceError: You are trying to `import` a file after the Jest environment has been torn down. From components/__tests__/StyledText-test.js.
+test	Run Tests	2026-01-29T00:28:18.1238840Z 
+test	Run Tests	2026-01-29T00:28:18.1308383Z     [0m [90m 6 |[39m[0m
+test	Run Tests	2026-01-29T00:28:18.1308936Z 
+test	Run Tests	2026-01-29T00:28:18.1309584Z       at Object.require [as Platform] (node_modules/react-native/index.js:267:12)
+test	Run Tests	2026-01-29T00:28:18.1311284Z       at maybeHijackSafeAreaProvider (node_modules/react-native-css-interop/src/runtime/third-party-libs/react-native-safe-area-context.native.tsx:31:22)
+test	Run Tests	2026-01-29T00:28:18.1313087Z       at node_modules/react-native-css-interop/src/runtime/wrap-jsx.ts:21:39
+test	Run Tests	2026-01-29T00:28:18.1314074Z       at MonoText (components/StyledText.tsx:8:30)
+test	Run Tests	2026-01-29T00:28:18.1315465Z       at Object.react-stack-bottom-frame (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:13976:20)
+test	Run Tests	2026-01-29T00:28:18.1317314Z       at renderWithHooks (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:2866:22)
+test	Run Tests	2026-01-29T00:28:18.1319243Z       at updateFunctionComponent (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:6006:19)
+test	Run Tests	2026-01-29T00:28:18.1320775Z       at beginWork (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:7474:18)
+test	Run Tests	2026-01-29T00:28:18.1322251Z       at runWithFiberInDEV (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:1574:13)
+test	Run Tests	2026-01-29T00:28:18.1323758Z       at performUnitOfWork (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:10972:22)
+test	Run Tests	2026-01-29T00:28:18.1325239Z       at workLoopSync (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:10816:41)
+test	Run Tests	2026-01-29T00:28:18.1326705Z       at renderRootSync (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:10797:11)
+test	Run Tests	2026-01-29T00:28:18.1328148Z       at performWorkOnRoot (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:10349:13)
+test	Run Tests	2026-01-29T00:28:18.1329953Z       at performWorkOnRootViaSchedulerTask (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:2094:7)
+test	Run Tests	2026-01-29T00:28:18.1331807Z       at Immediate.performWorkUntilDeadline [as _onImmediate] (node_modules/scheduler/cjs/scheduler.native.development.js:45:48)
+test	Run Tests	2026-01-29T00:28:18.1438363Z 
+test	Run Tests	2026-01-29T00:28:18.1440424Z   ●  Cannot log after tests are done. Did you forget to wait for something async in your test?
+test	Run Tests	2026-01-29T00:28:18.1441441Z     Attempted to log "An error occurred in the <MonoText> component.
+test	Run Tests	2026-01-29T00:28:18.1444056Z 
+test	Run Tests	2026-01-29T00:28:18.1445954Z     Consider adding an error boundary to your tree to customize error handling behavior.
+test	Run Tests	2026-01-29T00:28:18.1463749Z     Visit https://react.dev/link/error-boundaries to learn more about error boundaries.
+test	Run Tests	2026-01-29T00:28:18.1464485Z     ".
+test	Run Tests	2026-01-29T00:28:18.1464656Z 
+test	Run Tests	2026-01-29T00:28:18.1465109Z       at console.warn (node_modules/@jest/console/build/BufferedConsole.js:191:10)
+test	Run Tests	2026-01-29T00:28:18.1466680Z       at defaultOnUncaughtError (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:5452:15)
+test	Run Tests	2026-01-29T00:28:18.1468178Z       at logUncaughtError (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:5512:11)
+test	Run Tests	2026-01-29T00:28:18.1469959Z       at runWithFiberInDEV (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:1574:13)
+test	Run Tests	2026-01-29T00:28:18.1471305Z       at lane.callback (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:5542:9)
+test	Run Tests	2026-01-29T00:28:18.1472693Z       at callCallback (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:2700:16)
+test	Run Tests	2026-01-29T00:28:18.1474060Z       at commitCallbacks (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:2720:11)
+test	Run Tests	2026-01-29T00:28:18.1475438Z       at runWithFiberInDEV (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:1574:13)
+test	Run Tests	2026-01-29T00:28:18.1476899Z       at commitLayoutEffectOnFiber (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:8936:15)
+test	Run Tests	2026-01-29T00:28:18.1478321Z       at flushLayoutEffects (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:11356:13)
+test	Run Tests	2026-01-29T00:28:18.1479862Z       at commitRoot (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:11310:9)
+test	Run Tests	2026-01-29T00:28:18.1481261Z       at commitRootWhenReady (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:10532:7)
+test	Run Tests	2026-01-29T00:28:18.1482703Z       at performWorkOnRoot (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:10494:15)
+test	Run Tests	2026-01-29T00:28:18.1484301Z       at performWorkOnRootViaSchedulerTask (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:2094:7)
+test	Run Tests	2026-01-29T00:28:18.1486021Z       at Immediate.performWorkUntilDeadline [as _onImmediate] (node_modules/scheduler/cjs/scheduler.native.development.js:45:48)
+test	Run Tests	2026-01-29T00:28:18.1486984Z 
+test	Run Tests	2026-01-29T00:28:18.1487306Z PASS components/__tests__/StyledText-test.js
+test	Run Tests	2026-01-29T00:28:18.1487948Z   ● Console
+test	Run Tests	2026-01-29T00:28:18.1488135Z 
+test	Run Tests	2026-01-29T00:28:18.1488284Z     console.error
+test	Run Tests	2026-01-29T00:28:18.1488851Z       An update to Root inside a test was not wrapped in act(...).
+test	Run Tests	2026-01-29T00:28:18.1489775Z       
+test	Run Tests	2026-01-29T00:28:18.1490448Z       When testing, code that causes React state updates should be wrapped into act(...):
+test	Run Tests	2026-01-29T00:28:18.1491196Z       
+test	Run Tests	2026-01-29T00:28:18.1491477Z       act(() => {
+test	Run Tests	2026-01-29T00:28:18.1491873Z         /* fire events that update state */
+test	Run Tests	2026-01-29T00:28:18.1492318Z       });
+test	Run Tests	2026-01-29T00:28:18.1492662Z       /* assert on the output */
+test	Run Tests	2026-01-29T00:28:18.1493076Z       
+test	Run Tests	2026-01-29T00:28:18.1494097Z       This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+test	Run Tests	2026-01-29T00:28:18.1495017Z 
+test	Run Tests	2026-01-29T00:28:18.1495285Z     [0m [90m 11 |[39m
+test	Run Tests	2026-01-29T00:28:18.1496097Z      [90m 12 |[39m it([32m`renders correctly`[39m[33m,[39m () [33m=>[39m {
+test	Run Tests	2026-01-29T00:28:18.1498382Z     [31m[1m>[22m[39m[90m 13 |[39m   [36mconst[39m tree [33m=[39m renderer[33m.[39mcreate([33m<[39m[33mMonoText[39m[33m>[39m[33mSnapshot[39m test[33m![39m[33m<[39m[33m/[39m[33mMonoText[39m[33m>[39m)[33m.[39mtoJSON()[33m;[39m
+test	Run Tests	2026-01-29T00:28:18.1500777Z      [90m    |[39m                         [31m[1m^[22m[39m
+test	Run Tests	2026-01-29T00:28:18.1501382Z      [90m 14 |[39m
+test	Run Tests	2026-01-29T00:28:18.1502036Z      [90m 15 |[39m   expect(tree)[33m.[39mtoMatchSnapshot()[33m;[39m
+test	Run Tests	2026-01-29T00:28:18.1502754Z      [90m 16 |[39m })[33m;[39m[0m
+test	Run Tests	2026-01-29T00:28:18.1503044Z 
+test	Run Tests	2026-01-29T00:28:18.1503569Z       at node_modules/react-test-renderer/cjs/react-test-renderer.development.js:11801:19
+test	Run Tests	2026-01-29T00:28:18.1504866Z       at runWithFiberInDEV (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:1574:13)
+test	Run Tests	2026-01-29T00:28:18.1506456Z       at warnIfUpdatesNotWrappedWithActDEV (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:11800:9)
+test	Run Tests	2026-01-29T00:28:18.1508320Z       at scheduleUpdateOnFiber (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:10326:9)
+test	Run Tests	2026-01-29T00:28:18.1510047Z       at updateContainerImpl (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:12382:10)
+test	Run Tests	2026-01-29T00:28:18.1511507Z       at updateContainer (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:12326:7)
+test	Run Tests	2026-01-29T00:28:18.1513182Z       at Object.<anonymous>.process.env.NODE_ENV.exports.create (node_modules/react-test-renderer/cjs/react-test-renderer.development.js:14630:7)
+test	Run Tests	2026-01-29T00:28:18.1514523Z       at Object.create (components/__tests__/StyledText-test.js:13:25)
+test	Run Tests	2026-01-29T00:28:18.1515046Z 
+test	Run Tests	2026-01-29T00:28:18.6629592Z PASS __tests__/components/Inventory/AddItems/ExpirySelector.test.tsx (5.564 s)
+test	Run Tests	2026-01-29T00:28:22.5824904Z FAIL __tests__/components/Inventory/AddItemForm.test.tsx
+test	Run Tests	2026-01-29T00:28:22.5827812Z   ● Test suite failed to run
+test	Run Tests	2026-01-29T00:28:22.5828096Z 
+test	Run Tests	2026-01-29T00:28:22.5828360Z     You must pass your PostHog project's api key.
+test	Run Tests	2026-01-29T00:28:22.5828725Z 
+test	Run Tests	2026-01-29T00:28:22.5830024Z     [0m [90m  5 |[39m   process[33m.[39menv[33m.[39m[33mEXPO_PUBLIC_POSTHOG_HOST[39m [33m||[39m [32m"https://app.posthog.com"[39m[33m;[39m
+test	Run Tests	2026-01-29T00:28:22.5831078Z      [90m  6 |[39m
+test	Run Tests	2026-01-29T00:28:22.5832256Z     [31m[1m>[22m[39m[90m  7 |[39m [36mexport[39m [36mconst[39m posthog [33m=[39m [36mnew[39m [33mPostHog[39m(posthogApiKey[33m,[39m {
+test	Run Tests	2026-01-29T00:28:22.5833424Z      [90m    |[39m                        [31m[1m^[22m[39m
+test	Run Tests	2026-01-29T00:28:22.5834135Z      [90m  8 |[39m   host[33m:[39m posthogHost[33m,[39m
+test	Run Tests	2026-01-29T00:28:22.5834724Z      [90m  9 |[39m })[33m;[39m
+test	Run Tests	2026-01-29T00:28:22.5835149Z      [90m 10 |[39m[0m
+test	Run Tests	2026-01-29T00:28:22.5835367Z 
+test	Run Tests	2026-01-29T00:28:22.5835734Z       at assert (node_modules/@posthog/core/dist/utils/index.js:238:91)
+test	Run Tests	2026-01-29T00:28:22.5836792Z       at new PostHogCoreStateless (node_modules/@posthog/core/dist/posthog-core-stateless.js:90:45)
+test	Run Tests	2026-01-29T00:28:22.5837874Z       at new PostHogCore (node_modules/@posthog/core/dist/posthog-core.js:38:9)
+test	Run Tests	2026-01-29T00:28:22.5838812Z       at _callSuper (node_modules/posthog-react-native/dist/posthog-rn.js:1:2550)
+test	Run Tests	2026-01-29T00:28:22.5839951Z       at new PostHog (node_modules/posthog-react-native/dist/posthog-rn.js:1:3201)
+test	Run Tests	2026-01-29T00:28:22.5840747Z       at Object.<anonymous> (services/analytics.ts:7:24)
+test	Run Tests	2026-01-29T00:28:22.5841430Z       at Object.require (components/Inventory/AddItemForm.tsx:25:1)
+test	Run Tests	2026-01-29T00:28:22.5842302Z       at Object.require (__tests__/components/Inventory/AddItemForm.test.tsx:5:1)
+test	Run Tests	2026-01-29T00:28:22.5842841Z 
+test	Run Tests	2026-01-29T00:28:22.6556136Z Test Suites: 1 failed, 10 passed, 11 total
+test	Run Tests	2026-01-29T00:28:22.6556670Z Tests:       57 passed, 57 total
+test	Run Tests	2026-01-29T00:28:22.6556978Z Snapshots:   1 passed, 1 total
+test	Run Tests	2026-01-29T00:28:22.6557252Z Time:        10.283 s
+test	Run Tests	2026-01-29T00:28:22.6557464Z Ran all test suites.
+test	Run Tests	2026-01-29T00:28:22.6960943Z ##[error]Process completed with exit code 1.

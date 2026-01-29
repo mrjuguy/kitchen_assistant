@@ -33,6 +33,7 @@ import {
   useDeleteAllShoppingItems,
   useShoppingList,
 } from "../../hooks/useShoppingList";
+import { posthog } from "../../services/analytics";
 import { ProductData, searchProducts } from "../../services/openFoodFacts";
 import { ShoppingItem } from "../../types/schema";
 
@@ -89,6 +90,9 @@ export default function ShoppingScreen() {
   const handleCheckout = () => {
     if (boughtCount === 0) return;
     Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+    posthog.capture("shopping_list_checked_out", {
+      itemCount: boughtCount,
+    });
     checkoutMutation.mutate();
   };
 

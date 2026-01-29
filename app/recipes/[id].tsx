@@ -30,6 +30,7 @@ import { GapAnalysis, useGapAnalysis } from "../../hooks/useGapAnalysis";
 import { useConsumeIngredients } from "../../hooks/usePantry";
 import { useDeleteRecipe, useRecipes } from "../../hooks/useRecipes";
 import { useAddShoppingItems } from "../../hooks/useShoppingList";
+import { posthog } from "../../services/analytics";
 import { RecipeStackParamList } from "../../types/navigation";
 
 export default function RecipeDetailScreen() {
@@ -87,6 +88,12 @@ export default function RecipeDetailScreen() {
 
             consumeMutation.mutate(updates, {
               onSuccess: () => {
+                posthog.capture("recipe_cooked", {
+                  recipeId: id,
+                  recipeName: recipe.name,
+                  servings,
+                  matchPercentage: percentage,
+                });
                 Alert.alert(
                   "Bon Appétit!",
                   "Ingredients removed from pantry.",
