@@ -23,7 +23,9 @@
 - **State Management**: [TanStack Query](https://tanstack.com/query/latest) (React Query)
   - *Rationale*: Efficient server state management, caching, and real-time updates.
 - **API Layer**: Supabase-js client.
-- **Analytics System**: Lightweight, immutable `usage_logs` system for tracking consumption and waste patterns. Aggregates data via pure utility functions with 100% test coverage.
+- **Analytics System**: 
+  - **Internal**: Lightweight, immutable `usage_logs` system for tracking consumption and waste patterns. Aggregates data via pure utility functions with 100% test coverage.
+  - **External**: [PostHog](https://posthog.com/) for product-led growth and user behavior analysis. Captures high-level events (recipe cooking, shopping, planning) to inform product roadmap decisions.
 
 ## Development Tools
 - **Package Manager**: npm

@@ -11,12 +11,14 @@ import Constants, { ExecutionEnvironment } from "expo-constants";
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
+import { PostHogProvider } from "posthog-react-native";
 import React, { useEffect, useState } from "react";
 import { ActivityIndicator, View } from "react-native";
 import "react-native-reanimated";
 import "../global.css";
 
 import LoginScreen from "./login";
+import { posthog } from "../services/analytics";
 import { supabase } from "../services/supabase";
 
 import { useColorScheme } from "@/components/useColorScheme";
@@ -87,7 +89,9 @@ function RootLayout() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <RootLayoutNav />
+      <PostHogProvider client={posthog}>
+        <RootLayoutNav />
+      </PostHogProvider>
     </QueryClientProvider>
   );
 }
@@ -111,6 +115,14 @@ function RootLayoutNav() {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
+      if (session?.user) {
+        posthog.identify(session.user.id, {
+          email: session.user.email || "",
+        });
+        posthog.capture("session_started");
+      } else {
+        posthog.reset();
+      }
     });
 
     return () => subscription.unsubscribe();
