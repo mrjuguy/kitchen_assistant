@@ -3,9 +3,6 @@ import { Package, Trash2 } from "lucide-react-native";
 import React from "react";
 import { Alert, Image, Pressable, Text, View } from "react-native";
 
-import { ConsumptionSlider } from "./ConsumptionSlider";
-import { ExpiryBadge } from "./ExpiryBadge";
-import { QuantityControl } from "./QuantityControl";
 import {
   useDeletePantryItem,
   useUpdatePantryItem,
@@ -13,6 +10,9 @@ import {
 import { useLogUsage } from "../../hooks/useUsageLogs";
 import { PantryItem, UpdatePantryItem } from "../../types/schema";
 import { UNITS_DB, UnitKey } from "../../utils/units";
+import { ConsumptionSlider } from "./ConsumptionSlider";
+import { ExpiryBadge } from "./ExpiryBadge";
+import { QuantityControl } from "./QuantityControl";
 
 interface PantryCardProps {
   item: PantryItem;
@@ -90,11 +90,17 @@ export const PantryCard = React.memo(({ item, onPress }: PantryCardProps) => {
   return (
     <Pressable onPress={onPress}>
       <View
-        className="bg-white rounded-2xl p-4 mb-3 border border-gray-100 flex-row items-center shadow-sm"
-        style={{ elevation: 2 }}
+        className="bg-white rounded-3xl p-4 mb-3 border border-zinc-100 flex-row items-center"
+        style={{
+          shadowColor: "#10b981",
+          shadowOffset: { width: 0, height: 4 },
+          shadowOpacity: 0.05,
+          shadowRadius: 12,
+          elevation: 2,
+        }}
       >
         {/* Product Image/Icon */}
-        <View className="w-16 h-16 bg-gray-50 rounded-xl items-center justify-center overflow-hidden mr-4">
+        <View className="w-16 h-16 bg-zinc-50 rounded-2xl items-center justify-center overflow-hidden mr-4 border border-zinc-100">
           {item.image_url ? (
             <Image source={{ uri: item.image_url }} className="w-full h-full" />
           ) : (
@@ -107,7 +113,7 @@ export const PantryCard = React.memo(({ item, onPress }: PantryCardProps) => {
           <View className="flex-row items-center justify-between mb-1">
             <View className={`${colors.bg} px-2 py-0.5 rounded-full`}>
               <Text
-                className={`text-[10px] font-bold uppercase tracking-wider ${colors.text}`}
+                className={`text-[10px] font-bold uppercase tracking-widest ${colors.text}`}
               >
                 {item.category}
               </Text>
@@ -117,7 +123,7 @@ export const PantryCard = React.memo(({ item, onPress }: PantryCardProps) => {
             </Pressable>
           </View>
           <Text
-            className="text-lg font-bold text-gray-900 mb-1.5"
+            className="text-lg font-bold text-zinc-900 mb-1.5 tracking-tight"
             numberOfLines={1}
           >
             {item.name}

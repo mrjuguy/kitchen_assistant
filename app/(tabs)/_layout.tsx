@@ -13,7 +13,17 @@ export default function TabLayout() {
     <Tabs
       screenOptions={{
         tabBarActiveTintColor: "#10b981", // Emerald 500
-        headerShown: false, // We use SafeAreaView in the screens
+        tabBarInactiveTintColor: "#a1a1aa", // Zinc 400
+        headerShown: false,
+        tabBarStyle: {
+          backgroundColor: "#ffffff",
+          borderTopColor: "#f4f4f5", // Zinc 100
+          elevation: 0,
+          shadowOpacity: 0,
+        },
+        sceneStyle: {
+          backgroundColor: "#fafafa", // Zinc 50
+        },
       }}
     >
       <Tabs.Screen
