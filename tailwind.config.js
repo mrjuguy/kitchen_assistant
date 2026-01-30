@@ -6,8 +6,10 @@ module.exports = {
     extend: {
       colors: {
         brand: {
-          primary: "#10b981", // Emerald-500 equivalent
-          surface: "#18181b", // Zinc-900 equivalent
+          primary: "#10b981", // Emerald-500
+          secondary: "#8b5cf6", // Violet-500
+          surface: "#fafafa", // Zinc-50
+          dark: "#18181b", // Zinc-950
         },
       },
     },

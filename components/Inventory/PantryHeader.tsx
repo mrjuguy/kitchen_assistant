@@ -11,30 +11,30 @@ interface PantryHeaderProps {
 export const PantryHeader = React.memo(
   ({ onSearchPress }: PantryHeaderProps) => {
     return (
-      <View className="flex-row items-center justify-between px-4 mb-8">
+      <View className="flex-row items-center justify-between px-6 py-2 mb-6">
         <View className="flex-row items-center gap-3">
           <Pressable
             onPress={() => supabase.auth.signOut()}
-            className="w-10 h-10 rounded-full bg-gray-200 border-2 border-white overflow-hidden"
+            className="w-10 h-10 rounded-full bg-zinc-200 border-2 border-white overflow-hidden shadow-sm shadow-zinc-200"
           >
-            <View className="flex-1 items-center justify-center bg-gray-300">
-              <Text className="text-[10px] text-gray-600 font-bold">USER</Text>
+            <View className="flex-1 items-center justify-center bg-zinc-200">
+              <Text className="text-[10px] text-zinc-600 font-bold">USER</Text>
             </View>
           </Pressable>
           <View>
-            <Text className="text-[10px] font-bold text-emerald-500 uppercase tracking-wider">
+            <Text className="text-[10px] font-bold text-emerald-500 uppercase tracking-widest">
               Culinary OS
             </Text>
-            <Text className="text-lg font-bold text-gray-900">
+            <Text className="text-xl font-bold text-zinc-900 tracking-tight">
               Kitchen Assistant
             </Text>
           </View>
         </View>
         <Pressable
           onPress={onSearchPress}
-          className="w-10 h-10 rounded-full bg-white items-center justify-center shadow-sm elevation-3"
+          className="w-12 h-12 rounded-full bg-white items-center justify-center shadow-lg shadow-zinc-200/50 border border-zinc-100"
         >
-          <Search size={20} color="#111827" />
+          <Search size={22} color="#18181b" />
         </Pressable>
       </View>
     );

@@ -54,11 +54,17 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({ recipe, analysis }) => {
 
   return (
     <View
-      className="bg-white rounded-2xl overflow-hidden mb-4 border border-gray-100 shadow-sm"
-      style={{ elevation: 2 }}
+      className="bg-white rounded-3xl overflow-hidden mb-4 border border-zinc-100"
+      style={{
+        shadowColor: "#10b981", // Emerald shadow for "Tasty" feel
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.05,
+        shadowRadius: 12,
+        elevation: 2,
+      }}
     >
       {/* Header Image */}
-      <View className="h-44 bg-gray-50 items-center justify-center relative">
+      <View className="h-44 bg-zinc-50 items-center justify-center relative">
         {recipe.image_url ? (
           <Image source={{ uri: recipe.image_url }} className="w-full h-full" />
         ) : (

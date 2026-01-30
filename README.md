@@ -39,6 +39,7 @@ A premium, inventory-first kitchen management application built with Expo and Su
 - **Production Assets & Branding (Issue #37)**: Replaced default Expo placeholders with high-fidelity, AI-generated professional branding. Includes a custom minimalist app icon, a full-screen gradient splash screen, and an adaptive Android icon. Standardized the splash screen configuration to `resizeMode: cover` for edge-to-edge branding.
 - **App Analytics & User Insights (Issue #36)**: Integrated PostHog for behavior tracking. Captures critical events including recipe cooking, shopping checkouts, item additions, and meal planning. Includes automated user identification and session tracking for product-led growth analysis.
 - **Brand Aligned Design System (v2)**: Implemented the "Mint & Gunmetal" visual identity. Features a high-contrast aesthetic with Emerald-500 branding, 10% opacity status pills, and "Professional Chef" precision typography across all major components. Optimized for clarity and visual hierarchy.
+- **Stunning Visuals Upgrade (v2.1)**: Complete UI overhaul introducing a "Soft Modern" design language. Features `rounded-3xl` cards, warmth-preserving Zinc-50 backgrounds, and "Elevation" shadow physics (`shadow-emerald-500/10`) for a premium depth effect. Typography updated to 'Outfit' (headers) and 'Inter' (body) with `tracking-tight` styling for a luxurious feel.
 
 
 ## 🛠 Tech Stack
