@@ -32,3 +32,4 @@ description: Interact with GitHub via the command line (PRs, Issues, Releases).
 - **Non-Interactive**: Use flags (`--title`, `--body`, `--yes`) to avoid interactive prompts when running from scripts/agent.
 - **Web Flag**: Use `--web` when asking the user to review something in the browser.
 - **JSON Output**: Use `--json [fields]` to get machine-readable output.
+- **Draft PRs**: GitHub cannot merge Draft PRs. Always run `gh pr ready [id]` before `gh pr merge`.

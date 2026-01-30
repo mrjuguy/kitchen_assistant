@@ -11,7 +11,7 @@ Use this skill when you have a complex, isolated task that would benefit from a 
 
 Execute via the `Bash` tool (run_command). You MUST use the `-p` (headless) flag.
 
-> **CRITICAL**: Do NOT attempt to spawn an agent using the `browser_subagent` tool. That tool is for browser automation only and cannot spawn child agents. You MUST use the `claude` CLI via `run_command`.
+> **CRITICAL**: Do NOT attempt to spawn an agent using the `browser_subagent` tool. That tool is for browser automation only and cannot spawn child agents. You MUST use the `claude` CLI via `run_command`. If you are about to use `browser_subagent` to spawn a child agent, STOP and use `run_command` instead.
 
 ```bash
 claude -p "Your detailed instructions for the child agent here" \

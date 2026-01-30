@@ -37,6 +37,10 @@ Determine the specific "Flavor" of the interface:
 * **Physics:** "Spring" (Bouncy/Overshoot) vs. "Ease-out" (Smooth/Tech).
 * **Sequence:** "Staggered" (0.1s delay) vs. "Unified" (All-at-once).
 
+### 5. Verify Compliance
+* **Constraint Check:** Before finalizing, verify that the implementation strictly matches the defined constraints (e.g., if Spec says `p-4`, ensure `p-4` is used, not `p-3`).
+* **Fidelity Drift:** Watch out for "close enough" values. Professional design requires exact matches.
+
 ## Examples
 The following is the EXPECTED output format.
 
