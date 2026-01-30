@@ -95,7 +95,7 @@ export default function PlannerScreen() {
             </Text>
             <Text className="text-sm text-gray-500">The "Chef's Weekly"</Text>
           </View>
-          <View className="bg-emerald-50 p-3 rounded-full">
+          <View className="bg-emerald-500/10 p-3 rounded-full">
             <CalendarDays size={24} color="#10b981" />
           </View>
         </View>

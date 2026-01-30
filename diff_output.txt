@@ -1,0 +1,228 @@
+ app/(tabs)/index.tsx                     | 22 +++++++++++-----------
+ app/(tabs)/planner.tsx                   |  2 +-
+ app/(tabs)/recipes.tsx                   | 18 +++++++++---------
+ components/Inventory/PantryCard.tsx      | 10 +++++-----
+ components/Inventory/PantryHeader.tsx    |  2 +-
+ components/Planner/MealCard.tsx          | 10 +++++-----
+ components/Planner/WeekStrip.tsx         |  2 +-
+ components/Recipes/RecipeCard.tsx        | 28 ++++++++++++++--------------
+ components/Shopping/ShoppingItemCard.tsx | 12 ++++++------
+ constants/Colors.ts                      | 16 ++++++++--------
+ tailwind.config.js                       | 10 +++++++++-
+ 11 files changed, 70 insertions(+), 62 deletions(-)
+
+diff --git a/app/(tabs)/index.tsx b/app/(tabs)/index.tsx
+index 222ee06..a0429a3 100644
+--- a/app/(tabs)/index.tsx
++++ b/app/(tabs)/index.tsx
+@@ -163 +163 @@ export default function PantryScreen() {
+-                ? "bg-blue-100"
++                ? "bg-blue-500/10"
+@@ -165 +165 @@ export default function PantryScreen() {
+-                  ? "bg-sky-100"
++                  ? "bg-sky-500/10"
+@@ -167 +167 @@ export default function PantryScreen() {
+-                    ? "bg-red-100"
++                    ? "bg-red-500/10"
+@@ -169 +169 @@ export default function PantryScreen() {
+-                      ? "bg-amber-100"
++                      ? "bg-amber-500/10"
+@@ -171,2 +171,2 @@ export default function PantryScreen() {
+-                        ? "bg-green-100"
+-                        : "bg-gray-100"
++                        ? "bg-emerald-500/10"
++                        : "bg-zinc-500/10"
+@@ -188,2 +188,2 @@ export default function PantryScreen() {
+-                          ? "#22c55e"
+-                          : "#6b7280"
++                          ? "#10b981"
++                          : "#71717a"
+@@ -296 +296 @@ export default function PantryScreen() {
+-              tintColor="#0d7ff2"
++              tintColor="#10b981"
+@@ -305 +305 @@ export default function PantryScreen() {
+-          className="w-16 h-16 bg-[#0d7ff2] rounded-full items-center justify-center shadow-lg elevation-8"
++          className="w-16 h-16 bg-[#10b981] rounded-full items-center justify-center shadow-lg elevation-8"
+@@ -307 +307 @@ export default function PantryScreen() {
+-            shadowColor: "#0d7ff2",
++            shadowColor: "#10b981",
+diff --git a/app/(tabs)/planner.tsx b/app/(tabs)/planner.tsx
+index 96b46d3..5fbce26 100644
+--- a/app/(tabs)/planner.tsx
++++ b/app/(tabs)/planner.tsx
+@@ -98 +98 @@ export default function PlannerScreen() {
+-          <View className="bg-emerald-50 p-3 rounded-full">
++          <View className="bg-emerald-500/10 p-3 rounded-full">
+diff --git a/app/(tabs)/recipes.tsx b/app/(tabs)/recipes.tsx
+index 8e5f3c8..1e289b6 100644
+--- a/app/(tabs)/recipes.tsx
++++ b/app/(tabs)/recipes.tsx
+@@ -118 +118 @@ export default function RecipesScreen() {
+-          <View className="flex-row items-center justify-between mb-6 bg-blue-50 p-4 rounded-2xl border border-blue-100">
++          <View className="flex-row items-center justify-between mb-6 bg-emerald-50 p-4 rounded-2xl border border-emerald-100">
+@@ -120 +120 @@ export default function RecipesScreen() {
+-              <Text className="text-base font-bold text-blue-900">
++              <Text className="text-base font-bold text-emerald-900">
+@@ -123 +123 @@ export default function RecipesScreen() {
+-              <Text className="text-sm text-blue-600">
++              <Text className="text-sm text-emerald-600">
+@@ -142 +142 @@ export default function RecipesScreen() {
+-              className="bg-white px-3 py-1.5 rounded-full border border-blue-100"
++              className="bg-white px-3 py-1.5 rounded-full border border-emerald-100"
+@@ -164 +164 @@ export default function RecipesScreen() {
+-                ? "bg-white border-blue-500 shadow-lg shadow-blue-500/10"
++                ? "bg-white border-emerald-500 shadow-lg shadow-emerald-500/10"
+@@ -168 +168 @@ export default function RecipesScreen() {
+-            <Search size={20} color={isSearchFocused ? "#3b82f6" : "#94a3b8"} />
++            <Search size={20} color={isSearchFocused ? "#10b981" : "#94a3b8"} />
+@@ -239 +239 @@ export default function RecipesScreen() {
+-                        ? "bg-blue-50 border-blue-200"
++                        ? "bg-emerald-50 border-emerald-200"
+@@ -244 +244 @@ export default function RecipesScreen() {
+-                      <View className="w-1.5 h-1.5 rounded-full bg-blue-500 mr-2" />
++                      <View className="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-2" />
+@@ -248 +248 @@ export default function RecipesScreen() {
+-                        isSelected ? "text-blue-700" : "text-gray-500"
++                        isSelected ? "text-emerald-700" : "text-gray-500"
+diff --git a/components/Inventory/PantryCard.tsx b/components/Inventory/PantryCard.tsx
+index c90b968..368fe4c 100644
+--- a/components/Inventory/PantryCard.tsx
++++ b/components/Inventory/PantryCard.tsx
+@@ -23,5 +23,5 @@ const categoryStyles: Record<string, { bg: string; text: string }> = {
+-  Produce: { bg: "bg-green-50", text: "text-green-800" },
+-  Dairy: { bg: "bg-blue-50", text: "text-blue-800" },
+-  Spices: { bg: "bg-amber-50", text: "text-amber-800" },
+-  Protein: { bg: "bg-red-50", text: "text-red-800" },
+-  Pantry: { bg: "bg-gray-100", text: "text-gray-700" },
++  Produce: { bg: "bg-emerald-500/10", text: "text-emerald-600" },
++  Dairy: { bg: "bg-blue-500/10", text: "text-blue-600" },
++  Spices: { bg: "bg-amber-500/10", text: "text-amber-600" },
++  Protein: { bg: "bg-red-500/10", text: "text-red-600" },
++  Pantry: { bg: "bg-zinc-500/10", text: "text-zinc-600" },
+diff --git a/components/Inventory/PantryHeader.tsx b/components/Inventory/PantryHeader.tsx
+index a3c14df..b5e39b5 100644
+--- a/components/Inventory/PantryHeader.tsx
++++ b/components/Inventory/PantryHeader.tsx
+@@ -25 +25 @@ export const PantryHeader = React.memo(
+-            <Text className="text-xs text-gray-500 font-medium">
++            <Text className="text-[10px] font-bold text-emerald-500 uppercase tracking-wider">
+diff --git a/components/Planner/MealCard.tsx b/components/Planner/MealCard.tsx
+index c1633d1..d32024e 100644
+--- a/components/Planner/MealCard.tsx
++++ b/components/Planner/MealCard.tsx
+@@ -21,2 +21,2 @@ export const MealCard: React.FC<MealCardProps> = ({
+-      className={`bg-white rounded-2xl p-3 mb-3 border flex-row items-center ${
+-        meal ? "border-gray-200 border-solid" : "border-gray-100 border-dashed"
++      className={`bg-white rounded-2xl p-4 mb-3 border flex-row items-center ${
++        meal ? "border-solid border-gray-200" : "border-dashed border-gray-100"
+@@ -29,2 +29,2 @@ export const MealCard: React.FC<MealCardProps> = ({
+-        className={`w-12 h-12 rounded-xl items-center justify-center mr-3 overflow-hidden ${
+-          meal ? "bg-emerald-50" : "bg-gray-50"
++        className={`w-16 h-16 rounded-xl items-center justify-center mr-4 overflow-hidden ${
++          meal ? "bg-emerald-500/10" : "bg-gray-50"
+@@ -48 +48 @@ export const MealCard: React.FC<MealCardProps> = ({
+-          <Text className="text-base font-bold text-gray-900" numberOfLines={1}>
++          <Text className="text-lg font-bold text-gray-900" numberOfLines={1}>
+diff --git a/components/Planner/WeekStrip.tsx b/components/Planner/WeekStrip.tsx
+index 7a80522..ba240d9 100644
+--- a/components/Planner/WeekStrip.tsx
++++ b/components/Planner/WeekStrip.tsx
+@@ -38 +38 @@ export const WeekStrip: React.FC<WeekStripProps> = ({
+-                    ? "bg-emerald-50 border-emerald-500"
++                    ? "bg-emerald-500/10 border-emerald-500"
+diff --git a/components/Recipes/RecipeCard.tsx b/components/Recipes/RecipeCard.tsx
+index be9c3cf..ed41a89 100644
+--- a/components/Recipes/RecipeCard.tsx
++++ b/components/Recipes/RecipeCard.tsx
+@@ -22,3 +22,3 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({ recipe, analysis }) => {
+-          lightBg: "bg-emerald-50",
+-          lightText: "text-emerald-800",
+-          border: "border-emerald-100",
++          lightBg: "bg-emerald-500/10",
++          lightText: "text-emerald-600",
++          border: "border-emerald-500/20",
+@@ -30,3 +30,3 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({ recipe, analysis }) => {
+-          lightBg: "bg-amber-50",
+-          lightText: "text-amber-800",
+-          border: "border-amber-100",
++          lightBg: "bg-amber-500/10",
++          lightText: "text-amber-600",
++          border: "border-amber-500/20",
+@@ -38,3 +38,3 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({ recipe, analysis }) => {
+-          lightBg: "bg-red-50",
+-          lightText: "text-red-800",
+-          border: "border-red-100",
++          lightBg: "bg-red-500/10",
++          lightText: "text-red-600",
++          border: "border-red-500/20",
+@@ -44 +44 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({ recipe, analysis }) => {
+-          bg: "bg-gray-400",
++          bg: "bg-zinc-400",
+@@ -46,3 +46,3 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({ recipe, analysis }) => {
+-          lightBg: "bg-gray-50",
+-          lightText: "text-gray-800",
+-          border: "border-gray-100",
++          lightBg: "bg-zinc-500/10",
++          lightText: "text-zinc-600",
++          border: "border-zinc-500/20",
+@@ -57 +57 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({ recipe, analysis }) => {
+-      className="bg-white rounded-3xl overflow-hidden mb-4 border border-gray-100 shadow-sm"
++      className="bg-white rounded-2xl overflow-hidden mb-4 border border-gray-100 shadow-sm"
+diff --git a/components/Shopping/ShoppingItemCard.tsx b/components/Shopping/ShoppingItemCard.tsx
+index 95e1c49..d57d02c 100644
+--- a/components/Shopping/ShoppingItemCard.tsx
++++ b/components/Shopping/ShoppingItemCard.tsx
+@@ -19,5 +19,5 @@ const categoryStyles: Record<string, { bg: string; text: string }> = {
+-  Produce: { bg: "bg-green-50", text: "text-green-800" },
+-  Dairy: { bg: "bg-blue-50", text: "text-blue-800" },
+-  Spices: { bg: "bg-amber-50", text: "text-amber-800" },
+-  Protein: { bg: "bg-red-50", text: "text-red-800" },
+-  Pantry: { bg: "bg-gray-100", text: "text-gray-700" },
++  Produce: { bg: "bg-emerald-500/10", text: "text-emerald-600" },
++  Dairy: { bg: "bg-blue-500/10", text: "text-blue-600" },
++  Spices: { bg: "bg-amber-500/10", text: "text-amber-600" },
++  Protein: { bg: "bg-red-500/10", text: "text-red-600" },
++  Pantry: { bg: "bg-zinc-500/10", text: "text-zinc-600" },
+@@ -95 +95 @@ export const ShoppingItemCard: React.FC<ShoppingItemCardProps> = ({
+-        <View className="w-16 h-16 bg-gray-50 rounded-2xl items-center justify-center overflow-hidden mr-4">
++        <View className="w-16 h-16 bg-gray-50 rounded-xl items-center justify-center overflow-hidden mr-4">
+diff --git a/constants/Colors.ts b/constants/Colors.ts
+index b083680..fd99124 100644
+--- a/constants/Colors.ts
++++ b/constants/Colors.ts
+@@ -1,2 +1,2 @@
+-const tintColorLight = "#2f95dc";
+-const tintColorDark = "#fff";
++const brandPrimary = "#10b981"; // Mint-500 / Emerald-500
++const brandSurface = "#18181b"; // Gunmetal / Zinc-900
+@@ -8 +8 @@ export default {
+-    tint: tintColorLight,
++    tint: brandPrimary,
+@@ -10 +10 @@ export default {
+-    tabIconSelected: tintColorLight,
++    tabIconSelected: brandPrimary,
+@@ -14,4 +14,4 @@ export default {
+-    background: "#09090b",
+-    tint: tintColorDark,
+-    tabIconDefault: "#ccc",
+-    tabIconSelected: tintColorDark,
++    background: brandSurface,
++    tint: "#fff", // White tint on dark background for contrast
++    tabIconDefault: "#71717a", // Zinc-400
++    tabIconSelected: brandPrimary,
+diff --git a/tailwind.config.js b/tailwind.config.js
+index 574cc97..0b3352a 100644
+--- a/tailwind.config.js
++++ b/tailwind.config.js
+@@ -6 +6,8 @@ module.exports = {
+-    extend: {},
++    extend: {
++      colors: {
++        brand: {
++          primary: "#10b981", // Emerald-500 equivalent
++          surface: "#18181b", // Zinc-900 equivalent
++        },
++      },
++    },
+@@ -10,0 +18 @@ module.exports = {
++

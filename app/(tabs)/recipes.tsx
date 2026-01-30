@@ -115,12 +115,12 @@ export default function RecipesScreen() {
     <SafeAreaView className="flex-1 bg-[#f5f7f8]" edges={["top"]}>
       <View className="flex-1 px-5 pt-6">
         {mode === "select" && date && meal_type ? (
-          <View className="flex-row items-center justify-between mb-6 bg-blue-50 p-4 rounded-2xl border border-blue-100">
+          <View className="flex-row items-center justify-between mb-6 bg-emerald-50 p-4 rounded-2xl border border-emerald-100">
             <View className="flex-1">
-              <Text className="text-base font-bold text-blue-900">
+              <Text className="text-base font-bold text-emerald-900">
                 Select Meal
               </Text>
-              <Text className="text-sm text-blue-600">
+              <Text className="text-sm text-emerald-600">
                 Scheduling for <Text className="font-bold">{meal_type}</Text> on{" "}
                 <Text className="font-bold">
                   {new Date(date).toLocaleDateString(undefined, {
@@ -139,7 +139,7 @@ export default function RecipesScreen() {
                   meal_type: undefined,
                 })
               }
-              className="bg-white px-3 py-1.5 rounded-full border border-blue-100"
+              className="bg-white px-3 py-1.5 rounded-full border border-emerald-100"
             >
               <Text className="text-red-500 font-bold text-xs">Cancel</Text>
             </Pressable>
@@ -161,11 +161,11 @@ export default function RecipesScreen() {
           <View
             className={`flex-row items-center px-4 h-14 rounded-2xl border-2 transition-all ${
               isSearchFocused
-                ? "bg-white border-blue-500 shadow-lg shadow-blue-500/10"
+                ? "bg-white border-emerald-500 shadow-lg shadow-emerald-500/10"
                 : "bg-gray-50 border-gray-50"
             }`}
           >
-            <Search size={20} color={isSearchFocused ? "#3b82f6" : "#94a3b8"} />
+            <Search size={20} color={isSearchFocused ? "#10b981" : "#94a3b8"} />
             <TextInput
               placeholder="Find inspiration..."
               placeholderTextColor="#94a3b8"
@@ -236,16 +236,16 @@ export default function RecipesScreen() {
                     onPress={() => toggleTag(tag)}
                     className={`px-4 py-2 rounded-xl mr-2 border flex-row items-center ${
                       isSelected
-                        ? "bg-blue-50 border-blue-200"
+                        ? "bg-emerald-50 border-emerald-200"
                         : "bg-white border-gray-100"
                     }`}
                   >
                     {isSelected && (
-                      <View className="w-1.5 h-1.5 rounded-full bg-blue-500 mr-2" />
+                      <View className="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-2" />
                     )}
                     <Text
                       className={`text-[11px] font-semibold ${
-                        isSelected ? "text-blue-700" : "text-gray-500"
+                        isSelected ? "text-emerald-700" : "text-gray-500"
                       }`}
                     >
                       {tag}

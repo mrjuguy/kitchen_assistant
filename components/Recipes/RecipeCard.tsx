@@ -19,33 +19,33 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({ recipe, analysis }) => {
         return {
           bg: "bg-emerald-500",
           text: "text-white",
-          lightBg: "bg-emerald-50",
-          lightText: "text-emerald-800",
-          border: "border-emerald-100",
+          lightBg: "bg-emerald-500/10",
+          lightText: "text-emerald-600",
+          border: "border-emerald-500/20",
         };
       case "Yellow":
         return {
           bg: "bg-amber-500",
           text: "text-white",
-          lightBg: "bg-amber-50",
-          lightText: "text-amber-800",
-          border: "border-amber-100",
+          lightBg: "bg-amber-500/10",
+          lightText: "text-amber-600",
+          border: "border-amber-500/20",
         };
       case "Red":
         return {
           bg: "bg-red-500",
           text: "text-white",
-          lightBg: "bg-red-50",
-          lightText: "text-red-800",
-          border: "border-red-100",
+          lightBg: "bg-red-500/10",
+          lightText: "text-red-600",
+          border: "border-red-500/20",
         };
       default:
         return {
-          bg: "bg-gray-400",
+          bg: "bg-zinc-400",
           text: "text-white",
-          lightBg: "bg-gray-50",
-          lightText: "text-gray-800",
-          border: "border-gray-100",
+          lightBg: "bg-zinc-500/10",
+          lightText: "text-zinc-600",
+          border: "border-zinc-500/20",
         };
     }
   };
@@ -54,7 +54,7 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({ recipe, analysis }) => {
 
   return (
     <View
-      className="bg-white rounded-3xl overflow-hidden mb-4 border border-gray-100 shadow-sm"
+      className="bg-white rounded-2xl overflow-hidden mb-4 border border-gray-100 shadow-sm"
       style={{ elevation: 2 }}
     >
       {/* Header Image */}

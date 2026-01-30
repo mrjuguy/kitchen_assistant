@@ -18,16 +18,16 @@ export const MealCard: React.FC<MealCardProps> = ({
   return (
     <Pressable
       onPress={onPress}
-      className={`bg-white rounded-2xl p-3 mb-3 border flex-row items-center ${
-        meal ? "border-gray-200 border-solid" : "border-gray-100 border-dashed"
+      className={`bg-white rounded-2xl p-4 mb-3 border flex-row items-center ${
+        meal ? "border-solid border-gray-200" : "border-dashed border-gray-100"
       }`}
       style={({ pressed }) => ({
         opacity: pressed ? 0.7 : 1,
       })}
     >
       <View
-        className={`w-12 h-12 rounded-xl items-center justify-center mr-3 overflow-hidden ${
-          meal ? "bg-emerald-50" : "bg-gray-50"
+        className={`w-16 h-16 rounded-xl items-center justify-center mr-4 overflow-hidden ${
+          meal ? "bg-emerald-500/10" : "bg-gray-50"
         }`}
       >
         {meal?.recipe?.image_url ? (
@@ -45,7 +45,7 @@ export const MealCard: React.FC<MealCardProps> = ({
           {mealType}
         </Text>
         {meal ? (
-          <Text className="text-base font-bold text-gray-900" numberOfLines={1}>
+          <Text className="text-lg font-bold text-gray-900" numberOfLines={1}>
             {meal.recipe?.name}
           </Text>
         ) : (
