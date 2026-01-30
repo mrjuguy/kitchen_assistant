@@ -60,3 +60,8 @@
     - UI/UX tweaks (styling, spacing, icon changes).
     - Simple logic bugs or configuration updates.
     - Requirements verification (first-pass QA).
+
+## 7. Skill Loading Protocol
+- **Discovery**: Before starting ANY task (coding, design, git), run `list_dir .agent/skills` to check if a specialized guide exists.
+- **Mandatory Usage**: If a relevant skill exists (e.g., `github-cli` for PRs, `design-analyst` for UI), you MUST read its `SKILL.md` content before proceeding.
+- **Governance**: Agents are forbidden from improvising on tasks that have a defined Skill. Violations of Skill protocols (e.g., using `browser_subagent` instead of `run_command` for child agents) will generally result in failure. Trust the Skill.
