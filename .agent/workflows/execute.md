@@ -8,6 +8,7 @@ description: The Decision Engine - Determines whether to delegate to Heavy Coder
 
 2. **Establish Context & Branch**
    - **Identify Issue**: Extract the Issue ID (e.g., #35) if present.
+   - **Ticket Anatomy Check**: Ensures the issue has "Implementation-Ready" specs with **Binary Acceptance Criteria (AC)**. If not, bounce back to `/plan`.
    - **Branch Strategy**:
      - IF on `main`: Create a new branch `git checkout -b [type]/[issue-id]-[desc]`.
      - IF on existing feature branch: Continue.
@@ -22,13 +23,19 @@ description: The Decision Engine - Determines whether to delegate to Heavy Coder
    - Is this "Heavy"? (New Feature, Scaffolding, Refactoring >1 file).
    - Is this "Light"? (UI Tweak, Text Change, Config Update).
 
-5. **Execution Path**
+5. **Phase Control (The Plan Check)**
+   - **Action**: Present the implementation phase-plan to the Pilot (User).
+   - **Output**: "Proposed Execution Plan: [Steps]. Proceed?"
+   - **Wait**: Do NOT execute code until user approves or rearranges steps.
+
+6. **Execution Path (Atomic Execution)**
    - **IF HEAVY**: 
      - "⚙️ Building: Delegating to Heavy Coder..."
-     - Spawn heavy-coder with full PRD context.
+     - **Spec Anchors**: Task MUST explicitly reference the Tech Plan in `specs/issue_[ID].md`.
+     - Spawn heavy-coder with full PRD + Tech Plan context.
    - **IF LIGHT**:
      - "⚡ Tweaking: Handling this directly..."
      - YOU (Antigravity) perform the file edit immediately using your file tools.
 
-6. **Completion**
+7. **Completion**
    - Output: "Done. Run /save to trigger Cloud QA."

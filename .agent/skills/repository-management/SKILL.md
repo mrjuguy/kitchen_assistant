@@ -15,8 +15,19 @@ description: Standards for repository hygiene, security, and public documentatio
     - `chore/update-deps`
 - **Workflow Integration**: The `/execute` workflow MUST trigger this branch creation immediately after analyzing the request.
 
+## Shipping Discipline (One Feature = One Ship)
+- **Granulairy**: A "Ship" (Merge) happens as soon as a single unit of value is complete.
+  - **Do**: Merge "Login Page" immediately upon completion.
+  - **Don't**: Wait to build "Login" AND "Home" AND "Profile" on one branch.
+- **Risk Mitigation**: Shipping frequently prevents "Merge Hell" and allows for easy reverts if something breaks.
+- **WIP Management**: If you didn't finish the featin a session, just `/save` (which pushes to the feature branch). Only `/ship` when it is production-ready.
+
+
 ## Security & Hygiene
 - **CRITICAL**: Never commit `.env` files or any file containing secrets/API keys.
+- **Environment Safety (Onboarding)**:
+  - **Sync**: Whenever you add a new variable to `.env`, you MUST immediately add it to `.env.example` (with a placeholder value).
+  - **Check**: New developers (or agents) rely on `.env.example` to know how to configure the app. Missing this is unprofessional.
 - **Agent Sharing**: You **SHOULD** commit the `.agent/` folder (workflows, skills, rules) so that the team shares the same capabilities.
 - **Rule Sharing**: `PROJECT_RULES.md` is now the shared source of truth and **SHOULD** be committed.
 - **Gitignore Audit**: Verify that `.env` and `.claude/` (personal config) are in `.gitignore`.

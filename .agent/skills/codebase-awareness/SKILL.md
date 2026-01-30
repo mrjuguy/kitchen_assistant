@@ -20,6 +20,10 @@ Before proposing a PRD, technical plan, or new feature implementation, you MUST 
     - **GitHub State**: Run `gh issue list --state closed` AND `gh issue list --state open` (the default `gh issue list` is insufficient on its own).
     - **Git History**: Run `git log --grep="issue-number"` or `git log --oneline -50` to see if commits related to the task already exist in main.
     - **CRITICAL**: If a spec file exists but the code and issue are complete, DELETE the spec file to prevent "zombie" feature drift.
+6.  **The Ghost Check (Anti-Hallucination)**:
+    - **Concept**: GitHub Issues are often stale. The Code is the only truth.
+    - **Action**: Before planning a feature, run a *surgical* search for the files that *would* exist if it were done (e.g., `find_by_name "login"`, `grep_search "AuthService"`).
+    - **Verdict**: If the code exists, the Issue is wrong. Close the Issue; do NOT duplicate the code.
 
 ## Workflow: The "Pre-Plan" Audit
 Whenever the `/plan` workflow or a similar "what should we do next" request is triggered:

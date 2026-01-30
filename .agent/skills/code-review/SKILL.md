@@ -30,8 +30,32 @@ description: Audits code for errors, security issues, and alignment with project
 - **DRY Types (The "Single Source" Rule)**: Never duplicate complex type or interface definitions. If a data structure is used in more than one layer (e.g., Service AND Hook), it MUST be defined in `types/schema.ts` and imported.
 - **Error Handling**: Every network or DB call MUST have a `try/catch` block or a defined error state in a TanStack query.
 
-## How to Report
-- **Review Archival**: Every finalized review MUST be saved to `specs/reviews/[feature_name]_review.md`. 
-- **Pass**: "✅ Code looks good and meets all standards."
-- **Fail**: List the specific file, line number, and the violation.
-- **Fix Suggestion**: Provide the exact code block to fix the issue.
+## How to Report (Tiered Verification Standard)
+
+**1. Create the Artifact**
+- Save the review to `specs/reviews/YYYY-MM-DD-[feature_name].md`.
+
+**2. Categorize Findings**
+Group all issues by their Priority Tier (Color Coded):
+
+### 🔴 Critical (Red)
+*Blocking Issues. Immediate Fix Required.*
+- **Safety Violations**: Missing allergen checks, data leaks between households.
+- **Security**: Hardcoded secrets, unvalidated inputs.
+- **Crash Risks**: Unhandled errors, infinite loops.
+
+### 🟠 Major (Orange)
+*Functional Defects. Must Fix before Merge.*
+- **Logic Deviations**: Code does not match the Logic in the Gap Analysis Engine.
+- **Failed AC**: Feature does not meet the Binary Acceptance Criteria in the PRD.
+- **Performance**: N+1 queries, unoptimized re-renders.
+
+### 🔵 Minor (Cyan)
+*Polish & Aesthetics. Fix for v1.0 Quality.*
+- **Emerald UI**: Deviations from Design System (spacing, colors, typography).
+- **Polish**: Missing haptics, skeleton loaders, or micro-animations.
+- **Consistency**: Variable naming, file structure quirks.
+
+**3. Verdict**
+- **PASS**: No Critical or Major issues.
+- **FAIL**: Any Critical or Major issues present.
