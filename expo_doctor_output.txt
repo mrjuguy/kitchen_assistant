@@ -1,0 +1,31 @@
+env: load .env.local .env
+env: export GOOGLE_CLOUD_PROJECT STITCH_ACCESS_TOKEN EXPO_PUBLIC_SUPABASE_URL EXPO_PUBLIC_SUPABASE_ANON_KEY ANTHROPIC_API_KEY EXPO_PUBLIC_SENTRY_DSN EXPO_PUBLIC_POSTHOG_API_KEY EXPO_PUBLIC_POSTHOG_HOST SENTRY_AUTH_TOKEN
+Running 17 checks on your project...
+15/17 checks passed. 2 checks failed. Possible issues detected:
+Use the --verbose flag to see more details about passed checks.
+
+✖ Check Expo config (app.json/ app.config.js) schema
+Error validating asset fields in C:\Users\jmbur\OneDrive\Projects\kitchen_assistant\app.json:
+ Field: Android.adaptiveIcon.foregroundImage - the file extension should match the content, but the file extension is .png while the file content at './assets/images/adaptive-icon.png' is of type jpg.
+ Field: Android.adaptiveIcon.foregroundImage - field 'Android.adaptiveIcon.foregroundImage' should point to .png image but the file at './assets/images/adaptive-icon.png' has type jpg.
+ Field: Splash.image - the file extension should match the content, but the file extension is .png while the file content at './assets/images/splash-icon.png' is of type jpg.
+ Field: Splash.image - field 'Splash.image' should point to .png image but the file at './assets/images/splash-icon.png' has type jpg.
+ Field: icon - the file extension should match the content, but the file extension is .png while the file content at './assets/images/icon.png' is of type jpg.
+ Field: icon - field 'icon' should point to .png image but the file at './assets/images/icon.png' has type jpg.
+Advice:
+Resolve schema errors in your app config. Learn more: https://docs.expo.dev/workflow/configuration/
+
+✖ Check that packages match versions required by installed Expo SDK
+
+❗ Major version mismatches
+package                         expected  found  
+react-native-get-random-values  ~1.11.0   2.0.0  
+
+
+
+1 package out of date.
+Advice:
+Use 'npx expo install --check' to review and upgrade your dependencies.
+To ignore specific packages, add them to "expo.install.exclude" in package.json. Learn more: https://expo.fyi/dependency-validation
+
+2 checks failed, indicating possible issues with the project.

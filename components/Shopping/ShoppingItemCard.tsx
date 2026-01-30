@@ -16,11 +16,11 @@ interface ShoppingItemCardProps {
 }
 
 const categoryStyles: Record<string, { bg: string; text: string }> = {
-  Produce: { bg: "bg-green-50", text: "text-green-800" },
-  Dairy: { bg: "bg-blue-50", text: "text-blue-800" },
-  Spices: { bg: "bg-amber-50", text: "text-amber-800" },
-  Protein: { bg: "bg-red-50", text: "text-red-800" },
-  Pantry: { bg: "bg-gray-100", text: "text-gray-700" },
+  Produce: { bg: "bg-emerald-500/10", text: "text-emerald-600" },
+  Dairy: { bg: "bg-blue-500/10", text: "text-blue-600" },
+  Spices: { bg: "bg-amber-500/10", text: "text-amber-600" },
+  Protein: { bg: "bg-red-500/10", text: "text-red-600" },
+  Pantry: { bg: "bg-zinc-500/10", text: "text-zinc-600" },
 };
 
 export const ShoppingItemCard: React.FC<ShoppingItemCardProps> = ({
@@ -92,7 +92,7 @@ export const ShoppingItemCard: React.FC<ShoppingItemCardProps> = ({
         </Pressable>
 
         {/* Product Image/Icon */}
-        <View className="w-16 h-16 bg-gray-50 rounded-2xl items-center justify-center overflow-hidden mr-4">
+        <View className="w-16 h-16 bg-gray-50 rounded-xl items-center justify-center overflow-hidden mr-4">
           {item.image_url ? (
             <Image source={{ uri: item.image_url }} className="w-full h-full" />
           ) : (

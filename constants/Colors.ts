@@ -1,19 +1,19 @@
-const tintColorLight = "#2f95dc";
-const tintColorDark = "#fff";
+const brandPrimary = "#10b981"; // Mint-500 / Emerald-500
+const brandSurface = "#18181b"; // Gunmetal / Zinc-900
 
 export default {
   light: {
     text: "#000",
     background: "#fff",
-    tint: tintColorLight,
+    tint: brandPrimary,
     tabIconDefault: "#ccc",
-    tabIconSelected: tintColorLight,
+    tabIconSelected: brandPrimary,
   },
   dark: {
     text: "#fff",
-    background: "#09090b",
-    tint: tintColorDark,
-    tabIconDefault: "#ccc",
-    tabIconSelected: tintColorDark,
+    background: brandSurface,
+    tint: "#fff", // White tint on dark background for contrast
+    tabIconDefault: "#71717a", // Zinc-400
+    tabIconSelected: brandPrimary,
   },
 };

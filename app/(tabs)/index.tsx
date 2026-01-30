@@ -160,16 +160,16 @@ export default function PantryScreen() {
           <View
             className={`p-2 rounded-xl mr-3 ${
               section.title === "Fridge"
-                ? "bg-blue-100"
+                ? "bg-blue-500/10"
                 : section.title === "Freezer"
-                  ? "bg-sky-100"
+                  ? "bg-sky-500/10"
                   : section.title === "Expired" || section.title === "Critical"
-                    ? "bg-red-100"
+                    ? "bg-red-500/10"
                     : section.title === "Warning"
-                      ? "bg-amber-100"
+                      ? "bg-amber-500/10"
                       : section.title === "Good"
-                        ? "bg-green-100"
-                        : "bg-gray-100"
+                        ? "bg-emerald-500/10"
+                        : "bg-zinc-500/10"
             }`}
           >
             <Refrigerator
@@ -185,8 +185,8 @@ export default function PantryScreen() {
                       : section.title === "Warning"
                         ? "#f59e0b"
                         : section.title === "Good"
-                          ? "#22c55e"
-                          : "#6b7280"
+                          ? "#10b981"
+                          : "#71717a"
               }
             />
           </View>
@@ -293,7 +293,7 @@ export default function PantryScreen() {
             <RefreshControl
               refreshing={isRefetching}
               onRefresh={refetch}
-              tintColor="#0d7ff2"
+              tintColor="#10b981"
             />
           }
         />
@@ -302,9 +302,9 @@ export default function PantryScreen() {
       <View className="absolute bottom-8 left-0 right-0 items-center">
         <Pressable
           onPress={() => router.push("/modal")}
-          className="w-16 h-16 bg-[#0d7ff2] rounded-full items-center justify-center shadow-lg elevation-8"
+          className="w-16 h-16 bg-[#10b981] rounded-full items-center justify-center shadow-lg elevation-8"
           style={{
-            shadowColor: "#0d7ff2",
+            shadowColor: "#10b981",
             shadowOffset: { width: 0, height: 8 },
             shadowOpacity: 0.3,
             shadowRadius: 12,

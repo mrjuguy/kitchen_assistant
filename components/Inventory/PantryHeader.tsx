@@ -22,7 +22,7 @@ export const PantryHeader = React.memo(
             </View>
           </Pressable>
           <View>
-            <Text className="text-xs text-gray-500 font-medium">
+            <Text className="text-[10px] font-bold text-emerald-500 uppercase tracking-wider">
               Culinary OS
             </Text>
             <Text className="text-lg font-bold text-gray-900">

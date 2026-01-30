@@ -35,7 +35,7 @@ export const WeekStrip: React.FC<WeekStripProps> = ({
                 isSelected
                   ? "bg-gray-900 border-gray-900"
                   : isToday
-                    ? "bg-emerald-50 border-emerald-500"
+                    ? "bg-emerald-500/10 border-emerald-500"
                     : "bg-white border-gray-100"
               }`}
             >

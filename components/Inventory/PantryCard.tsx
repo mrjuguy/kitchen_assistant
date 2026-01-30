@@ -20,11 +20,11 @@ interface PantryCardProps {
 }
 
 const categoryStyles: Record<string, { bg: string; text: string }> = {
-  Produce: { bg: "bg-green-50", text: "text-green-800" },
-  Dairy: { bg: "bg-blue-50", text: "text-blue-800" },
-  Spices: { bg: "bg-amber-50", text: "text-amber-800" },
-  Protein: { bg: "bg-red-50", text: "text-red-800" },
-  Pantry: { bg: "bg-gray-100", text: "text-gray-700" },
+  Produce: { bg: "bg-emerald-500/10", text: "text-emerald-600" },
+  Dairy: { bg: "bg-blue-500/10", text: "text-blue-600" },
+  Spices: { bg: "bg-amber-500/10", text: "text-amber-600" },
+  Protein: { bg: "bg-red-500/10", text: "text-red-600" },
+  Pantry: { bg: "bg-zinc-500/10", text: "text-zinc-600" },
 };
 
 export const PantryCard = React.memo(({ item, onPress }: PantryCardProps) => {
