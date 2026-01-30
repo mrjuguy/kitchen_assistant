@@ -20,12 +20,14 @@ This applies systematic debugging methodology with evidence gathering, hypothesi
    - **Scope**: Is this isolated to one component or a system-wide failure?
 
 3. **Reproduction (The "Red" Test)**
+   - **Reproduction Mandate**: NO CODE CHANGES allowed until a "Red" test (Unit/Script) reproduces the bug.
    - **Constraint**: You (or the delegate) MUST create a reproduction case before fixing.
    - **Option A (Unit)**: Create `utils/__tests__/repro_issue.test.ts` that fails.
    - **Option B (Script)**: Create `scripts/repro_issue.ts` that demonstrates the bug.
    - **Option C (Manual)**: If UI-only, strictly define the "Fail State" steps.
 
 4. **Investigation & Fix**
+   - **Skepticism Rule**: Treat your own new code with higher skepticism than legacy code.
    - **Decision**:
      - **Quick Fix** (Typos, One File): Handle it yourself using `debug-like-expert`.
      - **Deep Dive** (Crashes, Logic Gaps):

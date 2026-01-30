@@ -9,14 +9,19 @@ description: Scans the codebase first, then interviews the user to generate a PR
    - **Action**: Run `git checkout main && git pull origin main`.
    - **Action**: Read `specs/tech-stack.md` and `.agent/skills/codebase-awareness/SKILL.md`.
 
-2. **Phase 1: Discovery**
+2. **Phase 1: Dialectic Discovery (Intent Alignment)**
+   - **Ambiguity Check**: Before proceeding, ask the user 3-5 clarifying questions to resolve any intent ambiguity.
+     - *Focus*: Edge cases, error states, and "what if" scenarios.
    - **GitHub Scan**: 
      - Run `gh issue list --label "priority:high" --json number,title,body,labels`.
    - **Candidate Selection**: Identify the "Highest Value" (Impact/Effort) task from the list. 
    - **Reality Check (The Neophyte Shield)**:
      - **Constraint**: Before finalizing the choice, you **MUST** validate the specific candidate:
      - **History Audit**: Run `gh issue list --state closed --search "[Key Terms]"` to verify it hasn't been solved previously.
-     - **Codebase Audit**: Run `find_by_name [Key Terms]` to ensure the features don't already exist (Ghost Code).
+     - **Codebase Audit**: Run `find_by_name [Key Terms]` to ensure the features don't already exist.
+     - **Inventory-First Check**: 
+       - *Constraint*: You must verify existing logic/components before proposing new ones to prevent "Ghost Code".
+       - *Action*: List potential reusable components/hooks found.
      - **Outcome**: Only proceed if the path is clear.
 
    - **Prioritization Engine**: 
@@ -37,7 +42,13 @@ description: Scans the codebase first, then interviews the user to generate a PR
 
 4. **Phase 2: Draft PRD (Collision-Free)**
    - Draft the requirements in `specs/drafts/[slug]_PRD.md`.
-   - **Content**: Must include User Stories, UX Guidelines (referencing `specs/DESIGN.md`), Implementation Plan (incorporating `specs/drafts/[slug]_tech_notes.md` if available), and Verification Plan.
+   - **Content Requirements**:
+     1. **User Stories** & **Binary Acceptance Criteria**.
+     2. **UX Guidelines** (referencing `specs/DESIGN.md`).
+     3. **Tech Plan** (Architectural Anchoring):
+        - MUST include Mermaid diagrams (Data Flow & Component Hierarchy).
+        - *Goal*: Visual proof of logic flow.
+     4. **Verification Plan** (Test cases).
    - **Constraint**: Reference existing files correctly.
 
 5. **Phase 2b: RFC / Technical Design Review (For High Complexity)**
