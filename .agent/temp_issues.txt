@@ -1,0 +1,8 @@
+60	OPEN	fix: Add Household Scope to Query Keys	Chore, priority:high	2026-01-30T18:37:11Z
+59	OPEN	fix: Type Safety and Magic Strings Cleanup	Chore, priority:low	2026-01-30T18:30:09Z
+58	OPEN	chore: Codebase Hygiene and Structure Cleanup	Chore, priority:low	2026-01-30T18:30:05Z
+57	OPEN	refactor: Centralize Auth and Error Handling	Chore, priority:medium	2026-01-30T18:30:02Z
+56	OPEN	refactor: Atomic Shopping List Checkout	Chore, priority:medium	2026-01-30T18:29:58Z
+55	OPEN	refactor: Optimize Gap Analysis Performance	Chore, priority:medium	2026-01-30T18:29:54Z
+54	OPEN	fix: Enforce Household Isolation in Read Queries	Chore, priority:high	2026-01-30T18:37:04Z
+12	OPEN	Gamify Healthy Decisions	Feature, UI/UX, priority:low	2026-01-27T07:05:59Z

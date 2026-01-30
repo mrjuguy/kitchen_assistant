@@ -1,0 +1,24 @@
+commit a48c5bea4209ffb66eb542ddf7407a0c4bd43f28
+Author: mrjuguy <jmburrough@gmail.com>
+Date:   Fri Jan 30 11:10:42 2026 -0800
+
+    chore: workflow and skill updates (#61)
+    
+    * feat(ui): implement stunning visuals upgrade
+    
+    - Update global theme with Zinc-50 background and Emerald/Violet colors
+    - Refactor Pantry and Recipe cards to use rounded-3xl and colored shadows
+    - Upgrade typography to use tracking-tight and Outfit/Inter hierarchy
+    
+    * chore(agent): update workflows and skills for enhanced triage and QA consistency
+
+ .agent/skills/code-review/SKILL.md           | 34 ++++++++++++--
+ .agent/skills/codebase-awareness/SKILL.md    |  4 ++
+ .agent/skills/heavy-coder/SKILL.md           | 14 ++++--
+ .agent/skills/repository-management/SKILL.md | 11 +++++
+ .agent/workflows/debug.md                    |  2 +
+ .agent/workflows/execute.md                  | 13 ++++--
+ .agent/workflows/plan.md                     | 17 +++++--
+ .agent/workflows/review.md                   | 16 ++++++-
+ .claude/agents/qa-bot.md                     | 70 +++++++++++++++++++++++++---
+ 9 files changed, 158 insertions(+), 23 deletions(-)

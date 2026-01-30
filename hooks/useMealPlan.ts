@@ -8,12 +8,18 @@ import { CreateMealPlan, MealPlan, RecipeIngredient } from "../types/schema";
 import { isMatch } from "../utils/matcher";
 
 export const useMealPlan = (startDate?: string, endDate?: string) => {
+  const { currentHousehold } = useCurrentHousehold();
+
   return useQuery<MealPlan[]>({
-    queryKey: ["meal_plans", startDate, endDate],
+    queryKey: ["meal_plans", currentHousehold?.id, startDate, endDate],
+    enabled: !!currentHousehold,
     queryFn: async () => {
+      if (!currentHousehold) return [];
+
       let query = supabase
         .from("meal_plans")
-        .select("*, recipe:recipes(*, recipe_ingredients(*))");
+        .select("*, recipe:recipes(*, recipe_ingredients(*))")
+        .eq("household_id", currentHousehold.id);
 
       if (startDate) {
         query = query.gte("date", startDate);

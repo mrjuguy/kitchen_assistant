@@ -10,12 +10,18 @@ import {
 import { scheduleExpiryNotification } from "../utils/notifications";
 
 export const usePantry = () => {
+  const { currentHousehold } = useCurrentHousehold();
+
   return useQuery<PantryItem[]>({
-    queryKey: ["pantry"],
+    queryKey: ["pantry", currentHousehold?.id],
+    enabled: !!currentHousehold,
     queryFn: async () => {
+      if (!currentHousehold) return [];
+
       const { data, error } = await supabase
         .from("pantry_items")
         .select("*")
+        .eq("household_id", currentHousehold.id)
         .order("created_at", { ascending: false });
 
       if (error) throw error;

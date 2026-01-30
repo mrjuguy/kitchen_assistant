@@ -5,12 +5,18 @@ import { supabase } from "../services/supabase";
 import { RecipeWithIngredients } from "../types/schema";
 
 export const useRecipes = () => {
+  const { currentHousehold } = useCurrentHousehold();
+
   return useQuery<RecipeWithIngredients[]>({
-    queryKey: ["recipes"],
+    queryKey: ["recipes", currentHousehold?.id],
+    enabled: !!currentHousehold,
     queryFn: async () => {
+      if (!currentHousehold) return [];
+
       const { data, error } = await supabase
         .from("recipes")
-        .select("*, recipe_ingredients(*)");
+        .select("*, recipe_ingredients(*)")
+        .eq("household_id", currentHousehold.id);
 
       if (error) throw error;
       return data.map((recipe) => ({

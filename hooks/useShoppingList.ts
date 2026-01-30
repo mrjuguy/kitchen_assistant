@@ -10,12 +10,18 @@ import {
 import { normalizeToUS, UnitKey } from "../utils/units";
 
 export const useShoppingList = () => {
+  const { currentHousehold } = useCurrentHousehold();
+
   return useQuery<ShoppingItem[]>({
-    queryKey: ["shopping_list"],
+    queryKey: ["shopping_list", currentHousehold?.id],
+    enabled: !!currentHousehold,
     queryFn: async () => {
+      if (!currentHousehold) return [];
+
       const { data, error } = await supabase
         .from("shopping_list")
         .select("*")
+        .eq("household_id", currentHousehold.id)
         .order("created_at", { ascending: false });
 
       if (error) throw error;
