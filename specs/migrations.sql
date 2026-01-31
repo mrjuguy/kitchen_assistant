@@ -55,3 +55,76 @@ CREATE POLICY "Users can modify ingredients of own recipes" ON public.recipe_ing
             AND user_id = auth.uid()
         )
     );
+
+-- ============================================
+-- Migration: checkout_shopping_list_rpc
+-- Date: 2026-01-31
+-- Issue: #56 - Atomic Shopping List Checkout
+-- ============================================
+
+-- Atomic Shopping List Checkout RPC
+-- This function handles the entire checkout process in a single transaction:
+-- 1. Fetches all bought items for the household
+-- 2. Inserts them into pantry_items
+-- 3. Deletes them from shopping_list
+-- Returns the count of items transferred
+
+CREATE OR REPLACE FUNCTION checkout_shopping_list(p_household_id UUID)
+RETURNS INTEGER
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public
+AS $$
+DECLARE
+  v_transferred_count INTEGER := 0;
+BEGIN
+  -- Insert bought items into pantry_items
+  INSERT INTO pantry_items (
+    user_id,
+    household_id,
+    name,
+    quantity,
+    unit,
+    category,
+    barcode,
+    image_url,
+    brand,
+    nutritional_info,
+    ingredients_text,
+    allergens,
+    labels,
+    total_capacity
+  )
+  SELECT
+    user_id,
+    household_id,
+    name,
+    quantity,
+    unit,
+    category,
+    barcode,
+    image_url,
+    brand,
+    nutritional_info,
+    ingredients_text,
+    allergens,
+    labels,
+    quantity -- total_capacity = original quantity
+  FROM shopping_list
+  WHERE household_id = p_household_id
+    AND bought = true;
+
+  -- Get the count of transferred items
+  GET DIAGNOSTICS v_transferred_count = ROW_COUNT;
+
+  -- Delete bought items from shopping_list
+  DELETE FROM shopping_list
+  WHERE household_id = p_household_id
+    AND bought = true;
+
+  RETURN v_transferred_count;
+END;
+$$;
+
+-- Grant execute permission to authenticated users
+GRANT EXECUTE ON FUNCTION checkout_shopping_list(UUID) TO authenticated;
