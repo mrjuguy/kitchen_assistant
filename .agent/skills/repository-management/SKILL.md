@@ -38,6 +38,33 @@ description: Standards for repository hygiene, security, and public documentatio
 - **Repository Sweep (Sub-Agent)**: You can spawn a sub-agent to perform a thorough security sweep:
   - `claude -p "Perform a deep security audit of the repository. Check all files (even ignored ones) for potential secrets and report findings." --agent "qa-bot"`
 
+## Git Lock File Handling
+- **Symptom**: `fatal: Unable to create '.git/...lock': File exists.`
+- **Cause**: Another git process (IDE plugin, background `git pull`, or a crashed process) is holding a lock.
+- **Solution**:
+  1. First, check if a legitimate process is running (`git status`).
+  2. If safe, remove all lock files:
+     ```bash
+     find .git -name "*.lock" -delete
+     ```
+  3. Retry the command.
+- **Prevention**: Avoid very long-running background git commands. Do NOT leave `git pull` running indefinitely.
+
+## Git Sync After PR Merge
+- **Problem**: After `gh pr merge`, local `main` may diverge if it has local-only commits.
+- **Safe Sync Pattern**:
+  ```bash
+  git checkout main
+  git fetch origin
+  git reset --hard origin/main
+  git remote prune origin
+  ```
+- **NEVER** chain `git pull` after `gh pr merge` if you suspect local divergence. Use `reset --hard` to guarantee sync.
+
+## Command Execution Discipline
+- **Avoid Long Chains**: Do NOT chain more than 2-3 commands with `&&`. If one fails mid-chain, recovery is difficult.
+- **Prefer Sequential Steps**: For high-risk operations (merge, reset, prune), run commands individually and check status between each.
+
 ## Tool Hygiene
 - **No Hammering**: If a tool call (like `mcp_list_resources` or `run_command`) fails, **DO NOT** retry the exact same call within the same step. Analyze the error message first. If a resource or command is not found, assume it is unavailable and ask the user or try an alternative approach.
 - **Agent Folder Location**: The `claude` CLI strictly requires agents to be in `.claude/agents/`. **NEVER** try to place them in `.agent/agents/` or create new directories for them. Use the existing location.
