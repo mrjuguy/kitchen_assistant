@@ -7,6 +7,7 @@ import {
   PantryItem,
   UpdatePantryItem,
 } from "../types/schema";
+import { requireAuthAndHousehold } from "../utils/mutation";
 import { scheduleExpiryNotification } from "../utils/notifications";
 
 export const usePantry = () => {
@@ -36,17 +37,12 @@ export const useAddPantryItem = () => {
 
   return useMutation({
     mutationFn: async (newItem: CreatePantryItem) => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      if (!user) throw new Error("User not authenticated");
-      if (!currentHousehold) throw new Error("No household selected");
+      const { user, household } =
+        await requireAuthAndHousehold(currentHousehold);
 
       const { data, error } = await supabase
         .from("pantry_items")
-        .insert([
-          { ...newItem, user_id: user.id, household_id: currentHousehold.id },
-        ])
+        .insert([{ ...newItem, user_id: user.id, household_id: household.id }])
         .select()
         .single();
 

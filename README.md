@@ -105,8 +105,9 @@ For the best experience, use a physical device via **Expo Go** to access the Sma
 
 - `app/`: Expo Router file-based pages (Login, Tabs: Inventory, Recipes, Shopping, Planner, Profile). Includes a dedicated Legal section for App Store compliance.
 - `components/`: 30+ reusable UI components, 100% NativeWind-styled with type-safe props (Issue #10).
-- `hooks/`: Custom React hooks for business logic and data fetching.
+- `hooks/`: Custom React hooks for business logic and data fetching. Unified via a centralized mutation validation layer.
 - `services/`: Supabase client, OpenFoodFacts integration, and external API clients.
+- `utils/`: Reusable pure functions for analytics, date formatting, and **centralized mutation logic** (auth/household validation).
 - `types/`: Global TypeScript types, database schemas, and component prop interfaces.
 - `specs/`: Project requirements, completed features, design system documentation, test plans, and **QA reviews**.
 - `specs/reviews/`: Official validation artifacts and shippability assessments.

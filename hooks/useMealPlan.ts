@@ -6,6 +6,7 @@ import { useAddShoppingItems } from "./useShoppingList";
 import { supabase } from "../services/supabase";
 import { CreateMealPlan, MealPlan, RecipeIngredient } from "../types/schema";
 import { isMatch } from "../utils/matcher";
+import { requireAuthAndHousehold } from "../utils/mutation";
 
 export const useMealPlan = (startDate?: string, endDate?: string) => {
   const { currentHousehold } = useCurrentHousehold();
@@ -52,11 +53,8 @@ export const useAddToPlan = () => {
 
   return useMutation({
     mutationFn: async (plan: CreateMealPlan) => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      if (!user) throw new Error("User not authenticated");
-      if (!currentHousehold) throw new Error("No household selected");
+      const { user, household } =
+        await requireAuthAndHousehold(currentHousehold);
 
       const { data, error } = await supabase
         .from("meal_plans")
@@ -64,7 +62,7 @@ export const useAddToPlan = () => {
           {
             ...plan,
             user_id: user.id,
-            household_id: currentHousehold.id,
+            household_id: household.id,
           },
           {
             onConflict: "household_id,date,meal_type",

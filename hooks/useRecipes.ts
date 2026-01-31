@@ -3,6 +3,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useCurrentHousehold } from "./useHousehold";
 import { supabase } from "../services/supabase";
 import { RecipeWithIngredients } from "../types/schema";
+import { requireAuthAndHousehold } from "../utils/mutation";
 
 export const useRecipes = () => {
   const { currentHousehold } = useCurrentHousehold();
@@ -44,11 +45,8 @@ export const useAddRecipe = () => {
       source_url?: string;
       tags: string[];
     }) => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      if (!user) throw new Error("User not authenticated");
-      if (!currentHousehold) throw new Error("No household selected");
+      const { user, household } =
+        await requireAuthAndHousehold(currentHousehold);
 
       // 1. Create Recipe
       const { data: recipe, error: recipeError } = await supabase
@@ -65,7 +63,7 @@ export const useAddRecipe = () => {
             author: recipeData.author,
             source_url: recipeData.source_url,
             user_id: user.id,
-            household_id: currentHousehold.id,
+            household_id: household.id,
           },
         ])
         .select()

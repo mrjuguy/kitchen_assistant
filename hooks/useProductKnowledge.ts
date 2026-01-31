@@ -6,6 +6,7 @@ import {
   CreateHouseholdProductSettings,
   HouseholdProductSettings,
 } from "../types/schema";
+import { requireHousehold } from "../utils/mutation";
 
 export const useHouseholdProductSettings = (productName?: string) => {
   const { currentHousehold } = useCurrentHousehold();
@@ -39,7 +40,7 @@ export const useUpdateProductSettings = () => {
 
   return useMutation({
     mutationFn: async (settings: CreateHouseholdProductSettings) => {
-      if (!currentHousehold) throw new Error("No household selected");
+      const household = requireHousehold(currentHousehold);
 
       // Upsert based on natural key (household_id, product_name)
       const { data, error } = await supabase
@@ -47,7 +48,7 @@ export const useUpdateProductSettings = () => {
         .upsert(
           {
             ...settings,
-            household_id: currentHousehold.id,
+            household_id: household.id,
             updated_at: new Date().toISOString(),
           },
           {
