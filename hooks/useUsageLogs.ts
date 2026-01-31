@@ -5,6 +5,7 @@ import { useCurrentHousehold } from "./useHousehold";
 import { supabase } from "../services/supabase";
 import { CreateUsageLog, UsageLog } from "../types/schema";
 import { computeExpiredStats } from "../utils/analytics";
+import { requireAuthAndHousehold } from "../utils/mutation";
 
 export const useLogUsage = () => {
   const queryClient = useQueryClient();
@@ -14,11 +15,8 @@ export const useLogUsage = () => {
     mutationFn: async (
       log: Omit<CreateUsageLog, "user_id" | "household_id">,
     ) => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      if (!user) throw new Error("User not authenticated");
-      if (!currentHousehold) throw new Error("No household selected");
+      const { user, household } =
+        await requireAuthAndHousehold(currentHousehold);
 
       const { data, error } = await supabase
         .from("usage_logs")
@@ -26,7 +24,7 @@ export const useLogUsage = () => {
           {
             ...log,
             user_id: user.id,
-            household_id: currentHousehold.id,
+            household_id: household.id,
           },
         ])
         .select()

@@ -7,6 +7,7 @@ import {
   ShoppingItem,
   UpdateShoppingItem,
 } from "../types/schema";
+import { requireAuth, requireAuthAndHousehold } from "../utils/mutation";
 import { normalizeToUS, UnitKey } from "../utils/units";
 
 export const useShoppingList = () => {
@@ -36,17 +37,12 @@ export const useAddShoppingItem = () => {
 
   return useMutation({
     mutationFn: async (newItem: CreateShoppingItem) => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      if (!user) throw new Error("User not authenticated");
-      if (!currentHousehold) throw new Error("No household selected");
+      const { user, household } =
+        await requireAuthAndHousehold(currentHousehold);
 
       const { data, error } = await supabase
         .from("shopping_list")
-        .insert([
-          { ...newItem, user_id: user.id, household_id: currentHousehold.id },
-        ])
+        .insert([{ ...newItem, user_id: user.id, household_id: household.id }])
         .select()
         .single();
 
@@ -147,10 +143,7 @@ export const useCheckoutShoppingList = () => {
 
   return useMutation({
     mutationFn: async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      if (!user) throw new Error("User not authenticated");
+      const user = await requireAuth();
 
       // 1. Get all bought items
       const { data: boughtItems, error: fetchError } = await supabase
@@ -219,16 +212,13 @@ export const useAddShoppingItems = () => {
 
   return useMutation({
     mutationFn: async (newItems: CreateShoppingItem[]) => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      if (!user) throw new Error("User not authenticated");
-      if (!currentHousehold) throw new Error("No household selected");
+      const { user, household } =
+        await requireAuthAndHousehold(currentHousehold);
 
       const itemsWithUser = newItems.map((item) => ({
         ...item,
         user_id: user.id,
-        household_id: currentHousehold.id,
+        household_id: household.id,
       }));
 
       const { data, error } = await supabase
@@ -273,10 +263,7 @@ export const useDeleteAllShoppingItems = () => {
 
   return useMutation({
     mutationFn: async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      if (!user) throw new Error("User not authenticated");
+      const user = await requireAuth();
 
       const { error } = await supabase
         .from("shopping_list")

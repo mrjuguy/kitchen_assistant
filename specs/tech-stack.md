@@ -59,3 +59,12 @@ As of January 2026, all UI components have been refactored to use NativeWind v4 
 - **Color Palette**: Emerald (`emerald-500`, `emerald-600`) for primary actions, Gray scales for neutral UI, semantic colors (Red for delete, Blue for info).
 - **Responsive Spacing**: Consistent use of Tailwind spacing scale (`p-4`, `mb-3`, `gap-2`).
 - **Typography**: Defined text sizes (`text-lg`, `text-base`, `text-sm`) with weight modifiers (`font-bold`, `font-semibold`).
+
+## Mutation & Validation Architecture (Issue #57)
+
+As of January 2026, the application utilizes a **Centralized Mutation Validation** layer located in `utils/mutation.ts`. This architecture ensures:
+
+1. **DRY Auth Enforcement**: All write operations (mutations) route through `requireAuth()` or `requireAuthAndHousehold()` rather than duplicating `supabase.auth.getUser()` logic.
+2. **Strict Household Isolation**: The `requireHousehold()` utility enforces that any householded operation has an active context, preventing accidental cross-household data writes.
+3. **Typed Exceptional States**: Custom `AuthError` and `HouseholdError` classes allow the UI to differentiate between session expiry and selection errors for precise user feedback.
+4. **Standardized Error Handling**: The `handleMutationError()` utility provides a unified point for logging and potential future crash reporting integration.
