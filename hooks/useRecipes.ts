@@ -92,12 +92,15 @@ export const useAddRecipe = () => {
       return recipe;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["recipes"] });
+      queryClient.invalidateQueries({
+        queryKey: ["recipes", currentHousehold?.id],
+      });
     },
   });
 };
 export const useDeleteRecipe = () => {
   const queryClient = useQueryClient();
+  const { currentHousehold } = useCurrentHousehold();
 
   return useMutation({
     mutationFn: async (id: string) => {
@@ -106,7 +109,9 @@ export const useDeleteRecipe = () => {
       if (error) throw error;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["recipes"] });
+      queryClient.invalidateQueries({
+        queryKey: ["recipes", currentHousehold?.id],
+      });
     },
   });
 };

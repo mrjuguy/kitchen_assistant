@@ -77,13 +77,16 @@ export const useAddToPlan = () => {
       return data as MealPlan;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["meal_plans"] });
+      queryClient.invalidateQueries({
+        queryKey: ["meal_plans", currentHousehold?.id],
+      });
     },
   });
 };
 
 export const useRemoveFromPlan = () => {
   const queryClient = useQueryClient();
+  const { currentHousehold } = useCurrentHousehold();
 
   return useMutation({
     mutationFn: async (id: string) => {
@@ -92,7 +95,9 @@ export const useRemoveFromPlan = () => {
       if (error) throw error;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["meal_plans"] });
+      queryClient.invalidateQueries({
+        queryKey: ["meal_plans", currentHousehold?.id],
+      });
     },
   });
 };

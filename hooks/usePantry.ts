@@ -54,7 +54,9 @@ export const useAddPantryItem = () => {
       return data as PantryItem;
     },
     onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ["pantry"] });
+      queryClient.invalidateQueries({
+        queryKey: ["pantry", currentHousehold?.id],
+      });
       scheduleExpiryNotification(data);
     },
   });
@@ -62,6 +64,7 @@ export const useAddPantryItem = () => {
 
 export const useUpdatePantryItem = () => {
   const queryClient = useQueryClient();
+  const { currentHousehold } = useCurrentHousehold();
 
   return useMutation({
     mutationFn: async ({
@@ -84,20 +87,27 @@ export const useUpdatePantryItem = () => {
     // Optimistic Update
     onMutate: async ({ id, updates }) => {
       // Cancel any outgoing refetches (so they don't overwrite our optimistic update)
-      await queryClient.cancelQueries({ queryKey: ["pantry"] });
+      await queryClient.cancelQueries({
+        queryKey: ["pantry", currentHousehold?.id],
+      });
 
       // Add updated_at if not present
       const fullUpdates = { ...updates, updated_at: new Date().toISOString() };
 
       // Snapshot the previous value
-      const previousItems = queryClient.getQueryData<PantryItem[]>(["pantry"]);
+      const previousItems = queryClient.getQueryData<PantryItem[]>([
+        "pantry",
+        currentHousehold?.id,
+      ]);
 
       // Optimistically update to the new value
       if (previousItems) {
-        queryClient.setQueryData<PantryItem[]>(["pantry"], (old) =>
-          old?.map((item) =>
-            item.id === id ? { ...item, ...fullUpdates } : item,
-          ),
+        queryClient.setQueryData<PantryItem[]>(
+          ["pantry", currentHousehold?.id],
+          (old) =>
+            old?.map((item) =>
+              item.id === id ? { ...item, ...fullUpdates } : item,
+            ),
         );
       }
 
@@ -106,18 +116,24 @@ export const useUpdatePantryItem = () => {
     // If the mutation fails, use the context returned from onMutate to roll back
     onError: (_err, _newTodo, context) => {
       if (context?.previousItems) {
-        queryClient.setQueryData(["pantry"], context.previousItems);
+        queryClient.setQueryData(
+          ["pantry", currentHousehold?.id],
+          context.previousItems,
+        );
       }
     },
     // Always refetch after error or success:
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ["pantry"] });
+      queryClient.invalidateQueries({
+        queryKey: ["pantry", currentHousehold?.id],
+      });
     },
   });
 };
 
 export const useDeletePantryItem = () => {
   const queryClient = useQueryClient();
+  const { currentHousehold } = useCurrentHousehold();
 
   return useMutation({
     mutationFn: async (id: string) => {
@@ -129,13 +145,16 @@ export const useDeletePantryItem = () => {
       if (error) throw error;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["pantry"] });
+      queryClient.invalidateQueries({
+        queryKey: ["pantry", currentHousehold?.id],
+      });
     },
   });
 };
 
 export const useConsumeIngredients = () => {
   const queryClient = useQueryClient();
+  const { currentHousehold } = useCurrentHousehold();
 
   return useMutation({
     mutationFn: async (updates: { id: string; newQuantity: number }[]) => {
@@ -153,7 +172,9 @@ export const useConsumeIngredients = () => {
       await Promise.all(promises);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["pantry"] });
+      queryClient.invalidateQueries({
+        queryKey: ["pantry", currentHousehold?.id],
+      });
     },
   });
 };
