@@ -3,8 +3,12 @@ import { useMemo } from "react";
 import { usePantry } from "./usePantry";
 import { useProfile } from "./useProfile";
 import { useRecipes } from "./useRecipes";
-import { RecipeIngredient, RecipeWithIngredients } from "../types/schema";
-import { checkAllergen, isMatch } from "../utils/matcher";
+import {
+  PantryItem,
+  RecipeIngredient,
+  RecipeWithIngredients,
+} from "../types/schema";
+import { checkAllergen, normalizeName } from "../utils/matcher";
 
 export type MatchStatus = "Green" | "Yellow" | "Red";
 
@@ -28,6 +32,54 @@ export interface GapAnalysis {
   isSafe: boolean;
 }
 
+/**
+ * Build a lookup map for O(1) ingredient matching.
+ * Groups pantry items by their normalized name.
+ */
+const buildPantryLookup = (pantry: PantryItem[]): Map<string, PantryItem[]> => {
+  const lookup = new Map<string, PantryItem[]>();
+  for (const item of pantry) {
+    const key = normalizeName(item.name);
+    const existing = lookup.get(key);
+    if (existing) {
+      existing.push(item);
+    } else {
+      lookup.set(key, [item]);
+    }
+  }
+  return lookup;
+};
+
+/**
+ * Find matching pantry items for an ingredient using the pre-built lookup.
+ * Checks exact normalized match first, then falls back to substring matching.
+ */
+const findMatchingItems = (
+  ingredientName: string,
+  pantryLookup: Map<string, PantryItem[]>,
+): PantryItem[] => {
+  const normalizedIngredient = normalizeName(ingredientName);
+
+  // 1. Try exact normalized match (O(1) lookup)
+  const exactMatches = pantryLookup.get(normalizedIngredient);
+  if (exactMatches && exactMatches.length > 0) {
+    return exactMatches;
+  }
+
+  // 2. Fall back to substring matching (only when exact match fails)
+  // This handles cases like "Tomato Paste" matching "Tomato"
+  const substringMatches: PantryItem[] = [];
+  for (const [key, items] of pantryLookup) {
+    if (
+      key.includes(normalizedIngredient) ||
+      normalizedIngredient.includes(key)
+    ) {
+      substringMatches.push(...items);
+    }
+  }
+  return substringMatches;
+};
+
 export const useGapAnalysis = (recipeId?: string, servings?: number) => {
   const { data: recipes } = useRecipes();
   const { data: pantry } = usePantry();
@@ -35,6 +87,9 @@ export const useGapAnalysis = (recipeId?: string, servings?: number) => {
 
   return useMemo(() => {
     if (!recipes || !pantry) return null;
+
+    // Build the pantry lookup map once per memo cycle
+    const pantryLookup = buildPantryLookup(pantry);
 
     const processRecipe = (
       recipe: RecipeWithIngredients,
@@ -66,10 +121,8 @@ export const useGapAnalysis = (recipeId?: string, servings?: number) => {
       const isSafe = !allergenWarning;
 
       recipe.ingredients.forEach((reqIng: RecipeIngredient) => {
-        // Find ALL items that match
-        const matchingItems = pantry.filter((p) =>
-          isMatch(p.name, reqIng.name),
-        );
+        // Find ALL items that match using the optimized lookup
+        const matchingItems = findMatchingItems(reqIng.name, pantryLookup);
 
         // Sum available quantity
         const available = matchingItems.reduce(
@@ -88,7 +141,7 @@ export const useGapAnalysis = (recipeId?: string, servings?: number) => {
         );
         const bestMatch =
           exactMatch ||
-          matchingItems.sort((a, b) => b.quantity - a.quantity)[0];
+          [...matchingItems].sort((a, b) => b.quantity - a.quantity)[0];
 
         if (!isInStock) {
           missingCount++;
