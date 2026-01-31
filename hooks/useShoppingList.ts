@@ -8,7 +8,6 @@ import {
   UpdateShoppingItem,
 } from "../types/schema";
 import { requireAuth, requireAuthAndHousehold } from "../utils/mutation";
-import { normalizeToUS, UnitKey } from "../utils/units";
 
 export const useShoppingList = () => {
   const { currentHousehold } = useCurrentHousehold();
@@ -137,63 +136,29 @@ export const useDeleteShoppingItem = () => {
   });
 };
 
+/**
+ * Checkout all bought items from shopping list to pantry.
+ * Uses an atomic RPC function to ensure data consistency -
+ * either all items transfer successfully or none do.
+ *
+ * @returns Mutation hook for checkout operation
+ */
 export const useCheckoutShoppingList = () => {
   const queryClient = useQueryClient();
   const { currentHousehold } = useCurrentHousehold();
 
   return useMutation({
-    mutationFn: async () => {
-      const user = await requireAuth();
+    mutationFn: async (): Promise<number> => {
+      const { household } = await requireAuthAndHousehold(currentHousehold);
 
-      // 1. Get all bought items
-      const { data: boughtItems, error: fetchError } = await supabase
-        .from("shopping_list")
-        .select("*")
-        .eq("bought", true);
-
-      if (fetchError) throw fetchError;
-      if (!boughtItems || boughtItems.length === 0) return;
-
-      // 2. Transfer to pantry
-      const pantryItems = boughtItems.map((item) => {
-        // Ensure unit from DB matches UnitKey, fallback to 'unit' if unknown
-        const safeUnit = (item.unit as UnitKey) || "unit";
-        const { value: normalizedQty, unit: normalizedUnit } = normalizeToUS(
-          item.quantity,
-          safeUnit,
-        );
-
-        return {
-          user_id: user.id,
-          household_id: item.household_id, // Copy household_id
-          name: item.name,
-          quantity: normalizedQty,
-          unit: normalizedUnit,
-          total_capacity: normalizedQty, // Capture original full amount for progress tracking
-          category: item.category,
-          barcode: item.barcode,
-          image_url: item.image_url,
-          brand: item.brand,
-          nutritional_info: item.nutritional_info,
-          ingredients_text: item.ingredients_text,
-          allergens: item.allergens,
-          labels: item.labels,
-        };
+      // Call atomic RPC - handles fetch, insert, and delete in one transaction
+      const { data, error } = await supabase.rpc("checkout_shopping_list", {
+        p_household_id: household.id,
       });
 
-      const { error: insertError } = await supabase
-        .from("pantry_items")
-        .insert(pantryItems);
+      if (error) throw error;
 
-      if (insertError) throw insertError;
-
-      // 3. Delete from shopping list
-      const { error: deleteError } = await supabase
-        .from("shopping_list")
-        .delete()
-        .eq("bought", true);
-
-      if (deleteError) throw deleteError;
+      return data as number; // Returns count of transferred items
     },
     onSuccess: () => {
       queryClient.invalidateQueries({
