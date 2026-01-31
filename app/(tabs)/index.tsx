@@ -158,7 +158,8 @@ export default function PantryScreen() {
       >
         <View className="flex-row items-center">
           <View
-            className={`p-2 rounded-xl mr-3 ${section.title === "Fridge"
+            className={`p-2 rounded-xl mr-3 ${
+              section.title === "Fridge"
                 ? "bg-blue-500/10"
                 : section.title === "Freezer"
                   ? "bg-sky-500/10"
@@ -169,7 +170,7 @@ export default function PantryScreen() {
                       : section.title === "Good"
                         ? "bg-emerald-500/10"
                         : "bg-zinc-500/10"
-              }`}
+            }`}
           >
             <Refrigerator
               size={18}
@@ -179,7 +180,7 @@ export default function PantryScreen() {
                   : section.title === "Freezer"
                     ? "#0284c7"
                     : section.title === "Expired" ||
-                      section.title === "Critical"
+                        section.title === "Critical"
                       ? "#ef4444"
                       : section.title === "Warning"
                         ? "#f59e0b"
