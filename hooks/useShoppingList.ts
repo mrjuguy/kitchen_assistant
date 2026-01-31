@@ -54,13 +54,16 @@ export const useAddShoppingItem = () => {
       return data as ShoppingItem;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["shopping_list"] });
+      queryClient.invalidateQueries({
+        queryKey: ["shopping_list", currentHousehold?.id],
+      });
     },
   });
 };
 
 export const useUpdateShoppingItem = () => {
   const queryClient = useQueryClient();
+  const { currentHousehold } = useCurrentHousehold();
 
   return useMutation({
     mutationFn: async ({
@@ -81,14 +84,21 @@ export const useUpdateShoppingItem = () => {
       return data as ShoppingItem;
     },
     onMutate: async ({ id, updates }) => {
-      await queryClient.cancelQueries({ queryKey: ["shopping_list"] });
+      await queryClient.cancelQueries({
+        queryKey: ["shopping_list", currentHousehold?.id],
+      });
       const previousItems = queryClient.getQueryData<ShoppingItem[]>([
         "shopping_list",
+        currentHousehold?.id,
       ]);
 
       if (previousItems) {
-        queryClient.setQueryData<ShoppingItem[]>(["shopping_list"], (old) =>
-          old?.map((item) => (item.id === id ? { ...item, ...updates } : item)),
+        queryClient.setQueryData<ShoppingItem[]>(
+          ["shopping_list", currentHousehold?.id],
+          (old) =>
+            old?.map((item) =>
+              item.id === id ? { ...item, ...updates } : item,
+            ),
         );
       }
 
@@ -96,17 +106,23 @@ export const useUpdateShoppingItem = () => {
     },
     onError: (_err, _variables, context) => {
       if (context?.previousItems) {
-        queryClient.setQueryData(["shopping_list"], context.previousItems);
+        queryClient.setQueryData(
+          ["shopping_list", currentHousehold?.id],
+          context.previousItems,
+        );
       }
     },
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ["shopping_list"] });
+      queryClient.invalidateQueries({
+        queryKey: ["shopping_list", currentHousehold?.id],
+      });
     },
   });
 };
 
 export const useDeleteShoppingItem = () => {
   const queryClient = useQueryClient();
+  const { currentHousehold } = useCurrentHousehold();
 
   return useMutation({
     mutationFn: async (id: string) => {
@@ -118,13 +134,16 @@ export const useDeleteShoppingItem = () => {
       if (error) throw error;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["shopping_list"] });
+      queryClient.invalidateQueries({
+        queryKey: ["shopping_list", currentHousehold?.id],
+      });
     },
   });
 };
 
 export const useCheckoutShoppingList = () => {
   const queryClient = useQueryClient();
+  const { currentHousehold } = useCurrentHousehold();
 
   return useMutation({
     mutationFn: async () => {
@@ -184,8 +203,12 @@ export const useCheckoutShoppingList = () => {
       if (deleteError) throw deleteError;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["shopping_list"] });
-      queryClient.invalidateQueries({ queryKey: ["pantry"] });
+      queryClient.invalidateQueries({
+        queryKey: ["shopping_list", currentHousehold?.id],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["pantry", currentHousehold?.id],
+      });
     },
   });
 };
@@ -217,12 +240,15 @@ export const useAddShoppingItems = () => {
       return data as ShoppingItem[];
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["shopping_list"] });
+      queryClient.invalidateQueries({
+        queryKey: ["shopping_list", currentHousehold?.id],
+      });
     },
   });
 };
 export const useClearBoughtItems = () => {
   const queryClient = useQueryClient();
+  const { currentHousehold } = useCurrentHousehold();
 
   return useMutation({
     mutationFn: async () => {
@@ -234,13 +260,16 @@ export const useClearBoughtItems = () => {
       if (error) throw error;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["shopping_list"] });
+      queryClient.invalidateQueries({
+        queryKey: ["shopping_list", currentHousehold?.id],
+      });
     },
   });
 };
 
 export const useDeleteAllShoppingItems = () => {
   const queryClient = useQueryClient();
+  const { currentHousehold } = useCurrentHousehold();
 
   return useMutation({
     mutationFn: async () => {
@@ -257,7 +286,9 @@ export const useDeleteAllShoppingItems = () => {
       if (error) throw error;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["shopping_list"] });
+      queryClient.invalidateQueries({
+        queryKey: ["shopping_list", currentHousehold?.id],
+      });
     },
   });
 };

@@ -36,7 +36,9 @@ export const useLogUsage = () => {
       return data as UsageLog;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["usage_stats"] });
+      queryClient.invalidateQueries({
+        queryKey: ["usage_stats", "expired", currentHousehold?.id],
+      });
     },
   });
 };
